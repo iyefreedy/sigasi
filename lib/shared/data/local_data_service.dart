@@ -373,11 +373,9 @@ class LocalDataService implements DataService {
     try {
       final db = await _getDatabase();
 
-      final newResidentId = await db.update(
+      final newResidentId = await db.insert(
         'resident',
         resident.toJson()..remove('id'),
-        where: 'id=?',
-        whereArgs: [resident.id],
       );
 
       return resident.copyWith(id: newResidentId);
