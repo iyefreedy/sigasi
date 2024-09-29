@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../routes/app_route.dart';
+
 @RoutePage()
 class PostListScreen extends ConsumerWidget {
   const PostListScreen({super.key});
@@ -13,7 +15,9 @@ class PostListScreen extends ConsumerWidget {
         title: const Text('Data Posko'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          AutoRouter.of(context).push(PostFormRoute());
+        },
         child: const Icon(Icons.add),
       ),
       body: ListView(),
