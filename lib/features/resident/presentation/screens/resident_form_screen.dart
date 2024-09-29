@@ -80,6 +80,7 @@ class _ResidentFormScreenState extends ConsumerState<ResidentFormScreen> {
                     },
                   ),
                   DropdownButtonFormField<Gender>(
+                    value: state.value.gender,
                     decoration: const InputDecoration(
                       labelText: 'Jenis Kelamin',
                     ),
@@ -149,6 +150,7 @@ class _ResidentFormScreenState extends ConsumerState<ResidentFormScreen> {
                     },
                   ),
                   DropdownButtonFormField<int>(
+                    value: state.value.villageId,
                     decoration: const InputDecoration(
                       labelText: 'Desa',
                     ),
@@ -175,6 +177,7 @@ class _ResidentFormScreenState extends ConsumerState<ResidentFormScreen> {
                     },
                   ),
                   DropdownButtonFormField<int>(
+                    value: state.value.populationGroupId,
                     decoration: const InputDecoration(
                       labelText: 'Kelompok',
                     ),
@@ -196,7 +199,10 @@ class _ResidentFormScreenState extends ConsumerState<ResidentFormScreen> {
 
                       return null;
                     },
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      state.value =
+                          state.value.copyWith(populationGroupId: value);
+                    },
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
@@ -205,6 +211,8 @@ class _ResidentFormScreenState extends ConsumerState<ResidentFormScreen> {
                         await ref
                             .read(residentListNotifierProvider.notifier)
                             .save(state.value);
+
+                        if (context.mounted) AutoRouter.of(context).maybePop();
                       }
                     },
                     child: const Text('Simpan'),
