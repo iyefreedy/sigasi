@@ -38,7 +38,8 @@ class VillageListScreen extends ConsumerWidget {
           SliverPadding(
             padding: const EdgeInsets.all(8.0),
             sliver: villageList.when(
-              data: (data) => SliverList.builder(
+              data: (data) => SliverList.separated(
+                separatorBuilder: (context, index) => const SizedBox(height: 4),
                 itemCount: data.length,
                 itemBuilder: (context, index) => ListTile(
                   title: Text(data[index].name),
