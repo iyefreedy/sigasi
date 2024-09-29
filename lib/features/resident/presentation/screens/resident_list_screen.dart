@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/routes/app_route.dart';
 
+import '../../../../shared/dialogs/delete_dialog.dart';
 import '../../../../shared/globals.dart';
 import '../../notifiers/resident_list_notifier.dart';
 
@@ -33,6 +34,7 @@ class ResidentListScreen extends ConsumerWidget {
 
                 return ListTile(
                   title: Text('${resident.name}'),
+                  subtitle: Text('${resident.identityNumber}'),
                   trailing: PopupMenuButton(
                     itemBuilder: (context) => [
                       ...PopupMenuAction.values.map(
@@ -42,6 +44,22 @@ class ResidentListScreen extends ConsumerWidget {
                         ),
                       )
                     ],
+                    onSelected: (value) async {
+                      switch (value) {
+                        case PopupMenuAction.edit:
+                          break;
+                        case PopupMenuAction.delete:
+                          final shouldDelete =
+                              await showDeleteDialog(context) ?? false;
+
+                          if (shouldDelete) {
+                            await ref
+                                .read(residentListNotifierProvider.notifier)
+                                .remove(resident);
+                          }
+                          break;
+                      }
+                    },
                   ),
                 );
               },
