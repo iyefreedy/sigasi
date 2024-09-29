@@ -21,12 +21,12 @@ Post _$PostFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Post {
   int? get id => throw _privateConstructorUsedError;
-  int get residentId => throw _privateConstructorUsedError;
-  String get location => throw _privateConstructorUsedError;
-  String get issue => throw _privateConstructorUsedError;
-  String get solution => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
+  int? get residentId => throw _privateConstructorUsedError;
+  String? get location => throw _privateConstructorUsedError;
+  String? get issue => throw _privateConstructorUsedError;
+  String? get solution => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this Post to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -44,12 +44,12 @@ abstract class $PostCopyWith<$Res> {
   @useResult
   $Res call(
       {int? id,
-      int residentId,
-      String location,
-      String issue,
-      String solution,
-      DateTime createdAt,
-      DateTime updatedAt});
+      int? residentId,
+      String? location,
+      String? issue,
+      String? solution,
+      DateTime? createdAt,
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -68,42 +68,42 @@ class _$PostCopyWithImpl<$Res, $Val extends Post>
   @override
   $Res call({
     Object? id = freezed,
-    Object? residentId = null,
-    Object? location = null,
-    Object? issue = null,
-    Object? solution = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
+    Object? residentId = freezed,
+    Object? location = freezed,
+    Object? issue = freezed,
+    Object? solution = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
-      residentId: null == residentId
+      residentId: freezed == residentId
           ? _value.residentId
           : residentId // ignore: cast_nullable_to_non_nullable
-              as int,
-      location: null == location
+              as int?,
+      location: freezed == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
-              as String,
-      issue: null == issue
+              as String?,
+      issue: freezed == issue
           ? _value.issue
           : issue // ignore: cast_nullable_to_non_nullable
-              as String,
-      solution: null == solution
+              as String?,
+      solution: freezed == solution
           ? _value.solution
           : solution // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
+              as String?,
+      createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
+              as DateTime?,
+      updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -117,12 +117,12 @@ abstract class _$$PostImplCopyWith<$Res> implements $PostCopyWith<$Res> {
   @useResult
   $Res call(
       {int? id,
-      int residentId,
-      String location,
-      String issue,
-      String solution,
-      DateTime createdAt,
-      DateTime updatedAt});
+      int? residentId,
+      String? location,
+      String? issue,
+      String? solution,
+      DateTime? createdAt,
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -138,42 +138,42 @@ class __$$PostImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
-    Object? residentId = null,
-    Object? location = null,
-    Object? issue = null,
-    Object? solution = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
+    Object? residentId = freezed,
+    Object? location = freezed,
+    Object? issue = freezed,
+    Object? solution = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_$PostImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
-      residentId: null == residentId
+      residentId: freezed == residentId
           ? _value.residentId
           : residentId // ignore: cast_nullable_to_non_nullable
-              as int,
-      location: null == location
+              as int?,
+      location: freezed == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
-              as String,
-      issue: null == issue
+              as String?,
+      issue: freezed == issue
           ? _value.issue
           : issue // ignore: cast_nullable_to_non_nullable
-              as String,
-      solution: null == solution
+              as String?,
+      solution: freezed == solution
           ? _value.solution
           : solution // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
+              as String?,
+      createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
+              as DateTime?,
+      updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ));
   }
 }
@@ -183,12 +183,12 @@ class __$$PostImplCopyWithImpl<$Res>
 class _$PostImpl implements _Post {
   const _$PostImpl(
       {this.id,
-      required this.residentId,
-      required this.location,
-      required this.issue,
-      required this.solution,
-      required this.createdAt,
-      required this.updatedAt});
+      this.residentId,
+      this.location,
+      this.issue,
+      this.solution,
+      this.createdAt,
+      this.updatedAt});
 
   factory _$PostImpl.fromJson(Map<String, dynamic> json) =>
       _$$PostImplFromJson(json);
@@ -196,17 +196,17 @@ class _$PostImpl implements _Post {
   @override
   final int? id;
   @override
-  final int residentId;
+  final int? residentId;
   @override
-  final String location;
+  final String? location;
   @override
-  final String issue;
+  final String? issue;
   @override
-  final String solution;
+  final String? solution;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   @override
   String toString() {
@@ -256,29 +256,29 @@ class _$PostImpl implements _Post {
 abstract class _Post implements Post {
   const factory _Post(
       {final int? id,
-      required final int residentId,
-      required final String location,
-      required final String issue,
-      required final String solution,
-      required final DateTime createdAt,
-      required final DateTime updatedAt}) = _$PostImpl;
+      final int? residentId,
+      final String? location,
+      final String? issue,
+      final String? solution,
+      final DateTime? createdAt,
+      final DateTime? updatedAt}) = _$PostImpl;
 
   factory _Post.fromJson(Map<String, dynamic> json) = _$PostImpl.fromJson;
 
   @override
   int? get id;
   @override
-  int get residentId;
+  int? get residentId;
   @override
-  String get location;
+  String? get location;
   @override
-  String get issue;
+  String? get issue;
   @override
-  String get solution;
+  String? get solution;
   @override
-  DateTime get createdAt;
+  DateTime? get createdAt;
   @override
-  DateTime get updatedAt;
+  DateTime? get updatedAt;
 
   /// Create a copy of Post
   /// with the given fields replaced by the non-null parameter values.
