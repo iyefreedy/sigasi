@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/features/population_group/notifiers/population_group_notifier.dart';
 import 'package:sigasi/features/resident/notifiers/resident_list_notifier.dart';
 import 'package:sigasi/features/village/notifiers/village_list_notifier.dart';
+import 'package:sigasi/shared/globals.dart';
 
 import '../../../../shared/domain/models/resident/resident.dart';
 
@@ -121,7 +122,7 @@ class _ResidentFormScreenState extends ConsumerState<ResidentFormScreen> {
                             state.value.copyWith(birthDate: selectedDate);
 
                         _birthDateController.text =
-                            selectedDate.toIso8601String();
+                            selectedDate.format('d MMM y');
                       }
                     },
                     validator: (_) {
