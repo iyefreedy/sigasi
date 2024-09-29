@@ -7,7 +7,7 @@ part of 'resident_list_notifier.dart';
 // **************************************************************************
 
 String _$residentListNotifierHash() =>
-    r'5949354e1f36c4de9bda0cc5efb0b6ebb8c46570';
+    r'692a542c4534edb28fe21bbecf93f03d56ebcb87';
 
 /// See also [ResidentListNotifier].
 @ProviderFor(ResidentListNotifier)

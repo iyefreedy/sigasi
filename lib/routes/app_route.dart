@@ -11,6 +11,7 @@ import '../features/item_category/presentation/screens/item_type_form_screen.dar
 import '../features/item_category/presentation/screens/item_type_list_screen.dart';
 import '../features/population_group/presentation/population_group_form_screen.dart';
 import '../features/population_group/presentation/population_group_list_screen.dart';
+import '../features/post/presentation/screens/post_form_screen.dart';
 import '../features/post/presentation/screens/post_list_screen.dart';
 import '../features/resident/presentation/screens/resident_form_screen.dart';
 import '../features/resident/presentation/screens/resident_list_screen.dart';
@@ -22,6 +23,7 @@ import '../shared/domain/models/district/district.dart';
 import '../shared/domain/models/item/item.dart';
 import '../shared/domain/models/item_category/item_category.dart';
 import '../shared/domain/models/population_group/population_group.dart';
+import '../shared/domain/models/post/post.dart';
 import '../shared/domain/models/resident/resident.dart';
 import '../shared/domain/models/village/village.dart';
 
@@ -52,5 +54,6 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: ResidentListRoute.page),
         AutoRoute(page: ResidentFormRoute.page),
         AutoRoute(page: PostListRoute.page),
+        AutoRoute(page: PostFormRoute.page),
       ];
 }

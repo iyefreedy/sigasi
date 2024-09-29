@@ -348,6 +348,53 @@ class PopulationGroupListRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [PostFormScreen]
+class PostFormRoute extends PageRouteInfo<PostFormRouteArgs> {
+  PostFormRoute({
+    Key? key,
+    Post? post,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PostFormRoute.name,
+          args: PostFormRouteArgs(
+            key: key,
+            post: post,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PostFormRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<PostFormRouteArgs>(
+          orElse: () => const PostFormRouteArgs());
+      return PostFormScreen(
+        key: args.key,
+        post: args.post,
+      );
+    },
+  );
+}
+
+class PostFormRouteArgs {
+  const PostFormRouteArgs({
+    this.key,
+    this.post,
+  });
+
+  final Key? key;
+
+  final Post? post;
+
+  @override
+  String toString() {
+    return 'PostFormRouteArgs{key: $key, post: $post}';
+  }
+}
+
+/// generated route for
 /// [PostListScreen]
 class PostListRoute extends PageRouteInfo<void> {
   const PostListRoute({List<PageRouteInfo>? children})

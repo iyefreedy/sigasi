@@ -59,7 +59,7 @@ class _ResidentFormScreenState extends ConsumerState<ResidentFormScreen> {
                         return 'NIK tidak boleh kosong';
                       }
 
-                      if (value.length < 16) {
+                      if (value.length != 16) {
                         return 'NIK harus berisikan 16 digit angka';
                       }
 
