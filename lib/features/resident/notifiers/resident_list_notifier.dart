@@ -27,4 +27,15 @@ class ResidentListNotifier extends _$ResidentListNotifier {
     final newResidents = await dataService.allResidents();
     state = AsyncData(newResidents);
   }
+
+  Future<void> remove(Resident resident) async {
+    final dataService = ref.read(dataServiceProvider);
+
+    if (resident.id == null) {
+      await dataService.deleteResident(resident.id!);
+    }
+
+    final newResidents = await dataService.allResidents();
+    state = AsyncData(newResidents);
+  }
 }

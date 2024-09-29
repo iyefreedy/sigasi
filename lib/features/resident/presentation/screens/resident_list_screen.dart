@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/routes/app_route.dart';
 
+import '../../../../shared/globals.dart';
 import '../../notifiers/resident_list_notifier.dart';
 
 @RoutePage()
@@ -32,6 +33,16 @@ class ResidentListScreen extends ConsumerWidget {
 
                 return ListTile(
                   title: Text('${resident.name}'),
+                  trailing: PopupMenuButton(
+                    itemBuilder: (context) => [
+                      ...PopupMenuAction.values.map(
+                        (action) => PopupMenuItem(
+                          value: action,
+                          child: Text(action.label),
+                        ),
+                      )
+                    ],
+                  ),
                 );
               },
               separatorBuilder: (context, index) => const SizedBox(height: 4),
