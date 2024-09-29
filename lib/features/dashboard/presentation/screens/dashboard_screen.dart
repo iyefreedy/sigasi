@@ -12,6 +12,7 @@ class DashboardScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            pinned: true,
             leading: Padding(
               padding: const EdgeInsets.only(left: 10.0),
               child: Image.asset('assets/logo-kampus-merdeka.png'),
