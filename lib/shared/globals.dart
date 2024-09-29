@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 enum PopupMenuAction {
   edit('Ubah'),
@@ -26,4 +27,12 @@ TextTheme createTextTheme(
     labelSmall: bodyTextTheme.labelSmall,
   );
   return textTheme;
+}
+
+extension FormatDateTime on DateTime {
+  String format(String pattern) {
+    final dateFormatter = DateFormat(pattern);
+
+    return dateFormatter.format(this);
+  }
 }
