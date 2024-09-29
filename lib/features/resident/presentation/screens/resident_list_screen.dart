@@ -26,6 +26,7 @@ class ResidentListScreen extends ConsumerWidget {
         child: residentList.when(
           data: (data) {
             return ListView.separated(
+              padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
                 final resident = data[index];
 
