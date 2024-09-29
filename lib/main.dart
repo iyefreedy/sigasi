@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/date_symbol_data_file.dart';
 
 import 'main/observers.dart';
 import 'routes/app_route.dart';
@@ -9,7 +8,6 @@ import 'shared/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('id_ID', '');
 
   runApp(
     ProviderScope(
