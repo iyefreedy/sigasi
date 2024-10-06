@@ -10,6 +10,72 @@
 part of 'app_route.dart';
 
 /// generated route for
+/// [BarangFormScreen]
+class BarangFormRoute extends PageRouteInfo<BarangFormRouteArgs> {
+  BarangFormRoute({
+    Key? key,
+    Barang? barang,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BarangFormRoute.name,
+          args: BarangFormRouteArgs(
+            key: key,
+            barang: barang,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BarangFormRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<BarangFormRouteArgs>(
+          orElse: () => const BarangFormRouteArgs());
+      return BarangFormScreen(
+        key: args.key,
+        barang: args.barang,
+      );
+    },
+  );
+}
+
+class BarangFormRouteArgs {
+  const BarangFormRouteArgs({
+    this.key,
+    this.barang,
+  });
+
+  final Key? key;
+
+  final Barang? barang;
+
+  @override
+  String toString() {
+    return 'BarangFormRouteArgs{key: $key, barang: $barang}';
+  }
+}
+
+/// generated route for
+/// [BarangListScreen]
+class BarangListRoute extends PageRouteInfo<void> {
+  const BarangListRoute({List<PageRouteInfo>? children})
+      : super(
+          BarangListRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BarangListRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const BarangListScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [DashboardScreen]
 class DashboardRoute extends PageRouteInfo<void> {
   const DashboardRoute({List<PageRouteInfo>? children})
@@ -29,199 +95,133 @@ class DashboardRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [DistrictFormScreen]
-class DistrictFormRoute extends PageRouteInfo<DistrictFormRouteArgs> {
-  DistrictFormRoute({
+/// [JenisBarangFormScreen]
+class JenisBarangFormRoute extends PageRouteInfo<JenisBarangFormRouteArgs> {
+  JenisBarangFormRoute({
     Key? key,
-    District? district,
+    JenisBarang? jenisBarang,
     List<PageRouteInfo>? children,
   }) : super(
-          DistrictFormRoute.name,
-          args: DistrictFormRouteArgs(
+          JenisBarangFormRoute.name,
+          args: JenisBarangFormRouteArgs(
             key: key,
-            district: district,
+            jenisBarang: jenisBarang,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'DistrictFormRoute';
+  static const String name = 'JenisBarangFormRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<DistrictFormRouteArgs>(
-          orElse: () => const DistrictFormRouteArgs());
-      return DistrictFormScreen(
+      final args = data.argsAs<JenisBarangFormRouteArgs>(
+          orElse: () => const JenisBarangFormRouteArgs());
+      return JenisBarangFormScreen(
         key: args.key,
-        district: args.district,
+        jenisBarang: args.jenisBarang,
       );
     },
   );
 }
 
-class DistrictFormRouteArgs {
-  const DistrictFormRouteArgs({
+class JenisBarangFormRouteArgs {
+  const JenisBarangFormRouteArgs({
     this.key,
-    this.district,
+    this.jenisBarang,
   });
 
   final Key? key;
 
-  final District? district;
+  final JenisBarang? jenisBarang;
 
   @override
   String toString() {
-    return 'DistrictFormRouteArgs{key: $key, district: $district}';
+    return 'JenisBarangFormRouteArgs{key: $key, jenisBarang: $jenisBarang}';
   }
 }
 
 /// generated route for
-/// [DistrictListScreen]
-class DistrictListRoute extends PageRouteInfo<void> {
-  const DistrictListRoute({List<PageRouteInfo>? children})
+/// [JenisBarangListScreen]
+class JenisBarangListRoute extends PageRouteInfo<void> {
+  const JenisBarangListRoute({List<PageRouteInfo>? children})
       : super(
-          DistrictListRoute.name,
+          JenisBarangListRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'DistrictListRoute';
+  static const String name = 'JenisBarangListRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const DistrictListScreen();
+      return const JenisBarangListScreen();
     },
   );
 }
 
 /// generated route for
-/// [ItemFormScreen]
-class ItemFormRoute extends PageRouteInfo<ItemFormRouteArgs> {
-  ItemFormRoute({
+/// [KelompokFormScreen]
+class KelompokFormRoute extends PageRouteInfo<KelompokFormRouteArgs> {
+  KelompokFormRoute({
     Key? key,
-    Item? item,
+    Kelompok? kelompok,
     List<PageRouteInfo>? children,
   }) : super(
-          ItemFormRoute.name,
-          args: ItemFormRouteArgs(
+          KelompokFormRoute.name,
+          args: KelompokFormRouteArgs(
             key: key,
-            item: item,
+            kelompok: kelompok,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'ItemFormRoute';
+  static const String name = 'KelompokFormRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<ItemFormRouteArgs>(
-          orElse: () => const ItemFormRouteArgs());
-      return ItemFormScreen(
+      final args = data.argsAs<KelompokFormRouteArgs>(
+          orElse: () => const KelompokFormRouteArgs());
+      return KelompokFormScreen(
         key: args.key,
-        item: args.item,
+        kelompok: args.kelompok,
       );
     },
   );
 }
 
-class ItemFormRouteArgs {
-  const ItemFormRouteArgs({
+class KelompokFormRouteArgs {
+  const KelompokFormRouteArgs({
     this.key,
-    this.item,
+    this.kelompok,
   });
 
   final Key? key;
 
-  final Item? item;
+  final Kelompok? kelompok;
 
   @override
   String toString() {
-    return 'ItemFormRouteArgs{key: $key, item: $item}';
+    return 'KelompokFormRouteArgs{key: $key, kelompok: $kelompok}';
   }
 }
 
 /// generated route for
-/// [ItemListScreen]
-class ItemListRoute extends PageRouteInfo<void> {
-  const ItemListRoute({List<PageRouteInfo>? children})
+/// [KelompokListScreen]
+class KelompokListRoute extends PageRouteInfo<void> {
+  const KelompokListRoute({List<PageRouteInfo>? children})
       : super(
-          ItemListRoute.name,
+          KelompokListRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'ItemListRoute';
+  static const String name = 'KelompokListRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const ItemListScreen();
-    },
-  );
-}
-
-/// generated route for
-/// [ItemTypeFormScreen]
-class ItemTypeFormRoute extends PageRouteInfo<ItemTypeFormRouteArgs> {
-  ItemTypeFormRoute({
-    Key? key,
-    ItemCategory? itemType,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ItemTypeFormRoute.name,
-          args: ItemTypeFormRouteArgs(
-            key: key,
-            itemType: itemType,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ItemTypeFormRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<ItemTypeFormRouteArgs>(
-          orElse: () => const ItemTypeFormRouteArgs());
-      return ItemTypeFormScreen(
-        key: args.key,
-        itemType: args.itemType,
-      );
-    },
-  );
-}
-
-class ItemTypeFormRouteArgs {
-  const ItemTypeFormRouteArgs({
-    this.key,
-    this.itemType,
-  });
-
-  final Key? key;
-
-  final ItemCategory? itemType;
-
-  @override
-  String toString() {
-    return 'ItemTypeFormRouteArgs{key: $key, itemType: $itemType}';
-  }
-}
-
-/// generated route for
-/// [ItemTypeListScreen]
-class ItemTypeListRoute extends PageRouteInfo<void> {
-  const ItemTypeListRoute({List<PageRouteInfo>? children})
-      : super(
-          ItemTypeListRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ItemTypeListRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const ItemTypeListScreen();
+      return const KelompokListScreen();
     },
   );
 }
@@ -281,200 +281,133 @@ class MenuListRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [PopulationGroupFormScreen]
-class PopulationGroupFormRoute
-    extends PageRouteInfo<PopulationGroupFormRouteArgs> {
-  PopulationGroupFormRoute({
+/// [PendudukFormScreen]
+class PendudukFormRoute extends PageRouteInfo<PendudukFormRouteArgs> {
+  PendudukFormRoute({
     Key? key,
-    PopulationGroup? populationGroup,
+    Penduduk? penduduk,
     List<PageRouteInfo>? children,
   }) : super(
-          PopulationGroupFormRoute.name,
-          args: PopulationGroupFormRouteArgs(
+          PendudukFormRoute.name,
+          args: PendudukFormRouteArgs(
             key: key,
-            populationGroup: populationGroup,
+            penduduk: penduduk,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'PopulationGroupFormRoute';
+  static const String name = 'PendudukFormRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<PopulationGroupFormRouteArgs>(
-          orElse: () => const PopulationGroupFormRouteArgs());
-      return PopulationGroupFormScreen(
+      final args = data.argsAs<PendudukFormRouteArgs>(
+          orElse: () => const PendudukFormRouteArgs());
+      return PendudukFormScreen(
         key: args.key,
-        populationGroup: args.populationGroup,
+        penduduk: args.penduduk,
       );
     },
   );
 }
 
-class PopulationGroupFormRouteArgs {
-  const PopulationGroupFormRouteArgs({
+class PendudukFormRouteArgs {
+  const PendudukFormRouteArgs({
     this.key,
-    this.populationGroup,
+    this.penduduk,
   });
 
   final Key? key;
 
-  final PopulationGroup? populationGroup;
+  final Penduduk? penduduk;
 
   @override
   String toString() {
-    return 'PopulationGroupFormRouteArgs{key: $key, populationGroup: $populationGroup}';
+    return 'PendudukFormRouteArgs{key: $key, penduduk: $penduduk}';
   }
 }
 
 /// generated route for
-/// [PopulationGroupListScreen]
-class PopulationGroupListRoute extends PageRouteInfo<void> {
-  const PopulationGroupListRoute({List<PageRouteInfo>? children})
+/// [PendudukListScreen]
+class PendudukListRoute extends PageRouteInfo<void> {
+  const PendudukListRoute({List<PageRouteInfo>? children})
       : super(
-          PopulationGroupListRoute.name,
+          PendudukListRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'PopulationGroupListRoute';
+  static const String name = 'PendudukListRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const PopulationGroupListScreen();
+      return const PendudukListScreen();
     },
   );
 }
 
 /// generated route for
-/// [PostFormScreen]
-class PostFormRoute extends PageRouteInfo<PostFormRouteArgs> {
-  PostFormRoute({
+/// [PoskoFormScreen]
+class PoskoFormRoute extends PageRouteInfo<PoskoFormRouteArgs> {
+  PoskoFormRoute({
     Key? key,
-    Post? post,
+    Posko? posko,
     List<PageRouteInfo>? children,
   }) : super(
-          PostFormRoute.name,
-          args: PostFormRouteArgs(
+          PoskoFormRoute.name,
+          args: PoskoFormRouteArgs(
             key: key,
-            post: post,
+            posko: posko,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'PostFormRoute';
+  static const String name = 'PoskoFormRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<PostFormRouteArgs>(
-          orElse: () => const PostFormRouteArgs());
-      return PostFormScreen(
+      final args = data.argsAs<PoskoFormRouteArgs>(
+          orElse: () => const PoskoFormRouteArgs());
+      return PoskoFormScreen(
         key: args.key,
-        post: args.post,
+        posko: args.posko,
       );
     },
   );
 }
 
-class PostFormRouteArgs {
-  const PostFormRouteArgs({
+class PoskoFormRouteArgs {
+  const PoskoFormRouteArgs({
     this.key,
-    this.post,
+    this.posko,
   });
 
   final Key? key;
 
-  final Post? post;
+  final Posko? posko;
 
   @override
   String toString() {
-    return 'PostFormRouteArgs{key: $key, post: $post}';
+    return 'PoskoFormRouteArgs{key: $key, posko: $posko}';
   }
 }
 
 /// generated route for
-/// [PostListScreen]
-class PostListRoute extends PageRouteInfo<void> {
-  const PostListRoute({List<PageRouteInfo>? children})
+/// [PoskoListScreen]
+class PoskoListRoute extends PageRouteInfo<void> {
+  const PoskoListRoute({List<PageRouteInfo>? children})
       : super(
-          PostListRoute.name,
+          PoskoListRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'PostListRoute';
+  static const String name = 'PoskoListRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const PostListScreen();
-    },
-  );
-}
-
-/// generated route for
-/// [ResidentFormScreen]
-class ResidentFormRoute extends PageRouteInfo<ResidentFormRouteArgs> {
-  ResidentFormRoute({
-    Key? key,
-    Resident? resident,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ResidentFormRoute.name,
-          args: ResidentFormRouteArgs(
-            key: key,
-            resident: resident,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ResidentFormRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<ResidentFormRouteArgs>(
-          orElse: () => const ResidentFormRouteArgs());
-      return ResidentFormScreen(
-        key: args.key,
-        resident: args.resident,
-      );
-    },
-  );
-}
-
-class ResidentFormRouteArgs {
-  const ResidentFormRouteArgs({
-    this.key,
-    this.resident,
-  });
-
-  final Key? key;
-
-  final Resident? resident;
-
-  @override
-  String toString() {
-    return 'ResidentFormRouteArgs{key: $key, resident: $resident}';
-  }
-}
-
-/// generated route for
-/// [ResidentListScreen]
-class ResidentListRoute extends PageRouteInfo<void> {
-  const ResidentListRoute({List<PageRouteInfo>? children})
-      : super(
-          ResidentListRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ResidentListRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const ResidentListScreen();
+      return const PoskoListScreen();
     },
   );
 }
@@ -494,72 +427,6 @@ class SplashRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const SplashScreen();
-    },
-  );
-}
-
-/// generated route for
-/// [VillageFormScreen]
-class VillageFormRoute extends PageRouteInfo<VillageFormRouteArgs> {
-  VillageFormRoute({
-    Key? key,
-    Village? village,
-    List<PageRouteInfo>? children,
-  }) : super(
-          VillageFormRoute.name,
-          args: VillageFormRouteArgs(
-            key: key,
-            village: village,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'VillageFormRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<VillageFormRouteArgs>(
-          orElse: () => const VillageFormRouteArgs());
-      return VillageFormScreen(
-        key: args.key,
-        village: args.village,
-      );
-    },
-  );
-}
-
-class VillageFormRouteArgs {
-  const VillageFormRouteArgs({
-    this.key,
-    this.village,
-  });
-
-  final Key? key;
-
-  final Village? village;
-
-  @override
-  String toString() {
-    return 'VillageFormRouteArgs{key: $key, village: $village}';
-  }
-}
-
-/// generated route for
-/// [VillageListScreen]
-class VillageListRoute extends PageRouteInfo<void> {
-  const VillageListRoute({List<PageRouteInfo>? children})
-      : super(
-          VillageListRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'VillageListRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const VillageListScreen();
     },
   );
 }

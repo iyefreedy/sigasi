@@ -19,28 +19,10 @@ class MenuListScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                 child: ListTile(
-                  title: const Text('Data Kecamatan'),
-                  trailing: const Icon(Icons.arrow_forward),
-                  onTap: () =>
-                      AutoRouter.of(context).push(const DistrictListRoute()),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                child: ListTile(
-                  title: const Text('Data Desa'),
-                  trailing: const Icon(Icons.arrow_forward),
-                  onTap: () =>
-                      AutoRouter.of(context).push(const VillageListRoute()),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                child: ListTile(
                   title: const Text('Data Kelompok Penduduk'),
                   trailing: const Icon(Icons.arrow_forward),
-                  onTap: () => AutoRouter.of(context)
-                      .push(const PopulationGroupListRoute()),
+                  onTap: () =>
+                      AutoRouter.of(context).push(const KelompokListRoute()),
                 ),
               ),
               Container(
@@ -49,7 +31,7 @@ class MenuListScreen extends StatelessWidget {
                   title: const Text('Data Jenis Barang'),
                   trailing: const Icon(Icons.arrow_forward),
                   onTap: () =>
-                      AutoRouter.of(context).push(const ItemTypeListRoute()),
+                      AutoRouter.of(context).push(const JenisBarangListRoute()),
                 ),
               ),
               Container(
@@ -58,7 +40,7 @@ class MenuListScreen extends StatelessWidget {
                   title: const Text('Data Barang'),
                   trailing: const Icon(Icons.arrow_forward),
                   onTap: () =>
-                      AutoRouter.of(context).push(const ItemListRoute()),
+                      AutoRouter.of(context).push(const BarangListRoute()),
                 ),
               ),
               Container(
@@ -67,7 +49,7 @@ class MenuListScreen extends StatelessWidget {
                   title: const Text('Data Posko'),
                   trailing: const Icon(Icons.arrow_forward),
                   onTap: () =>
-                      AutoRouter.of(context).push(const PostListRoute()),
+                      AutoRouter.of(context).push(const PoskoListRoute()),
                 ),
               ),
             ],

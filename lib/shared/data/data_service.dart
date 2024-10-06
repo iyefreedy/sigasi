@@ -1,45 +1,37 @@
-import '../domain/models/district/district.dart';
-import '../domain/models/item/item.dart';
-import '../domain/models/item_category/item_category.dart';
-import '../domain/models/population_group/population_group.dart';
-import '../domain/models/resident/resident.dart';
-import '../domain/models/village/village.dart';
+import '../domain/models/barang/barang.dart';
+import '../domain/models/jenis_barang/jenis_barang.dart';
+import '../domain/models/kelompok/kelompok.dart';
+import '../domain/models/penduduk/penduduk.dart';
+import '../domain/models/posko/posko.dart';
 
 abstract class DataService {
-  Future<List<District>> allDistricts();
-  Future<District> findDistrictById(int id);
-  Future<District> saveDistrict(District district);
-  Future<void> deleteDistrict(int id);
+  Future<List<Penduduk>> allPenduduk();
+  Future<Penduduk> findPendudukById(int id);
+  Future<Penduduk> addPenduduk(Penduduk penduduk);
+  Future<Penduduk> updatePenduduk(Penduduk penduduk);
+  Future<void> deletePenduduk(Penduduk penduduk);
 
-  Future<List<Village>> allVillages();
-  Future<Village> findVillageById(int id);
-  Future<Village> createVillage(Village village);
-  Future<Village> updateVillage(Village village);
-  Future<void> deleteVillage(int id);
+  Future<List<Kelompok>> allKelompok();
+  Future<Kelompok> findKelompokById(int id);
+  Future<Kelompok> addKelompok(Kelompok kelompok);
+  Future<Kelompok> updateKelompok(Kelompok kelompok);
+  Future<void> deleteKelompok(Kelompok kelompok);
 
-  Future<List<PopulationGroup>> allPopulationGroups();
-  Future<PopulationGroup> findPopulationGroupById(int id);
-  Future<PopulationGroup> createPopulationGroup(
-      PopulationGroup populationGroup);
-  Future<PopulationGroup> updatePopulationGroup(
-      PopulationGroup populationGroup);
-  Future<void> deletePopulationGroup(int id);
+  Future<List<JenisBarang>> allJenisBarang();
+  Future<JenisBarang> findJenisBarangById(int id);
+  Future<JenisBarang> addJenisBarang(JenisBarang jenisBarang);
+  Future<JenisBarang> updateJenisBarang(JenisBarang jenisBarang);
+  Future<void> deleteJenisBarang(JenisBarang jenisBarang);
 
-  Future<List<ItemCategory>> allItemCategories();
-  Future<ItemCategory> findItemCategoryById(int id);
-  Future<ItemCategory> createItemCategory(ItemCategory itemType);
-  Future<ItemCategory> updateItemCategory(ItemCategory itemType);
-  Future<void> deleteItemCategory(int id);
+  Future<List<Barang>> allBarang();
+  Future<Barang> findBarangById(int id);
+  Future<Barang> addBarang(Barang barang);
+  Future<Barang> updateBarang(Barang barang);
+  Future<void> deleteBarang(Barang barang);
 
-  Future<List<Item>> allItems();
-  Future<Item> getItemById(int id);
-  Future<Item> createItem(Item item);
-  Future<Item> updateItem(Item item);
-  Future<void> deleteItem(int id);
-
-  Future<List<Resident>> allResidents();
-  Future<Resident> findResidentById(int id);
-  Future<Resident> createResident(Resident resident);
-  Future<Resident> updateResident(Resident resident);
-  Future<void> deleteResident(int id);
+  Future<List<Posko>> allPosko();
+  Future<Posko> findPoskoById(int id);
+  Future<Posko> addPosko(Posko posko);
+  Future<Posko> updatePosko(Posko posko);
+  Future<void> deletePosko(Posko posko);
 }

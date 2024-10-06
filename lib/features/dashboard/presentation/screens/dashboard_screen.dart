@@ -61,7 +61,7 @@ class DashboardScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           AutoRouter.of(context)
-                              .push(const ResidentListRoute());
+                              .push(const PendudukListRoute());
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
