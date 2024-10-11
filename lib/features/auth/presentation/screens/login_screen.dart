@@ -5,8 +5,6 @@ import 'package:sigasi/routes/app_route.dart';
 
 @RoutePage()
 class LoginScreen extends ConsumerWidget {
-  static const routeName = '/loginScreen';
-
   LoginScreen({super.key});
 
   final TextEditingController usernameController =
