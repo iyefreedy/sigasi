@@ -18,10 +18,10 @@ class Penduduk with _$Penduduk {
   const factory Penduduk({
     int? idPenduduk,
     int? idKelompok,
+    int? idKelurahan,
     String? ktp,
     String? nama,
     String? alamat,
-    String? desa,
     DateTime? tanggalLahir,
     JenisKelamin? jenisKelamin,
     int? lastUpdatedBy,
@@ -29,7 +29,7 @@ class Penduduk with _$Penduduk {
   }) = _Penduduk;
 
   factory Penduduk.withLastUpdated() =>
-      Penduduk(lastUpdatedDate: DateTime.now());
+      Penduduk(lastUpdatedDate: DateTime.now(), lastUpdatedBy: 0);
 
   factory Penduduk.fromJson(Map<String, Object?> json) =>
       _$PendudukFromJson(json);

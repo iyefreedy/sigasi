@@ -22,10 +22,10 @@ Penduduk _$PendudukFromJson(Map<String, dynamic> json) {
 mixin _$Penduduk {
   int? get idPenduduk => throw _privateConstructorUsedError;
   int? get idKelompok => throw _privateConstructorUsedError;
+  int? get idKelurahan => throw _privateConstructorUsedError;
   String? get ktp => throw _privateConstructorUsedError;
   String? get nama => throw _privateConstructorUsedError;
   String? get alamat => throw _privateConstructorUsedError;
-  String? get desa => throw _privateConstructorUsedError;
   DateTime? get tanggalLahir => throw _privateConstructorUsedError;
   JenisKelamin? get jenisKelamin => throw _privateConstructorUsedError;
   int? get lastUpdatedBy => throw _privateConstructorUsedError;
@@ -49,10 +49,10 @@ abstract class $PendudukCopyWith<$Res> {
   $Res call(
       {int? idPenduduk,
       int? idKelompok,
+      int? idKelurahan,
       String? ktp,
       String? nama,
       String? alamat,
-      String? desa,
       DateTime? tanggalLahir,
       JenisKelamin? jenisKelamin,
       int? lastUpdatedBy,
@@ -76,10 +76,10 @@ class _$PendudukCopyWithImpl<$Res, $Val extends Penduduk>
   $Res call({
     Object? idPenduduk = freezed,
     Object? idKelompok = freezed,
+    Object? idKelurahan = freezed,
     Object? ktp = freezed,
     Object? nama = freezed,
     Object? alamat = freezed,
-    Object? desa = freezed,
     Object? tanggalLahir = freezed,
     Object? jenisKelamin = freezed,
     Object? lastUpdatedBy = freezed,
@@ -94,6 +94,10 @@ class _$PendudukCopyWithImpl<$Res, $Val extends Penduduk>
           ? _value.idKelompok
           : idKelompok // ignore: cast_nullable_to_non_nullable
               as int?,
+      idKelurahan: freezed == idKelurahan
+          ? _value.idKelurahan
+          : idKelurahan // ignore: cast_nullable_to_non_nullable
+              as int?,
       ktp: freezed == ktp
           ? _value.ktp
           : ktp // ignore: cast_nullable_to_non_nullable
@@ -105,10 +109,6 @@ class _$PendudukCopyWithImpl<$Res, $Val extends Penduduk>
       alamat: freezed == alamat
           ? _value.alamat
           : alamat // ignore: cast_nullable_to_non_nullable
-              as String?,
-      desa: freezed == desa
-          ? _value.desa
-          : desa // ignore: cast_nullable_to_non_nullable
               as String?,
       tanggalLahir: freezed == tanggalLahir
           ? _value.tanggalLahir
@@ -141,10 +141,10 @@ abstract class _$$PendudukImplCopyWith<$Res>
   $Res call(
       {int? idPenduduk,
       int? idKelompok,
+      int? idKelurahan,
       String? ktp,
       String? nama,
       String? alamat,
-      String? desa,
       DateTime? tanggalLahir,
       JenisKelamin? jenisKelamin,
       int? lastUpdatedBy,
@@ -166,10 +166,10 @@ class __$$PendudukImplCopyWithImpl<$Res>
   $Res call({
     Object? idPenduduk = freezed,
     Object? idKelompok = freezed,
+    Object? idKelurahan = freezed,
     Object? ktp = freezed,
     Object? nama = freezed,
     Object? alamat = freezed,
-    Object? desa = freezed,
     Object? tanggalLahir = freezed,
     Object? jenisKelamin = freezed,
     Object? lastUpdatedBy = freezed,
@@ -184,6 +184,10 @@ class __$$PendudukImplCopyWithImpl<$Res>
           ? _value.idKelompok
           : idKelompok // ignore: cast_nullable_to_non_nullable
               as int?,
+      idKelurahan: freezed == idKelurahan
+          ? _value.idKelurahan
+          : idKelurahan // ignore: cast_nullable_to_non_nullable
+              as int?,
       ktp: freezed == ktp
           ? _value.ktp
           : ktp // ignore: cast_nullable_to_non_nullable
@@ -195,10 +199,6 @@ class __$$PendudukImplCopyWithImpl<$Res>
       alamat: freezed == alamat
           ? _value.alamat
           : alamat // ignore: cast_nullable_to_non_nullable
-              as String?,
-      desa: freezed == desa
-          ? _value.desa
-          : desa // ignore: cast_nullable_to_non_nullable
               as String?,
       tanggalLahir: freezed == tanggalLahir
           ? _value.tanggalLahir
@@ -226,10 +226,10 @@ class _$PendudukImpl implements _Penduduk {
   const _$PendudukImpl(
       {this.idPenduduk,
       this.idKelompok,
+      this.idKelurahan,
       this.ktp,
       this.nama,
       this.alamat,
-      this.desa,
       this.tanggalLahir,
       this.jenisKelamin,
       this.lastUpdatedBy,
@@ -243,13 +243,13 @@ class _$PendudukImpl implements _Penduduk {
   @override
   final int? idKelompok;
   @override
+  final int? idKelurahan;
+  @override
   final String? ktp;
   @override
   final String? nama;
   @override
   final String? alamat;
-  @override
-  final String? desa;
   @override
   final DateTime? tanggalLahir;
   @override
@@ -261,7 +261,7 @@ class _$PendudukImpl implements _Penduduk {
 
   @override
   String toString() {
-    return 'Penduduk(idPenduduk: $idPenduduk, idKelompok: $idKelompok, ktp: $ktp, nama: $nama, alamat: $alamat, desa: $desa, tanggalLahir: $tanggalLahir, jenisKelamin: $jenisKelamin, lastUpdatedBy: $lastUpdatedBy, lastUpdatedDate: $lastUpdatedDate)';
+    return 'Penduduk(idPenduduk: $idPenduduk, idKelompok: $idKelompok, idKelurahan: $idKelurahan, ktp: $ktp, nama: $nama, alamat: $alamat, tanggalLahir: $tanggalLahir, jenisKelamin: $jenisKelamin, lastUpdatedBy: $lastUpdatedBy, lastUpdatedDate: $lastUpdatedDate)';
   }
 
   @override
@@ -273,10 +273,11 @@ class _$PendudukImpl implements _Penduduk {
                 other.idPenduduk == idPenduduk) &&
             (identical(other.idKelompok, idKelompok) ||
                 other.idKelompok == idKelompok) &&
+            (identical(other.idKelurahan, idKelurahan) ||
+                other.idKelurahan == idKelurahan) &&
             (identical(other.ktp, ktp) || other.ktp == ktp) &&
             (identical(other.nama, nama) || other.nama == nama) &&
             (identical(other.alamat, alamat) || other.alamat == alamat) &&
-            (identical(other.desa, desa) || other.desa == desa) &&
             (identical(other.tanggalLahir, tanggalLahir) ||
                 other.tanggalLahir == tanggalLahir) &&
             (identical(other.jenisKelamin, jenisKelamin) ||
@@ -293,10 +294,10 @@ class _$PendudukImpl implements _Penduduk {
       runtimeType,
       idPenduduk,
       idKelompok,
+      idKelurahan,
       ktp,
       nama,
       alamat,
-      desa,
       tanggalLahir,
       jenisKelamin,
       lastUpdatedBy,
@@ -322,10 +323,10 @@ abstract class _Penduduk implements Penduduk {
   const factory _Penduduk(
       {final int? idPenduduk,
       final int? idKelompok,
+      final int? idKelurahan,
       final String? ktp,
       final String? nama,
       final String? alamat,
-      final String? desa,
       final DateTime? tanggalLahir,
       final JenisKelamin? jenisKelamin,
       final int? lastUpdatedBy,
@@ -339,13 +340,13 @@ abstract class _Penduduk implements Penduduk {
   @override
   int? get idKelompok;
   @override
+  int? get idKelurahan;
+  @override
   String? get ktp;
   @override
   String? get nama;
   @override
   String? get alamat;
-  @override
-  String? get desa;
   @override
   DateTime? get tanggalLahir;
   @override
