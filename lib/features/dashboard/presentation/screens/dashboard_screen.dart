@@ -25,7 +25,9 @@ class DashboardScreen extends StatelessWidget {
                 icon: const Icon(Icons.dataset),
               ),
               PopupMenuButton(
-                onSelected: (value) {},
+                onSelected: (value) {
+                  AutoRouter.of(context).push(LoginRoute());
+                },
                 itemBuilder: (context) {
                   return const [PopupMenuItem(child: Text('Logout'))];
                 },
@@ -61,7 +63,7 @@ class DashboardScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           AutoRouter.of(context)
-                              .push(const PendudukListRoute());
+                              .push(const PendudukFilterRoute());
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -87,7 +89,10 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AutoRouter.of(context)
+                              .push(const FilterPengungsiRoute());
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
@@ -112,7 +117,10 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AutoRouter.of(context)
+                              .push(const FilterKebutuhanRoute());
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
@@ -137,7 +145,9 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AutoRouter.of(context).push(const ListDonaturRoute());
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
@@ -162,7 +172,9 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AutoRouter.of(context).push(const ListBantuanRoute());
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
@@ -187,7 +199,10 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AutoRouter.of(context)
+                              .push(const ListDistribusiRoute());
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
@@ -212,7 +227,10 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AutoRouter.of(context)
+                              .push(const ListAnggaranRoute());
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
