@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sigasi/routes/app_route.dart';
+import 'package:sigasi/shared/widgets/desa_dropdown_button.dart';
 import 'package:sigasi/shared/globals.dart';
 
 import '../../../../shared/domain/models/penduduk/penduduk.dart';
@@ -10,9 +12,16 @@ import '../../notifiers/penduduk_list_notifier.dart';
 
 @RoutePage()
 class PendudukFormScreen extends ConsumerStatefulWidget {
-  const PendudukFormScreen({super.key, this.penduduk});
+  const PendudukFormScreen({
+    super.key,
+    this.penduduk,
+    this.idKelompok,
+    this.idKelurahan,
+  });
 
   final Penduduk? penduduk;
+  final int? idKelompok;
+  final int? idKelurahan;
 
   @override
   ConsumerState<PendudukFormScreen> createState() => _PendudukFormScreenState();
@@ -147,18 +156,10 @@ class _PendudukFormScreenState extends ConsumerState<PendudukFormScreen> {
                       state.value = state.value.copyWith(alamat: value);
                     },
                   ),
-                  TextFormField(
-                    initialValue: state.value.desa,
+                  DesaDropdownButton(
+                    value: state.value.idKelurahan,
                     onChanged: (value) {
-                      state.value = state.value.copyWith(nama: value);
-                    },
-                    decoration: const InputDecoration(labelText: 'Desa'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Nama tidak boleh kosong';
-                      }
-
-                      return null;
+                      state.value = state.value.copyWith(idKelurahan: value);
                     },
                   ),
                   DropdownButtonFormField<int>(
@@ -200,12 +201,16 @@ class _PendudukFormScreenState extends ConsumerState<PendudukFormScreen> {
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () async {
+                      final router = AutoRouter.of(context);
                       if (formKey.currentState!.validate()) {
                         await ref
-                            .read(pendudukListNotifierProvider.notifier)
+                            .read(pendudukListNotifierProvider(
+                              idKelompok: widget.idKelompok,
+                              idKelurahan: widget.idKelurahan,
+                            ).notifier)
                             .save(state.value);
 
-                        if (context.mounted) AutoRouter.of(context).maybePop();
+                        router.popUntilRouteWithName(PendudukFilterRoute.name);
                       }
                     },
                     child: const Text('Simpan'),

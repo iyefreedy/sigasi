@@ -8,9 +8,15 @@ part 'penduduk_list_notifier.g.dart';
 @riverpod
 class PendudukListNotifier extends _$PendudukListNotifier {
   @override
-  Future<List<Penduduk>> build() async {
+  Future<List<Penduduk>> build({
+    int? idKelompok,
+    int? idKelurahan,
+  }) async {
     final dataService = ref.read(dataServiceProvider);
-    final listPenduduk = await dataService.allPenduduk();
+    final listPenduduk = await dataService.allPenduduk(
+      idKelurahan: idKelurahan,
+      idKelompok: idKelompok,
+    );
 
     return listPenduduk;
   }
@@ -24,7 +30,11 @@ class PendudukListNotifier extends _$PendudukListNotifier {
       await dataService.updatePenduduk(penduduk);
     }
 
-    final newListPenduduk = await dataService.allPenduduk();
+    final newListPenduduk = await dataService.allPenduduk(
+      idKelurahan: idKelurahan,
+      idKelompok: idKelompok,
+    );
+
     state = AsyncData(newListPenduduk);
   }
 
@@ -35,7 +45,10 @@ class PendudukListNotifier extends _$PendudukListNotifier {
       await dataService.deletePenduduk(penduduk);
     }
 
-    final newListPenduduk = await dataService.allPenduduk();
+    final newListPenduduk = await dataService.allPenduduk(
+      idKelurahan: idKelurahan,
+      idKelompok: idKelompok,
+    );
     state = AsyncData(newListPenduduk);
   }
 }
