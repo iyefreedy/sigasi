@@ -1,10 +1,16 @@
 import 'dart:developer' show log;
 
 import 'package:path/path.dart';
+import 'package:sigasi/shared/domain/models/bantuan/bantuan.dart';
 import 'package:sigasi/shared/domain/models/barang/barang.dart';
+import 'package:sigasi/shared/domain/models/desa/desa.dart';
+import 'package:sigasi/shared/domain/models/detail_bantuan/detail_bantuan.dart';
+import 'package:sigasi/shared/domain/models/donatur/donatur.dart';
 import 'package:sigasi/shared/domain/models/jenis_barang/jenis_barang.dart';
+import 'package:sigasi/shared/domain/models/kebutuhan/kebutuhan.dart';
 import 'package:sigasi/shared/domain/models/kelompok/kelompok.dart';
 import 'package:sigasi/shared/domain/models/penduduk/penduduk.dart';
+import 'package:sigasi/shared/domain/models/pengungsi/pengungsi.dart';
 import 'package:sigasi/shared/domain/models/posko/posko.dart';
 
 import 'package:sqflite/sqflite.dart';
@@ -30,10 +36,22 @@ class LocalDataService implements DataService {
   }
 
   @override
-  Future<List<Penduduk>> allPenduduk() async {
+  Future<List<Penduduk>> allPenduduk({
+    int? idKelompok,
+    int? idKelurahan,
+  }) async {
     try {
       final db = await _getDatabase();
-      final records = await db.query('TBL_PENDUDUK');
+      if (idKelompok == null && idKelurahan == null) {
+        final records = await db.query('TBL_PENDUDUK');
+        return records.map(Penduduk.fromJson).toList();
+      }
+
+      final records = await db.query(
+        'TBL_PENDUDUK',
+        where: 'idKelompok=? AND idKelurahan=?',
+        whereArgs: [idKelompok, idKelurahan],
+      );
       return records.map(Penduduk.fromJson).toList();
     } on DatabaseException catch (e) {
       log('$e');
@@ -75,6 +93,7 @@ class LocalDataService implements DataService {
   Future<Penduduk> updatePenduduk(Penduduk penduduk) async {
     try {
       final db = await _getDatabase();
+
       await db.update(
         'TBL_PENDUDUK',
         penduduk.toJson()..remove('IdPenduduk'),
@@ -279,15 +298,35 @@ class LocalDataService implements DataService {
   }
 
   @override
-  Future<void> deleteBarang(Barang barang) {
-    // TODO: implement deleteBarang
-    throw UnimplementedError();
+  Future<void> deleteBarang(Barang barang) async {
+    try {
+      final db = await _getDatabase();
+      await db.delete(
+        'REF_BARANG',
+        where: "IdBarang=?",
+        whereArgs: [barang.idBarang],
+      );
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
   }
 
   @override
-  Future<Barang> findBarangById(int id) {
-    // TODO: implement findBarangById
-    throw UnimplementedError();
+  Future<Barang> findBarangById(int id) async {
+    try {
+      final db = await _getDatabase();
+      final records = await db.query(
+        'REF_BARANG',
+        where: "IdBarang=?",
+        whereArgs: [id],
+      );
+
+      return Barang.fromJson(records.first);
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
   }
 
   @override
@@ -335,15 +374,34 @@ class LocalDataService implements DataService {
   }
 
   @override
-  Future<void> deletePosko(Posko posko) {
-    // TODO: implement deletePosko
-    throw UnimplementedError();
+  Future<void> deletePosko(Posko posko) async {
+    try {
+      final db = await _getDatabase();
+      await db.delete(
+        'TBL_POSKO',
+        where: "IdPosko=?",
+        whereArgs: [posko.idPosko],
+      );
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
   }
 
   @override
-  Future<Posko> findPoskoById(int id) {
-    // TODO: implement findPoskoById
-    throw UnimplementedError();
+  Future<Posko> findPoskoById(int id) async {
+    try {
+      final db = await _getDatabase();
+      final posko = await db.query(
+        'TBL_POSKO',
+        where: "IdPosko=?",
+        whereArgs: [id],
+      );
+      return Posko.fromJson(posko.first);
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
   }
 
   @override
@@ -385,14 +443,409 @@ class LocalDataService implements DataService {
           await trans.execute(createKebutuhanTableQuery);
           await trans.execute(createBantuanTableQuery);
           await trans.execute(createBantuanDetailTableQuery);
+          await trans.execute(createKecamatanTableQuery);
+          await trans.execute(createKelurahanTableQuery);
 
           await trans.execute(seedJenisBarangQuery);
           await trans.execute(seedKelompokQuery);
+          await trans.execute(seedKecamatanQuery);
+          await trans.execute(seedKelurahanQuery);
         });
       },
     );
 
     return database;
+  }
+
+  static Future<Database> getDatabase() async {
+    final databasePath = await getDatabasesPath();
+    final path = join(databasePath, 'sigasi.db');
+
+    final database = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.transaction((trans) async {
+          await trans.execute(createJenisBarangTableQuery);
+          await trans.execute(createBarangTableTable);
+          await trans.execute(createKelompokTableQuery);
+          await trans.execute(createPoskoTableQuery);
+          await trans.execute(createPenggunaTableQuery);
+          await trans.execute(createDonaturTableQuery);
+          await trans.execute(createPendudukTableQuery);
+          await trans.execute(createPengungsiTableQuery);
+          await trans.execute(createKebutuhanTableQuery);
+          await trans.execute(createBantuanTableQuery);
+          await trans.execute(createBantuanDetailTableQuery);
+          await trans.execute(createKecamatanTableQuery);
+          await trans.execute(createKelurahanTableQuery);
+
+          await trans.execute(seedJenisBarangQuery);
+          await trans.execute(seedKelompokQuery);
+          await trans.execute(seedKecamatanQuery);
+          await trans.execute(seedKelurahanQuery);
+        });
+      },
+    );
+
+    return database;
+  }
+
+  @override
+  Future<List<Desa>> allDesa() async {
+    try {
+      final db = await _getDatabase();
+      final records = await db.query('TBL_KELURAHAN');
+      return records.map(Desa.fromJson).toList();
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Pengungsi>> allPengungsi({int? idPosko, int? idKelompok}) async {
+    log("$idPosko");
+    log("$idKelompok");
+    try {
+      final db = await _getDatabase();
+      final records = await db.query(
+        "TBL_PENGUNGSI",
+        where: "IdPosko=?",
+        whereArgs: [idPosko],
+      );
+
+      final listPengungsi = records.map(Pengungsi.fromJson).toList();
+
+      for (int i = 0; i < listPengungsi.length; i++) {
+        final penduduk = await findPendudukById(listPengungsi[i].idPenduduk!);
+        final posko = await findPoskoById(listPengungsi[i].idPosko!);
+
+        listPengungsi[i] =
+            listPengungsi[i].copyWith(penduduk: penduduk, posko: posko);
+      }
+
+      return listPengungsi.where((pengungsi) {
+        return pengungsi.penduduk?.idKelompok == idKelompok;
+      }).toList();
+    } catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Pengungsi> addPengungsi(Pengungsi pengungsi) async {
+    final updatedPengungsi = pengungsi.copyWith(
+      lastUpdatedBy: 0,
+      lastUpdatedDate: DateTime.now(),
+    );
+    try {
+      final db = await _getDatabase();
+      final newIdPengungsi = await db.insert(
+        'TBL_PENGUNGSI',
+        updatedPengungsi.toJson()..remove('IdPengungsi'),
+      );
+      return updatedPengungsi.copyWith(idPengungsi: newIdPengungsi);
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Pengungsi> updatePengungsi(Pengungsi pengungsi) async {
+    final updatedPengungsi = pengungsi.copyWith(
+      lastUpdatedBy: 0,
+      lastUpdatedDate: DateTime.now(),
+    );
+    try {
+      final db = await _getDatabase();
+      await db.update(
+        'TBL_PENGUNGSI',
+        updatedPengungsi.toJson()
+          ..remove('IdPengungsi')
+          ..remove('Penduduk')
+          ..remove('Posko'),
+        where: "IdPengungsi=?",
+        whereArgs: [pengungsi.idPengungsi],
+      );
+      return updatedPengungsi;
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Kebutuhan> addKebutuhan(Kebutuhan kebutuhan) async {
+    try {
+      final db = await _getDatabase();
+      final newIdKebutuhan = await db.insert(
+        'TBL_KEBUTUHAN',
+        kebutuhan.toJson()
+          ..remove('IdKebutuhan')
+          ..remove('LastUpdatedDate')
+          ..update('LastUpdatedBy', (value) => 0),
+      );
+
+      return kebutuhan.copyWith(idKebutuhan: newIdKebutuhan);
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Kebutuhan>> allKebutuhan({int? idPosko}) async {
+    try {
+      final db = await _getDatabase();
+      final records = await db.query(
+        'TBL_KEBUTUHAN',
+        where: 'IdPosko=?',
+        whereArgs: [idPosko],
+      );
+
+      final listKebutuhan = records.map(Kebutuhan.fromJson).toList();
+
+      for (int i = 0; i < records.length; i++) {
+        final barang = await findBarangById(listKebutuhan[i].idBarang!);
+        final posko = await findPoskoById(listKebutuhan[i].idPosko!);
+
+        listKebutuhan[i] = listKebutuhan[i].copyWith(barang: barang);
+        listKebutuhan[i] = listKebutuhan[i].copyWith(posko: posko);
+      }
+      return listKebutuhan;
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteKebutuhan(Kebutuhan kebutuhan) async {
+    try {
+      final db = await _getDatabase();
+      await db.delete(
+        'TBL_KEBUTUHAN',
+        where: 'IdKebutuhan=?',
+        whereArgs: [kebutuhan.idKebutuhan],
+      );
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deletePengungsi(Pengungsi pengungsi) async {
+    try {
+      final db = await _getDatabase();
+      await db.delete(
+        'TBL_PENGUNGSI',
+        where: 'IdPengungsi=?',
+        whereArgs: [pengungsi.idPengungsi],
+      );
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Kebutuhan> findKebutuhanById(int id) async {
+    try {
+      final db = await _getDatabase();
+      final records = await db.query(
+        'TBL_KEBUTUHAN',
+        where: 'IdKebutuhan=?',
+        whereArgs: [id],
+      );
+
+      return Kebutuhan.fromJson(records.first);
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Pengungsi> findPengungsiById(int id) async {
+    try {
+      final db = await _getDatabase();
+      final records = await db.query(
+        'TBL_PENGUNGSI',
+        where: 'IdPengungsi=?',
+        whereArgs: [id],
+      );
+
+      return Pengungsi.fromJson(records.first);
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Kebutuhan> updateKebutuhan(Kebutuhan kebutuhan) async {
+    try {
+      final db = await _getDatabase();
+      await db.update(
+        'TBL_KEBUTUHAN',
+        kebutuhan.toJson()
+          ..remove('IdKebutuhan')
+          ..update('LastUpdatedBy', (value) => 0),
+        where: 'IdKebutuhan=?',
+        whereArgs: [kebutuhan.idKebutuhan],
+      );
+
+      return kebutuhan;
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Donatur> addDonatur(Donatur donatur) async {
+    try {
+      final db = await _getDatabase();
+      final newIdDonatur = await db.insert(
+        'TBL_DONATUR',
+        donatur.toJson()
+          ..remove('IdDonatur')
+          ..remove('LastUpdatedDate')
+          ..update('LastUpdatedBy', (value) => 0),
+      );
+
+      return donatur.copyWith(idDonatur: newIdDonatur);
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Donatur>> allDonatur() async {
+    try {
+      final db = await _getDatabase();
+      final records = await db.query('TBL_DONATUR');
+
+      return records.map(Donatur.fromJson).toList();
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteDonatur(Donatur donatur) async {
+    try {
+      final db = await _getDatabase();
+      await db.delete(
+        'TBL_DONATUR',
+        where: 'IdDonatur=?',
+        whereArgs: [donatur.idDonatur],
+      );
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Donatur> findDonaturById(int id) async {
+    try {
+      final db = await _getDatabase();
+      final records = await db.query(
+        'TBL_DONATUR',
+        where: 'IdDonatur=?',
+        whereArgs: [id],
+      );
+
+      return Donatur.fromJson(records.first);
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Donatur> updateDonatur(Donatur donatur) async {
+    try {
+      final db = await _getDatabase();
+      await db.update(
+        'TBL_DONATUR',
+        donatur.toJson()..remove('IdDonatur'),
+        where: 'IdDonatur=?',
+        whereArgs: [donatur.idDonatur],
+      );
+
+      return donatur;
+    } on DatabaseException catch (e) {
+      log('$e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Bantuan> addBantuan(Bantuan bantuan) {
+    // TODO: implement addBantuan
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DetailBantuan> addBantuanDetail(DetailBantuan detail) {
+    // TODO: implement addBantuanDetail
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Bantuan>> allBantuan() {
+    // TODO: implement allBantuan
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<DetailBantuan>> allBantuanDetail({int? idBantuan}) {
+    // TODO: implement allBantuanDetail
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteBantuan(Bantuan bantuan) {
+    // TODO: implement deleteBantuan
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteBantuanDetail(DetailBantuan detail) {
+    // TODO: implement deleteBantuanDetail
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Bantuan> findBantuanById(int id) {
+    // TODO: implement findBantuanById
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DetailBantuan> findBantuanDetail(int id) {
+    // TODO: implement findBantuanDetail
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Bantuan> updateBantuan(Bantuan bantuan) {
+    // TODO: implement updateBantuan
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DetailBantuan> updateBantuanDetail(DetailBantuan detail) {
+    // TODO: implement updateBantuanDetail
+    throw UnimplementedError();
   }
 }
 
@@ -465,7 +918,7 @@ CREATE TABLE TBL_DONATUR (
 const String createPendudukTableQuery = '''
 CREATE TABLE TBL_PENDUDUK (
     IdPenduduk INTEGER PRIMARY KEY AUTOINCREMENT,
-    KTP TEXT UNIQUE,
+    Ktp TEXT UNIQUE,
     Nama TEXT NOT NULL,
     JenisKelamin TEXT NOT NULL,
     Alamat TEXT,
@@ -544,7 +997,7 @@ CREATE TABLE TBL_KELURAHAN (
   IdKelurahan INTEGER PRIMARY KEY,
   IdKecamatan INTEGER NOT NULL,
   Nama TEXT,
-  FOREIGN KEY (IdKecamatan) REFERENCES TBL_KECAMATAN (IdKecamatan),
+  FOREIGN KEY (IdKecamatan) REFERENCES TBL_KECAMATAN (IdKecamatan)
 );
 ''';
 
