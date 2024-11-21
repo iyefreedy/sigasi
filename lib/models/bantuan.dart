@@ -3,7 +3,7 @@ import 'package:sigasi/models/detail_bantuan.dart';
 
 part 'bantuan.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Bantuan {
   Bantuan({
     this.iDBantuan,

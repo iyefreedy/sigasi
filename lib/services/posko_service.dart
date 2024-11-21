@@ -17,6 +17,7 @@ class PoskoService {
   Future<List<Posko>> _fetchPoskoFromLocal() async {
     final db = await dbHelper.database;
     final records = await db.query('TBL_POSKO');
+    print(records);
 
     return records.map(Posko.fromJson).toList();
   }

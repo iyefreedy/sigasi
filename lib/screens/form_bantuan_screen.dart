@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sigasi/models/detail_bantuan.dart';
+import 'package:sigasi/providers/list_bantuan_provider.dart';
+import 'package:sigasi/providers/list_barang_provider.dart';
 import 'package:sigasi/providers/list_donatur_provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/bantuan.dart';
 
@@ -25,7 +28,14 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
   List<DetailBantuan> _listDetailBantuan = [];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final listBarang = ref.watch(listBarangProvider);
     final listDonatur = ref.watch(listDonaturProvider);
     return Scaffold(
       appBar: AppBar(
@@ -88,7 +98,7 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
                   }
                 },
                 validator: (_) {
-                  if (_tanggalBantuan != null) {
+                  if (_tanggalBantuan == null) {
                     return 'Tanggal bantuan harus diisi';
                   }
                   return null;
@@ -110,7 +120,7 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
                       setState(() {
                         _listDetailBantuan = [
                           ..._listDetailBantuan,
-                          const DetailBantuan(),
+                          DetailBantuan(iDBantuanDTL: const Uuid().v4()),
                         ];
                       });
                     },
@@ -123,85 +133,104 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
                 (detail) {
                   final index = _listDetailBantuan.indexOf(detail);
                   print(index);
-                  return Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: DropdownButtonFormField<String?>(
-                          value: detail.iDBarang,
-                          items: [],
-                          onChanged: (value) {
-                            // Update idBarang di dalam DetailBantuan yang sesuai
-                            final updatedDetail =
-                                detail.copyWith(iDBarang: value);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: DropdownButtonFormField<String?>(
+                            isExpanded: true,
+                            value: detail.iDBarang,
+                            decoration: const InputDecoration(
+                              labelText: 'Barang',
+                            ),
+                            items: listBarang.maybeWhen(
+                              orElse: () => [],
+                              data: (data) => data
+                                  .map(
+                                    (barang) => DropdownMenuItem(
+                                      value: barang.iDBarang,
+                                      child: Text(barang.namaBarang ?? '-'),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                            onChanged: (value) {
+                              // Update idBarang di dalam DetailBantuan yang sesuai
+                              final updatedDetail =
+                                  detail.copyWith(iDBarang: value);
 
-                            // Buat list baru dengan detail yang diperbarui
-                            final updatedList = List<DetailBantuan>.from(
-                              _listDetailBantuan,
-                            );
-                            updatedList[index] = updatedDetail;
+                              // Buat list baru dengan detail yang diperbarui
+                              final updatedList = List<DetailBantuan>.from(
+                                _listDetailBantuan,
+                              );
+                              updatedList[index] = updatedDetail;
 
-                            // Perbarui state dengan list baru
-                            setState(() {
-                              _listDetailBantuan = updatedList;
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Pilih barang';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Flexible(
-                        child: TextFormField(
-                          initialValue: detail.jumlah?.toString(),
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Jumlah',
+                              // Perbarui state dengan list baru
+                              setState(() {
+                                _listDetailBantuan = updatedList;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Pilih barang';
+                              }
+                              return null;
+                            },
                           ),
-                          onChanged: (value) {
-                            // Update jumlah di dalam DetailBantuan yang sesuai
-                            final updatedDetail = detail.copyWith(
-                                jumlah: int.tryParse(value) ?? 0);
+                        ),
+                        const SizedBox(width: 10),
+                        Flexible(
+                          child: TextFormField(
+                            initialValue: detail.jumlah?.toString(),
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Jumlah',
+                            ),
+                            onChanged: (value) {
+                              // Update jumlah di dalam DetailBantuan yang sesuai
+                              final updatedDetail = detail.copyWith(
+                                jumlah: int.tryParse(value) ?? 0,
+                              );
 
-                            // Buat list baru dengan detail yang diperbarui
-                            final updatedList = List<DetailBantuan>.from(
-                              _listDetailBantuan,
-                            );
-                            updatedList[index] = updatedDetail;
+                              // Buat list baru dengan detail yang diperbarui
+                              final updatedList = List<DetailBantuan>.from(
+                                _listDetailBantuan,
+                              );
+                              updatedList[index] = updatedDetail;
 
-                            // Perbarui state dengan list baru
+                              // Perbarui state dengan list baru
+                              setState(() {
+                                _listDetailBantuan = updatedList;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Masukkan jumlah';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        // Misalkan tambahkan field lain seperti TextField untuk barang
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            // Menghapus detail barang
+                            final t = _listDetailBantuan
+                                .where((item) => item != detail)
+                                .toList();
+
                             setState(() {
-                              _listDetailBantuan = updatedList;
+                              _listDetailBantuan = t;
                             });
                           },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Masukkan jumlah';
-                            }
-                            return null;
-                          },
                         ),
-                      ),
-                      // Misalkan tambahkan field lain seperti TextField untuk barang
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          // Menghapus detail barang
-                          setState(() {
-                            _listDetailBantuan = [
-                              ..._listDetailBantuan
-                                  .where((item) => item != detail)
-                            ];
-                          });
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 },
               ),
@@ -211,11 +240,16 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
                   return ElevatedButton(
                     onPressed: () async {
                       final router = Navigator.of(context);
-                      final bantuan = widget.bantuan?.copyWith(
+                      final bantuan = (widget.bantuan ?? Bantuan()).copyWith(
+                        iDDonatur: _idDonatur,
+                        tanggalBantuan: _tanggalBantuan,
                         detailBantuan: _listDetailBantuan,
                       );
+                      print(bantuan);
                       if (_formKey.currentState!.validate()) {
-                        router.maybePop();
+                        await ref
+                            .read(listBantuanProvider.notifier)
+                            .save(bantuan);
                       }
                     },
                     child: const Text('Simpan'),

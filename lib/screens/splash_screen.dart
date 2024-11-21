@@ -27,8 +27,10 @@ class SplashScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             ),
           ),
-          error: (error, stackTrace) => Center(
-            child: Text('Error: $error'),
+          error: (error, stackTrace) => Scaffold(
+            body: Center(
+              child: Text('Error: $error'),
+            ),
           ),
         );
       },

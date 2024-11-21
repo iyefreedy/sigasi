@@ -43,6 +43,7 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
           padding: const EdgeInsets.all(12),
           children: [
             DropdownButtonFormField<String?>(
+              isExpanded: true,
               decoration: const InputDecoration(
                 labelText: 'Identitas Pengungsi',
               ),

@@ -26,5 +26,5 @@ Map<String, dynamic> _$BantuanToJson(Bantuan instance) => <String, dynamic>{
       'IDDonatur': instance.iDDonatur,
       'LastUpdateDate': instance.lastUpdateDate,
       'LastUpdateBy': instance.lastUpdateBy,
-      'DetailBantuan': instance.detailBantuan,
+      'DetailBantuan': instance.detailBantuan.map((e) => e.toJson()).toList(),
     };

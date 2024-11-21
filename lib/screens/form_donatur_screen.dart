@@ -20,6 +20,8 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
   late final TextEditingController _nomorKontakController;
   late final TextEditingController _alamatController;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +57,13 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
               decoration: const InputDecoration(
                 labelText: 'Nama Perusahaan',
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nama perusahaan tidak boleh kosong';
+                }
+
+                return null;
+              },
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -63,6 +72,13 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
                 labelText: 'Nomor Kontak',
               ),
               keyboardType: TextInputType.phone,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nomor kontak tidak boleh kosong';
+                }
+
+                return null;
+              },
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -70,23 +86,46 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
               decoration: const InputDecoration(
                 labelText: 'Alamat',
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nama perusahaan tidak boleh kosong';
+                }
+
+                return null;
+              },
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () async {
-                final donatur = Donatur(
-                  alamat: _alamatController.text,
-                  iDDonatur: widget.donatur?.iDDonatur,
-                  namaPerusahaan: _namaPerusahaanController.text,
-                  nomorKontak: _nomorKontakController.text,
-                );
-                await ref.read(listDonaturProvider.notifier).save(donatur);
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        final donatur = Donatur(
+                          alamat: _alamatController.text,
+                          iDDonatur: widget.donatur?.iDDonatur,
+                          namaPerusahaan: _namaPerusahaanController.text,
+                          nomorKontak: _nomorKontakController.text,
+                        );
+                        await ref
+                            .read(listDonaturProvider.notifier)
+                            .save(donatur);
 
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text('Simpan'),
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    },
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Text('Simpan'),
             ),
           ],
         ),

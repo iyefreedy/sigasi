@@ -57,6 +57,7 @@ class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
+              isExpanded: true,
               value: _idKelompok,
               decoration: const InputDecoration(
                 labelText: 'Kelompok penduduk',

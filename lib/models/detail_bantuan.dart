@@ -19,6 +19,8 @@ class DetailBantuan {
   factory DetailBantuan.fromJson(Map<String, dynamic> json) =>
       _$DetailBantuanFromJson(json);
 
+  Map<String, dynamic> toJson() => _$DetailBantuanToJson(this);
+
   DetailBantuan copyWith({
     String? iDBantuanDTL,
     String? iDBantuan,
@@ -44,4 +46,9 @@ class DetailBantuan {
   @override
   int get hashCode =>
       Object.hash(runtimeType, iDBantuanDTL, iDBantuan, iDBarang, jumlah);
+
+  @override
+  String toString() {
+    return 'DetailBantuan(iDBantuanDTL: $iDBantuanDTL, iDBantuan: $iDBantuan, iDBarang: $iDBarang, jumlah: $jumlah)';
+  }
 }
