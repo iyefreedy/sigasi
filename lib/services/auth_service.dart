@@ -46,6 +46,7 @@ class AuthService {
       );
 
       if (response.statusCode != 200) {
+        print(response.body);
         throw Exception('Username atau kata sandi salah.');
       }
 

@@ -32,6 +32,14 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _namaPerusahaanController.dispose();
+    _nomorKontakController.dispose();
+    _alamatController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -48,12 +56,15 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
                 labelText: 'Nama Perusahaan',
               ),
             ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _nomorKontakController,
               decoration: const InputDecoration(
                 labelText: 'Nomor Kontak',
               ),
+              keyboardType: TextInputType.phone,
             ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _alamatController,
               decoration: const InputDecoration(

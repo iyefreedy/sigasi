@@ -11,7 +11,7 @@ class ListPendudukScreen extends ConsumerStatefulWidget {
   });
 
   final String desa;
-  final int idKelompok;
+  final String idKelompok;
 
   @override
   ConsumerState<ListPendudukScreen> createState() => _ListPendudukScreenState();

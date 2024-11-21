@@ -35,7 +35,7 @@ class DatabaseHelper {
             Alamat TEXT,
             IDKelompok TEXT,
             LastUpdateDate TEXT,
-            LastUpdateBy INTEGER
+            LastUpdateBy TEXT
          )
       ''');
 
@@ -64,7 +64,7 @@ class DatabaseHelper {
           Alamat TEXT,
           NomorKontak TEXT,
           LastUpdateDate TEXT,
-          LastUpdateBy INTEGER
+          LastUpdateBy TEXT
         )
     ''');
 
@@ -73,8 +73,22 @@ class DatabaseHelper {
         IDPengguna TEXT PRIMARY KEY,
         Nama TEXT,
         NomorKontak TEXT,
-        Satuan TEXT,
-        IDPosko TEXT
+        Username TEXT,
+        KataSandi TEXT,
+        IDPosko TEXT,
+        created_at TEXT,
+        updated_at TEXT
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE TBL_PENGUNGSI (
+        IDPengungsi TEXT PRIMARY KEY,
+        IDPosko TEXT,
+        IDPenduduk TEXT,
+        KondisiKhusus TEXT,
+        LastUpdateDate TEXT,
+        LastUpdateBy TEXT
       )
     ''');
 

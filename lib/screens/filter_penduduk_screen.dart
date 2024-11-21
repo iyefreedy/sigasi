@@ -3,6 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/providers/list_kelompok_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 
+const listDesa = [
+  'Cibodas',
+  'Ciherang',
+  'Cipendawa',
+  'Ciputri',
+  'Gadog',
+  'Sukatani',
+  'Sukanagih'
+];
+
 class FilterPendudukScreen extends ConsumerStatefulWidget {
   const FilterPendudukScreen({super.key});
 
@@ -12,7 +22,9 @@ class FilterPendudukScreen extends ConsumerStatefulWidget {
 }
 
 class _FilterPendudukScreenState extends ConsumerState<FilterPendudukScreen> {
-  late final _desaController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  String? _desa;
   String? _kelompok;
 
   @override
@@ -29,21 +41,50 @@ class _FilterPendudukScreenState extends ConsumerState<FilterPendudukScreen> {
         },
       ),
       body: Form(
+        key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(10),
           children: [
-            TextFormField(
-              controller: _desaController,
+            DropdownButtonFormField(
+              value: _desa,
               decoration: const InputDecoration(
                 labelText: 'Desa',
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Pilih desa';
+                }
+
+                return null;
+              },
+              items: listDesa
+                  .map(
+                    (desa) => DropdownMenuItem(
+                      value: desa,
+                      child: Text(desa),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  _desa = value;
+                });
+              },
             ),
+            const SizedBox(height: 12),
             DropdownButtonFormField<String?>(
               isExpanded: true,
               decoration: const InputDecoration(
                 labelText: 'Kelompok',
               ),
               value: _kelompok,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Pilih kelompok';
+                }
+
+                return null;
+              },
               items: listKelompok.maybeWhen(
                 orElse: () => [],
                 data: (data) => data
@@ -59,14 +100,18 @@ class _FilterPendudukScreenState extends ConsumerState<FilterPendudukScreen> {
                 });
               },
             ),
-            ElevatedButton(
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
               onPressed: () {
-                Navigator.of(context).pushNamed(
-                  AppRouter.listPendudukRoute,
-                  arguments: [_kelompok, _desaController.text],
-                );
+                if (_formKey.currentState!.validate()) {
+                  Navigator.of(context).pushNamed(
+                    AppRouter.listPendudukRoute,
+                    arguments: [_kelompok, _desa],
+                  );
+                }
               },
-              child: const Text('Cari penduduk...'),
+              label: const Text('Cari penduduk...'),
+              icon: const Icon(Icons.search),
             )
           ],
         ),

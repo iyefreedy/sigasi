@@ -10,7 +10,6 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       iDPengguna: json['IDPengguna'] as String?,
       nama: json['Nama'] as String?,
       nomorKontak: json['NomorKontak'] as String?,
-      satuan: json['Satuan'] as String?,
       iDPosko: json['IDPosko'] as String?,
       roles: (json['roles'] as List<dynamic>?)
           ?.map((e) => Role.fromJson(e as Map<String, dynamic>))
@@ -21,7 +20,6 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'IDPengguna': instance.iDPengguna,
       'Nama': instance.nama,
       'NomorKontak': instance.nomorKontak,
-      'Satuan': instance.satuan,
       'IDPosko': instance.iDPosko,
       'roles': instance.roles,
     };

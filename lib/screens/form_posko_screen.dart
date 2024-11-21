@@ -31,8 +31,17 @@ class _FormPoskoScreenState extends ConsumerState<FormPoskoScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _lokasiController.dispose();
+    _masalahController.dispose();
+    _solusiMasalahController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final listPengguna = ref.watch(listPenggunaProvider);
+    print(listPengguna);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Form Posko'),
@@ -61,24 +70,28 @@ class _FormPoskoScreenState extends ConsumerState<FormPoskoScreen> {
                 labelText: 'Ketua',
               ),
             ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _lokasiController,
               decoration: const InputDecoration(
                 labelText: 'Lokasi',
               ),
             ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _masalahController,
               decoration: const InputDecoration(
                 labelText: 'Masalah',
               ),
             ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _solusiMasalahController,
               decoration: const InputDecoration(
                 labelText: 'Solusi Masalah',
               ),
             ),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () async {
                 final posko = Posko(

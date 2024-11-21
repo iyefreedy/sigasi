@@ -12,7 +12,7 @@ Donatur _$DonaturFromJson(Map<String, dynamic> json) => Donatur(
       nomorKontak: json['NomorKontak'] as String?,
       alamat: json['Alamat'] as String?,
       lastUpdateDate: json['LastUpdateDate'] as String?,
-      lastUpdateBy: (json['LastUpdateBy'] as num?)?.toInt(),
+      lastUpdateBy: json['LastUpdateBy'] as String?,
     );
 
 Map<String, dynamic> _$DonaturToJson(Donatur instance) => <String, dynamic>{

@@ -10,7 +10,6 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider);
     final roles = auth.value?.roles;
-    print(roles?.first.name);
 
     return Scaffold(
       body: CustomScrollView(
@@ -60,62 +59,62 @@ class HomeScreen extends ConsumerWidget {
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               children: [
-                if (roles != null && roles.first.name == 'kecamatan')
-                  MenuItem(
-                    to: AppRouter.filterPendudukRoute,
-                    title: 'Data Penduduk',
-                    backgroundColor: Colors.green.shade100,
-                    foregroundColor: Colors.green.shade700,
-                    icon: Icons.group,
-                  ),
-                if (roles != null && roles.first.name == 'posko')
-                  MenuItem(
-                    to: AppRouter.filterPengungsiRoute,
-                    title: 'Data Pengungsi',
-                    backgroundColor: Colors.amber.shade100,
-                    foregroundColor: Colors.amber.shade700,
-                    icon: Icons.person_pin,
-                  ),
-                if (roles != null && roles.first.name == 'posko utama')
-                  MenuItem(
-                    to: '/filter-kebutuhan',
-                    title: 'Data Kebutuhan',
-                    backgroundColor: Colors.red.shade100,
-                    foregroundColor: Colors.red.shade700,
-                    icon: Icons.request_page,
-                  ),
-                if (roles != null && roles.first.name == 'bansos')
-                  MenuItem(
-                    to: '/list-donatur',
-                    title: 'Data Donatur',
-                    backgroundColor: Colors.tealAccent.shade100,
-                    foregroundColor: Colors.tealAccent.shade700,
-                    icon: Icons.volunteer_activism,
-                  ),
-                if (roles != null && roles.first.name == 'bansos')
-                  MenuItem(
-                    to: '/list-bantuan',
-                    title: 'Data Bantuan',
-                    backgroundColor: Colors.blue.shade100,
-                    foregroundColor: Colors.blue.shade700,
-                    icon: Icons.inventory,
-                  ),
-                if (roles != null && roles.first.name == 'bansos')
-                  MenuItem(
-                    to: '/list-distribusi',
-                    title: 'Data Distribusi',
-                    backgroundColor: Colors.cyan.shade100,
-                    foregroundColor: Colors.cyan.shade700,
-                    icon: Icons.local_shipping,
-                  ),
-                if (roles != null && roles.first.name == 'posko utama')
-                  MenuItem(
-                    to: '/list-posko',
-                    title: 'Data Posko',
-                    backgroundColor: Colors.indigo.shade100,
-                    foregroundColor: Colors.indigo.shade700,
-                    icon: Icons.location_on,
-                  ),
+                // if (roles != null && roles.first.name == 'kecamatan')
+                MenuItem(
+                  to: AppRouter.filterPendudukRoute,
+                  title: 'Data Penduduk',
+                  backgroundColor: Colors.green.shade100,
+                  foregroundColor: Colors.green.shade700,
+                  icon: Icons.group,
+                ),
+                // if (roles != null && roles.first.name == 'posko')
+                MenuItem(
+                  to: AppRouter.filterPengungsiRoute,
+                  title: 'Data Pengungsi',
+                  backgroundColor: Colors.amber.shade100,
+                  foregroundColor: Colors.amber.shade700,
+                  icon: Icons.person_pin,
+                ),
+                // if (roles != null && roles.first.name == 'posko utama')
+                MenuItem(
+                  to: '/filter-kebutuhan',
+                  title: 'Data Kebutuhan',
+                  backgroundColor: Colors.red.shade100,
+                  foregroundColor: Colors.red.shade700,
+                  icon: Icons.request_page,
+                ),
+                // if (roles != null && roles.first.name == 'bansos')
+                MenuItem(
+                  to: '/list-donatur',
+                  title: 'Data Donatur',
+                  backgroundColor: Colors.tealAccent.shade100,
+                  foregroundColor: Colors.tealAccent.shade700,
+                  icon: Icons.volunteer_activism,
+                ),
+                // if (roles != null && roles.first.name == 'bansos')
+                MenuItem(
+                  to: '/list-bantuan',
+                  title: 'Data Bantuan',
+                  backgroundColor: Colors.blue.shade100,
+                  foregroundColor: Colors.blue.shade700,
+                  icon: Icons.inventory,
+                ),
+                // if (roles != null && roles.first.name == 'bansos')
+                MenuItem(
+                  to: '/list-distribusi',
+                  title: 'Data Distribusi',
+                  backgroundColor: Colors.cyan.shade100,
+                  foregroundColor: Colors.cyan.shade700,
+                  icon: Icons.local_shipping,
+                ),
+                // if (roles != null && roles.first.name == 'posko utama')
+                MenuItem(
+                  to: '/list-posko',
+                  title: 'Data Posko',
+                  backgroundColor: Colors.indigo.shade100,
+                  foregroundColor: Colors.indigo.shade700,
+                  icon: Icons.location_on,
+                ),
               ],
             ),
           )

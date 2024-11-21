@@ -5,9 +5,12 @@ import 'package:sigasi/models/posko.dart';
 import 'package:sigasi/screens/create_penduduk_screen.dart';
 import 'package:sigasi/screens/edit_penduduk_screen.dart';
 import 'package:sigasi/screens/filter_pengungsi_screen.dart';
+import 'package:sigasi/screens/form_bantuan_screen.dart';
 import 'package:sigasi/screens/form_donatur_screen.dart';
+import 'package:sigasi/screens/form_pengungsi_screen.dart';
 import 'package:sigasi/screens/form_posko_screen.dart';
 import 'package:sigasi/screens/home_screen.dart';
+import 'package:sigasi/screens/list_bantuan_screen.dart';
 import 'package:sigasi/screens/list_donatur_screen.dart';
 import 'package:sigasi/screens/list_penduduk_screen.dart';
 import 'package:sigasi/screens/list_posko_screen.dart';
@@ -30,6 +33,8 @@ class AppRouter {
   static const formPoskoRoute = '/form-posko';
   static const listDonaturRoute = '/list-donatur';
   static const formDonaturRoute = '/form-donatur';
+  static const listBantuanRoute = '/list-bantuan';
+  static const formBantuanRoute = '/form-bantuan';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final routeName = settings.name;
@@ -60,6 +65,12 @@ class AppRouter {
           settings: RouteSettings(name: routeName),
           builder: (context) => const FilterPengungsiScreen(),
         );
+
+      case formPengungsiRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) => const FormPengungsiScreen(),
+        );
       case formPendudukRoute:
         return MaterialPageRoute(
           settings: RouteSettings(name: routeName),
@@ -78,7 +89,7 @@ class AppRouter {
           builder: (context) {
             final params = settings.arguments as List;
             return ListPendudukScreen(
-              idKelompok: params[0] as int,
+              idKelompok: params[0] as String,
               desa: params[1] as String,
             );
           },
@@ -107,8 +118,23 @@ class AppRouter {
         return MaterialPageRoute(
           settings: RouteSettings(name: routeName),
           builder: (context) {
-            final donatur = settings.arguments as Donatur;
+            final donatur = settings.arguments as Donatur?;
             return FormDonaturScreen(donatur: donatur);
+          },
+        );
+
+      case listBantuanRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) {
+            return const ListBantuanScreen();
+          },
+        );
+
+      case formBantuanRoute:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const FormBantuanScreen();
           },
         );
       default:

@@ -9,7 +9,6 @@ class User {
     this.iDPengguna,
     this.nama,
     this.nomorKontak,
-    this.satuan,
     this.iDPosko,
     this.roles,
   });
@@ -17,7 +16,6 @@ class User {
   final String? iDPengguna;
   final String? nama;
   final String? nomorKontak;
-  final String? satuan;
   final String? iDPosko;
   @JsonKey(name: 'roles')
   final List<Role>? roles;

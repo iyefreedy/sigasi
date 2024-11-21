@@ -18,7 +18,7 @@ class Donatur {
   final String? nomorKontak;
   final String? alamat;
   final String? lastUpdateDate;
-  final int? lastUpdateBy;
+  final String? lastUpdateBy;
 
   factory Donatur.fromJson(Map<String, dynamic> json) =>
       _$DonaturFromJson(json);
@@ -31,7 +31,7 @@ class Donatur {
     String? nomorKontak,
     String? alamat,
     String? lastUpdateDate,
-    int? lastUpdateBy,
+    String? lastUpdateBy,
   }) {
     return Donatur(
       iDDonatur: iDDonatur ?? this.iDDonatur,

@@ -9,7 +9,7 @@ class PendudukService {
   final DatabaseHelper dbHelper = DatabaseHelper.getInstance();
 
   Future<List<Penduduk>> fetchPenduduk({
-    int? idKelompok,
+    String? idKelompok,
     String? desa,
   }) async {
     final db = await dbHelper.database;
@@ -17,7 +17,7 @@ class PendudukService {
     if (idKelompok != null && desa != null) {
       final records = await db.query(
         'TBL_PENDUDUK',
-        where: "Kelompok = ? AND Desa LIKE ?",
+        where: "IDKelompok = ? AND Desa LIKE ?",
         whereArgs: [idKelompok, "%$desa%"],
       );
       return records.map(Penduduk.fromJson).toList();

@@ -1,72 +1,82 @@
 import 'package:flutter/material.dart';
-import 'package:sigasi/services/kelompok_service.dart';
-import 'package:sigasi/services/posko_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sigasi/providers/list_kelompok_provider.dart';
+import 'package:sigasi/providers/list_posko_provider.dart';
+import 'package:sigasi/utils/app_router.dart';
 
-import '../models/kelompok.dart';
-import '../models/posko.dart';
-
-class FilterPengungsiScreen extends StatefulWidget {
+class FilterPengungsiScreen extends ConsumerStatefulWidget {
   const FilterPengungsiScreen({super.key});
 
   @override
-  State<FilterPengungsiScreen> createState() => _FilterPengungsiScreenState();
+  ConsumerState<FilterPengungsiScreen> createState() =>
+      _FilterPengungsiScreenState();
 }
 
-class _FilterPengungsiScreenState extends State<FilterPengungsiScreen> {
-  List<Kelompok> _listKelompok = [];
-  List<Posko> _listPosko = [];
-
-  int? _idPosko;
-  int? _idKelompok;
-
-  final _kelompokService = KelompokService();
-  final _poskoService = PoskoService();
-
-  @override
-  void initState() {
-    super.initState();
-    fetchKelompokAndPosko();
-  }
-
-  void fetchKelompokAndPosko() async {
-    _listKelompok = await _kelompokService.fetchKelompok();
-    _listPosko = await _poskoService.fetchPosko();
-  }
+class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
+  String? _idPosko;
+  String? _idKelompok;
 
   @override
   Widget build(BuildContext context) {
+    final listPosko = ref.watch(listPoskoProvider);
+    final listKelompok = ref.watch(listKelompokProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Filter Pengungsi'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(AppRouter.formPengungsiRoute);
+        },
         child: const Icon(Icons.person_add),
       ),
       body: Form(
         child: ListView(
           padding: const EdgeInsets.all(10),
           children: [
-            DropdownButtonFormField(
+            DropdownButtonFormField<String>(
               value: _idPosko,
-              items: _listPosko
-                  .map((posko) => DropdownMenuItem(
-                        value: posko.iDPosko,
-                        child: Text(posko.lokasi ?? '-'),
-                      ))
-                  .toList(),
-              onChanged: (value) {},
+              decoration: const InputDecoration(
+                labelText: 'Posko',
+              ),
+              items: listPosko.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map((posko) => DropdownMenuItem(
+                          value: posko.iDPosko,
+                          child: Text(posko.lokasi ?? '-'),
+                        ))
+                    .toList(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _idPosko = value;
+                });
+              },
             ),
-            DropdownButtonFormField(
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
               value: _idKelompok,
-              items: _listKelompok
-                  .map((kelompok) => DropdownMenuItem(
-                        value: kelompok.iDKelompok,
-                        child: Text(kelompok.namaKelompok ?? '-'),
-                      ))
-                  .toList(),
-              onChanged: (value) {},
+              decoration: const InputDecoration(
+                labelText: 'Kelompok penduduk',
+              ),
+              items: listKelompok.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map((kelompok) => DropdownMenuItem(
+                          value: kelompok.iDKelompok,
+                          child: Text(kelompok.namaKelompok ?? '-'),
+                        ))
+                    .toList(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _idKelompok = value;
+                });
+              },
             ),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {},
               child: const Text('Cari...'),

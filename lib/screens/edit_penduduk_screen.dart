@@ -7,6 +7,16 @@ import 'package:sigasi/providers/list_kelompok_provider.dart';
 import '../services/penduduk_service.dart';
 import '../utils/app_router.dart';
 
+const listDesa = [
+  'Cibodas',
+  'Ciherang',
+  'Cipendawa',
+  'Ciputri',
+  'Gadog',
+  'Sukatani',
+  'Sukanagih'
+];
+
 class EditPendudukScreen extends ConsumerStatefulWidget {
   const EditPendudukScreen({super.key, required this.penduduk});
 
@@ -20,7 +30,6 @@ class EditPendudukScreen extends ConsumerStatefulWidget {
 class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
   late final TextEditingController _ktpController;
   late final TextEditingController _namaController;
-  late final TextEditingController _desaController;
   late final TextEditingController _tanggalLahirController;
   late final TextEditingController _alamatController;
 
@@ -28,6 +37,7 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
 
   String? _jenisKelamin;
   String? _kelompok;
+  String? _desa;
 
   @override
   void initState() {
@@ -35,12 +45,12 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
 
     _ktpController = TextEditingController(text: widget.penduduk.kTP);
     _namaController = TextEditingController(text: widget.penduduk.nama);
-    _desaController = TextEditingController(text: widget.penduduk.desa);
     _alamatController = TextEditingController(text: widget.penduduk.alamat);
     _tanggalLahirController =
         TextEditingController(text: widget.penduduk.tanggalLahir);
     _jenisKelamin = widget.penduduk.jenisKelamin;
     _kelompok = widget.penduduk.iDKelompok;
+    _desa = widget.penduduk.desa;
 
     _formKey = GlobalKey<FormState>();
   }
@@ -64,6 +74,7 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
                 helperText: 'Opsional',
               ),
             ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _namaController,
               decoration: const InputDecoration(
@@ -77,6 +88,7 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
                 return null;
               },
             ),
+            const SizedBox(height: 12),
             DropdownButtonFormField(
               isExpanded: true,
               decoration: const InputDecoration(
@@ -106,6 +118,7 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
                 });
               },
             ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _tanggalLahirController,
               readOnly: true,
@@ -125,18 +138,42 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
                 }
               },
             ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _alamatController,
               decoration: const InputDecoration(
                 labelText: 'Alamat',
               ),
             ),
-            TextFormField(
-              controller: _desaController,
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String?>(
+              value: _desa,
+              isExpanded: true,
               decoration: const InputDecoration(
                 labelText: 'Desa',
               ),
+              validator: (value) {
+                if (value == null) {
+                  return 'Desa harus diisi.';
+                }
+
+                return null;
+              },
+              items: listDesa
+                  .map(
+                    (desa) => DropdownMenuItem(
+                      value: desa,
+                      child: Text(desa),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  _desa = value;
+                });
+              },
             ),
+            const SizedBox(height: 12),
             DropdownButtonFormField<String?>(
               isExpanded: true,
               decoration: const InputDecoration(
@@ -164,11 +201,12 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
                 });
               },
             ),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () async {
                 final penduduk = widget.penduduk.copyWith(
                   alamat: _alamatController.text,
-                  desa: _desaController.text,
+                  desa: _desa,
                   jenisKelamin: _jenisKelamin,
                   kTP: _ktpController.text,
                   kelompok: _kelompok,
