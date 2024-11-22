@@ -7,11 +7,13 @@ import 'package:sigasi/screens/edit_penduduk_screen.dart';
 import 'package:sigasi/screens/filter_pengungsi_screen.dart';
 import 'package:sigasi/screens/form_bantuan_screen.dart';
 import 'package:sigasi/screens/form_donatur_screen.dart';
+import 'package:sigasi/screens/form_kebutuhan_screen.dart';
 import 'package:sigasi/screens/form_pengungsi_screen.dart';
 import 'package:sigasi/screens/form_posko_screen.dart';
 import 'package:sigasi/screens/home_screen.dart';
 import 'package:sigasi/screens/list_bantuan_screen.dart';
 import 'package:sigasi/screens/list_donatur_screen.dart';
+import 'package:sigasi/screens/list_kebutuhan_screen.dart';
 import 'package:sigasi/screens/list_penduduk_screen.dart';
 import 'package:sigasi/screens/list_pengungsi_screen.dart';
 import 'package:sigasi/screens/list_posko_screen.dart';
@@ -36,6 +38,8 @@ class AppRouter {
   static const formDonaturRoute = '/form-donatur';
   static const listBantuanRoute = '/list-bantuan';
   static const formBantuanRoute = '/form-bantuan';
+  static const listKebutuhanRoute = '/list-kebutuhan';
+  static const formKebutuhanRoute = '/form-kebutuhan';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final routeName = settings.name;
@@ -148,6 +152,18 @@ class AppRouter {
             return ListPengungsiScreen(
                 idKelompok: args.idKelompok, idPosko: args.idPosko);
           },
+        );
+
+      case listKebutuhanRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) => const ListKebutuhanScreen(),
+        );
+
+      case formKebutuhanRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) => const FormKebutuhanScreen(),
         );
       default:
         return MaterialPageRoute(

@@ -7,20 +7,24 @@ part of 'kebutuhan.dart';
 // **************************************************************************
 
 Kebutuhan _$KebutuhanFromJson(Map<String, dynamic> json) => Kebutuhan(
-      json['IDKebutuhan'] as String?,
-      json['IDBarang'] as String?,
-      (json['JumlahDibutuhkan'] as num?)?.toInt(),
-      (json['JumlahDiterima'] as num?)?.toInt(),
-      json['LastUpdateDate'] == null
+      iDKebutuhan: json['IDKebutuhan'] as String?,
+      iDBarang: json['IDBarang'] as String?,
+      iDPosko: json['IDPosko'] as String?,
+      jumlahDibutuhkan: (json['JumlahDibutuhkan'] as num?)?.toInt(),
+      jumlahDiterima: (json['JumlahDiterima'] as num?)?.toInt(),
+      lastUpdateDate: json['LastUpdateDate'] == null
           ? null
           : DateTime.parse(json['LastUpdateDate'] as String),
-      json['LastUpdateBy'] as String?,
-      Barang.fromJson(json['barang'] as Map<String, dynamic>),
+      lastUpdateBy: json['LastUpdateBy'] as String?,
+      barang: json['barang'] == null
+          ? null
+          : Barang.fromJson(json['barang'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$KebutuhanToJson(Kebutuhan instance) => <String, dynamic>{
       'IDKebutuhan': instance.iDKebutuhan,
       'IDBarang': instance.iDBarang,
+      'IDPosko': instance.iDPosko,
       'JumlahDibutuhkan': instance.jumlahDibutuhkan,
       'JumlahDiterima': instance.jumlahDiterima,
       'LastUpdateDate': instance.lastUpdateDate?.toIso8601String(),

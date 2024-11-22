@@ -77,7 +77,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 // if (roles != null && roles.first.name == 'posko utama')
                 MenuItem(
-                  to: '/filter-kebutuhan',
+                  to: AppRouter.listKebutuhanRoute,
                   title: 'Data Kebutuhan',
                   backgroundColor: Colors.red.shade100,
                   foregroundColor: Colors.red.shade700,
@@ -93,7 +93,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 // if (roles != null && roles.first.name == 'bansos')
                 MenuItem(
-                  to: '/list-bantuan',
+                  to: AppRouter.listBantuanRoute,
                   title: 'Data Bantuan',
                   backgroundColor: Colors.blue.shade100,
                   foregroundColor: Colors.blue.shade700,

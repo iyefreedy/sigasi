@@ -121,6 +121,18 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
+      CREATE TABLE TBL_KEBUTUHAN (
+        IDKebutuhan TEXT PRIMARY KEY,
+        IDPosko TEXT,
+        IDBarang TEXT,
+        JumlahDibutuhkan INTEGER,
+        JumlahDiterima INTEGER,
+        LastUpdateBy TEXT,
+        LastUpdateDate TEXt
+      )
+    ''');
+
+    await db.execute('''
         INSERT INTO REF_KELOMPOK (IDKelompok, NamaKelompok, Keterangan)
           VALUES
             ('91e307b0-eb0d-45ca-8b7a-0b92286473ba', 'Bayi', '0 - 1 tahun'),

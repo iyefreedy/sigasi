@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sigasi/models/barang.dart';
 import 'package:sigasi/models/detail_bantuan.dart';

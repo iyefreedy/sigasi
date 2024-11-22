@@ -14,7 +14,7 @@ class PoskoService {
 
   Future<List<Posko>> fetchPosko() async {
     final isConnected = await isConnectedToInternet();
-    if (isConnected) {
+    if (!isConnected) {
       return _fetchPoskoFromLocal();
     }
     return _fetchPoskoFromServer();
@@ -24,19 +24,6 @@ class PoskoService {
     try {
       final db = await dbHelper.database;
       final records = await db.query('TBL_POSKO');
-
-      final token =
-          (await (SharedPreferences.getInstance())).getString('token');
-      final futures = records.map((record) => http.post(
-              Uri.parse('http://10.0.2.2:8000/api/posko'),
-              body: jsonEncode(record),
-              headers: {
-                "Authorization": 'Bearer $token',
-                'Content-Type': 'application/json'
-              }));
-
-      await Future.any(futures);
-      print(records);
 
       return records.map(Posko.fromJson).toList();
     } catch (e) {
@@ -52,7 +39,7 @@ class PoskoService {
       url,
       headers: {'Authorization': 'Bearer $token'},
     );
-    print(response.body);
+
     final data = jsonDecode(response.body) as Map<String, dynamic>;
 
     final listPosko = (data['data'] as List)
@@ -66,6 +53,21 @@ class PoskoService {
     final newPosko = posko.copyWith(iDPosko: const Uuid().v4());
     final db = await dbHelper.database;
     await db.insert('TBL_POSKO', newPosko.toJson());
+
+    final isConnected = await isConnectedToInternet();
+    if (isConnected) {
+      final token =
+          (await (SharedPreferences.getInstance())).getString('token');
+      final url = Uri.parse('http://10.0.2.2:8000/api/posko');
+      await http.post(
+        url,
+        body: jsonEncode(newPosko.toJson()),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json'
+        },
+      );
+    }
 
     return newPosko;
   }
