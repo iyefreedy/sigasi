@@ -12,6 +12,9 @@ DetailBantuan _$DetailBantuanFromJson(Map<String, dynamic> json) =>
       iDBantuanDTL: json['IDBantuanDTL'] as String?,
       iDBarang: json['IDBarang'] as String?,
       jumlah: (json['Jumlah'] as num?)?.toInt(),
+      barang: json['barang'] == null
+          ? null
+          : Barang.fromJson(json['barang'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$DetailBantuanToJson(DetailBantuan instance) =>

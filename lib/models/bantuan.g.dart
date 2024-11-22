@@ -14,10 +14,13 @@ Bantuan _$BantuanFromJson(Map<String, dynamic> json) => Bantuan(
           : DateTime.parse(json['TanggalBantuan'] as String),
       lastUpdateBy: json['LastUpdateBy'] as String?,
       lastUpdateDate: json['LastUpdateDate'] as String?,
-      detailBantuan: (json['DetailBantuan'] as List<dynamic>?)
+      detailBantuan: (json['bantuan_detail'] as List<dynamic>?)
               ?.map((e) => DetailBantuan.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      donatur: json['donatur'] == null
+          ? null
+          : Donatur.fromJson(json['donatur'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$BantuanToJson(Bantuan instance) => <String, dynamic>{
@@ -26,5 +29,5 @@ Map<String, dynamic> _$BantuanToJson(Bantuan instance) => <String, dynamic>{
       'IDDonatur': instance.iDDonatur,
       'LastUpdateDate': instance.lastUpdateDate,
       'LastUpdateBy': instance.lastUpdateBy,
-      'DetailBantuan': instance.detailBantuan.map((e) => e.toJson()).toList(),
+      'bantuan_detail': instance.detailBantuan.map((e) => e.toJson()).toList(),
     };

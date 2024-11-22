@@ -1,0 +1,3 @@
+class KebutuhanService {
+  const KebutuhanService();
+}

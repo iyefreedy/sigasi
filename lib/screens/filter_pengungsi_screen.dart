@@ -79,7 +79,13 @@ class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed(AppRouter.listPengungsiRoute, arguments: (
+                  idPosko: _idPosko,
+                  idKelompok: _idKelompok,
+                ));
+              },
               child: const Text('Cari...'),
             )
           ],

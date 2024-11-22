@@ -1,4 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sigasi/models/barang.dart';
+
+import 'donatur.dart';
 
 part 'detail_bantuan.g.dart';
 
@@ -9,12 +12,16 @@ class DetailBantuan {
     this.iDBantuanDTL,
     this.iDBarang,
     this.jumlah,
+    this.barang,
   });
 
   final String? iDBantuanDTL;
   final String? iDBantuan;
   final String? iDBarang;
   final int? jumlah;
+
+  @JsonKey(includeToJson: false, name: 'barang')
+  final Barang? barang;
 
   factory DetailBantuan.fromJson(Map<String, dynamic> json) =>
       _$DetailBantuanFromJson(json);
@@ -26,12 +33,15 @@ class DetailBantuan {
     String? iDBantuan,
     String? iDBarang,
     int? jumlah,
+    Donatur? donatur,
+    Barang? barang,
   }) =>
       DetailBantuan(
         iDBantuanDTL: iDBantuanDTL ?? this.iDBantuanDTL,
         iDBantuan: iDBantuan ?? this.iDBantuan,
         iDBarang: iDBarang ?? this.iDBarang,
         jumlah: jumlah ?? this.jumlah,
+        barang: barang ?? this.barang,
       );
 
   @override

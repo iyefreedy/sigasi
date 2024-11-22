@@ -13,16 +13,10 @@ class PengungsiService {
     final db = await dbHelper.database;
 
     if (idKelompok != null && idPosko != null) {
-      final records = await db.query(
-        'TBL_PENGUNGSI',
-        where: "IDKelompok = ? AND IDPosko = ?",
-        whereArgs: [idKelompok, idPosko],
+      final record = await db.rawQuery(
+        "SELECT TBL_PENGUNGSI.* FROM TBL_PENGUNGSI JOIN TBL_PENDUDUK ON TBL_PENDUDUK.IDPenduduk = TBL_PENGUNGSI.IDPenduduk AND TBL_PENDUDUK.IDKelompok='$idKelompok' WHERE TBL_PENGUNGSI.IDPosko='$idPosko'",
       );
-
-      final raw = await db.rawQuery(
-        "SELECT TBL_PENGUNGSI.* FROM TBL_PENGUNGSI JOIN TBL_PENDUDUK ON TBL_PENDUDUK.IDPenduduk = TBL_PENGUNGSI.IDPenduduk AND TBL_PENDUDUK.IDKelompok=$idKelompok WHERE TBL_PENGUNGSI.IDPosko=$idPosko",
-      );
-      return raw.map(Pengungsi.fromJson).toList();
+      return record.map(Pengungsi.fromJson).toList();
     }
 
     final records = await db.query('TBL_PENGUNGSI');

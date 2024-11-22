@@ -32,6 +32,7 @@ class Donatur {
     String? alamat,
     String? lastUpdateDate,
     String? lastUpdateBy,
+    Donatur? donatur,
   }) {
     return Donatur(
       iDDonatur: iDDonatur ?? this.iDDonatur,

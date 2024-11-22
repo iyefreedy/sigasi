@@ -13,6 +13,7 @@ import 'package:sigasi/screens/home_screen.dart';
 import 'package:sigasi/screens/list_bantuan_screen.dart';
 import 'package:sigasi/screens/list_donatur_screen.dart';
 import 'package:sigasi/screens/list_penduduk_screen.dart';
+import 'package:sigasi/screens/list_pengungsi_screen.dart';
 import 'package:sigasi/screens/list_posko_screen.dart';
 import 'package:sigasi/screens/login_screen.dart';
 
@@ -137,8 +138,20 @@ class AppRouter {
             return const FormBantuanScreen();
           },
         );
+
+      case listPengungsiRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) {
+            final args =
+                settings.arguments as ({String? idKelompok, String? idPosko});
+            return ListPengungsiScreen(
+                idKelompok: args.idKelompok, idPosko: args.idPosko);
+          },
+        );
       default:
         return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
           builder: (context) => const Scaffold(
             body: Center(
               child: Text('Not found'),

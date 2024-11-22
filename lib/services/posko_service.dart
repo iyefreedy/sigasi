@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sigasi/utils/connectivity.dart';
 import 'package:sigasi/utils/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
@@ -11,25 +13,49 @@ class PoskoService {
   final DatabaseHelper dbHelper = DatabaseHelper.getInstance();
 
   Future<List<Posko>> fetchPosko() async {
-    return _fetchPoskoFromLocal();
+    final isConnected = await isConnectedToInternet();
+    if (isConnected) {
+      return _fetchPoskoFromLocal();
+    }
+    return _fetchPoskoFromServer();
   }
 
   Future<List<Posko>> _fetchPoskoFromLocal() async {
-    final db = await dbHelper.database;
-    final records = await db.query('TBL_POSKO');
-    print(records);
+    try {
+      final db = await dbHelper.database;
+      final records = await db.query('TBL_POSKO');
 
-    return records.map(Posko.fromJson).toList();
+      final token =
+          (await (SharedPreferences.getInstance())).getString('token');
+      final futures = records.map((record) => http.post(
+              Uri.parse('http://10.0.2.2:8000/api/posko'),
+              body: jsonEncode(record),
+              headers: {
+                "Authorization": 'Bearer $token',
+                'Content-Type': 'application/json'
+              }));
+
+      await Future.any(futures);
+      print(records);
+
+      return records.map(Posko.fromJson).toList();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 
   Future<List<Posko>> _fetchPoskoFromServer() async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('http://10.0.2.2:8000/api/posko/index');
-    final response =
-        await http.get(url, headers: {'Authorization': 'Bearer $token'});
+    final url = Uri.parse('http://10.0.2.2:8000/api/posko');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    print(response.body);
     final data = jsonDecode(response.body) as Map<String, dynamic>;
-    print(data['data']['data']);
-    final listPosko = (data['data']['data'] as List)
+
+    final listPosko = (data['data'] as List)
         .map((item) => Posko.fromJson(item as Map<String, dynamic>))
         .toList();
 

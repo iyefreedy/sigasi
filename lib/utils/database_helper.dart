@@ -97,7 +97,26 @@ class DatabaseHelper {
         IDBarang TEXT PRIMARY KEY,
         IDJenisBarang TEXT,
         NamaBarang TEXT,
-        HargaSatuan TEXT
+        HargaSatuan REAL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE TBL_BANTUAN (
+        IDBantuan TEXT PRIMARY KEY,
+        IDDonatur TEXT,
+        TanggalBantuan TEXT,
+        LastUpdateDate TEXT,
+        LastUpdateBy TEXT
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE TBL_BANTUAN_DTL (
+        IDBantuanDTL TEXT PRIMARY KEY,
+        IDBantuan TEXT,
+        IDBarang TEXT,
+        Jumlah INTEGER
       )
     ''');
 

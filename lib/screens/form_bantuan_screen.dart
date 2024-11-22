@@ -5,6 +5,7 @@ import 'package:sigasi/models/detail_bantuan.dart';
 import 'package:sigasi/providers/list_bantuan_provider.dart';
 import 'package:sigasi/providers/list_barang_provider.dart';
 import 'package:sigasi/providers/list_donatur_provider.dart';
+import 'package:sigasi/utils/app_router.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/bantuan.dart';
@@ -132,7 +133,6 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
               ..._listDetailBantuan.map(
                 (detail) {
                   final index = _listDetailBantuan.indexOf(detail);
-                  print(index);
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -239,17 +239,22 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
                 builder: (context, ref, child) {
                   return ElevatedButton(
                     onPressed: () async {
-                      final router = Navigator.of(context);
                       final bantuan = (widget.bantuan ?? Bantuan()).copyWith(
                         iDDonatur: _idDonatur,
                         tanggalBantuan: _tanggalBantuan,
                         detailBantuan: _listDetailBantuan,
                       );
-                      print(bantuan);
+
                       if (_formKey.currentState!.validate()) {
                         await ref
                             .read(listBantuanProvider.notifier)
                             .save(bantuan);
+
+                        if (context.mounted) {
+                          Navigator.of(context).popUntil((route) =>
+                              route.settings.name ==
+                              AppRouter.listBantuanRoute);
+                        }
                       }
                     },
                     child: const Text('Simpan'),
