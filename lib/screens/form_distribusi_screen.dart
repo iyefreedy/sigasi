@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sigasi/providers/list_kebutuhan_provider.dart';
-import 'package:sigasi/providers/list_posko_provider.dart';
+import 'package:sigasi/providers/kebutuhan_posko_provider.dart';
 
 class FormDistribusiScreen extends ConsumerStatefulWidget {
   const FormDistribusiScreen({super.key});
@@ -16,8 +15,7 @@ class _FormDistribusiScreenState extends ConsumerState<FormDistribusiScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final listPosko = ref.watch(listPoskoProvider);
-    final listKebutuhan = ref.watch(listKebutuhanProvider);
+    final listKebutuhan = ref.watch(kebutuhanPoskoProvider);
 
     return Scaffold(
       appBar: AppBar(
