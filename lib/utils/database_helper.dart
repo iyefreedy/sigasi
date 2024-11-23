@@ -125,7 +125,7 @@ class DatabaseHelper {
         IDKebutuhan TEXT PRIMARY KEY,
         IDPosko TEXT,
         IDBarang TEXT,
-        JumlahDibutuhkan INTEGER,
+        JumlahKebutuhan INTEGER,
         JumlahDiterima INTEGER,
         LastUpdateBy TEXT,
         LastUpdateDate TEXt

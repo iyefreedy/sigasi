@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sigasi/models/kebutuhan.dart';
 import 'package:sigasi/utils/connectivity.dart';
 import 'package:sigasi/utils/database_helper.dart';
 import 'package:http/http.dart' as http;
@@ -93,5 +94,11 @@ class PoskoService {
     );
 
     return posko;
+  }
+
+  Future<List<Kebutuhan>> fetchKebutuhan(String? idPosko) async {
+    final url = Uri.parse('http://10.0.2.2:8000/api/posko/$idPosko/kebutuhan');
+
+    return [];
   }
 }

@@ -29,6 +29,7 @@ class KebutuhanService {
     });
 
     final jsonBody = jsonDecode(response.body) as Map<String, dynamic>;
+    print(jsonBody);
     final listKebutuhan = (jsonBody['data'] as List)
         .map(
           (json) => Kebutuhan.fromJson(json as Map<String, dynamic>),
@@ -41,6 +42,7 @@ class KebutuhanService {
   Future<List<Kebutuhan>> _fetchKebutuhanFromLocal() async {
     final db = await _databaseHelper.database;
     final records = await db.query('TBL_KEBUTUHAN');
+    print(records);
 
     return records.map(Kebutuhan.fromJson).toList();
   }
@@ -52,14 +54,21 @@ class KebutuhanService {
     await db.insert('TBL_KEBUTUHAN', newKebutuhan.toJson());
 
     final isConnected = await isConnectedToInternet();
+
     if (isConnected) {
       final token = (await SharedPreferences.getInstance()).getString('token');
 
       final url = Uri.parse('http://10.0.2.2:8000/api/kebutuhan');
-      await http.post(url, body: jsonEncode(newKebutuhan.toJson()), headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json',
-      });
+      final response = await http.post(
+        url,
+        body: jsonEncode(newKebutuhan.toJson()),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print(response.body);
     }
 
     return newKebutuhan;

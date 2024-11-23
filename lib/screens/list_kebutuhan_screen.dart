@@ -27,6 +27,36 @@ class ListKebutuhanScreen extends ConsumerWidget {
               child: Text('Tidak ada data.'),
             );
           }
+
+          return ListView.separated(
+            separatorBuilder: (context, index) => const SizedBox(height: 4),
+            padding: const EdgeInsets.all(10),
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              final kebutuhan = data[index];
+              return ExpansionTileTheme(
+                data: ExpansionTileThemeData(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primaryContainer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  collapsedShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: ExpansionTile(
+                  title: Text(kebutuhan.posko?.lokasi ?? '-'),
+                  children: [
+                    ListTile(
+                      title: Text(kebutuhan.barang?.namaBarang ?? '-'),
+                      subtitle: Text(kebutuhan.jumlahKebutuhan.toString()),
+                    )
+                  ],
+                ),
+              );
+            },
+          );
         },
         error: (error, stackTrace) => Center(
           child: Text('$error'),

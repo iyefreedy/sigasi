@@ -35,7 +35,7 @@ class _FormKebutuhanScreenState extends ConsumerState<FormKebutuhanScreen> {
     _idPosko = widget.kebutuhan?.iDPosko;
     _idBarang = widget.kebutuhan?.iDBarang;
     _jumlahKebutuhanController.text =
-        widget.kebutuhan?.jumlahDibutuhkan.toString() ?? '';
+        widget.kebutuhan?.jumlahKebutuhan.toString() ?? '';
   }
 
   @override
@@ -139,8 +139,7 @@ class _FormKebutuhanScreenState extends ConsumerState<FormKebutuhanScreen> {
                     iDKebutuhan: widget.kebutuhan?.iDKebutuhan,
                     iDBarang: _idBarang,
                     iDPosko: _idPosko,
-                    jumlahDibutuhkan:
-                        int.parse(_jumlahKebutuhanController.text),
+                    jumlahKebutuhan: int.parse(_jumlahKebutuhanController.text),
                   );
 
                   await ref

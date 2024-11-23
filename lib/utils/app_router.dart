@@ -6,12 +6,14 @@ import 'package:sigasi/screens/create_penduduk_screen.dart';
 import 'package:sigasi/screens/edit_penduduk_screen.dart';
 import 'package:sigasi/screens/filter_pengungsi_screen.dart';
 import 'package:sigasi/screens/form_bantuan_screen.dart';
+import 'package:sigasi/screens/form_distribusi_screen.dart';
 import 'package:sigasi/screens/form_donatur_screen.dart';
 import 'package:sigasi/screens/form_kebutuhan_screen.dart';
 import 'package:sigasi/screens/form_pengungsi_screen.dart';
 import 'package:sigasi/screens/form_posko_screen.dart';
 import 'package:sigasi/screens/home_screen.dart';
 import 'package:sigasi/screens/list_bantuan_screen.dart';
+import 'package:sigasi/screens/list_distribusi_screen.dart';
 import 'package:sigasi/screens/list_donatur_screen.dart';
 import 'package:sigasi/screens/list_kebutuhan_screen.dart';
 import 'package:sigasi/screens/list_penduduk_screen.dart';
@@ -40,6 +42,8 @@ class AppRouter {
   static const formBantuanRoute = '/form-bantuan';
   static const listKebutuhanRoute = '/list-kebutuhan';
   static const formKebutuhanRoute = '/form-kebutuhan';
+  static const listDistribusiRoute = '/list-distribusi';
+  static const formDistribusiRoute = '/form-distribusi';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final routeName = settings.name;
@@ -164,6 +168,18 @@ class AppRouter {
         return MaterialPageRoute(
           settings: RouteSettings(name: routeName),
           builder: (context) => const FormKebutuhanScreen(),
+        );
+
+      case listDistribusiRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) => const ListDistribusiScreen(),
+        );
+
+      case formDistribusiRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) => const FormDistribusiScreen(),
         );
       default:
         return MaterialPageRoute(
