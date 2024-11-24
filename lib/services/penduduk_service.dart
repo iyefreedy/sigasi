@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sigasi/utils/connectivity.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/penduduk.dart';
 import '../utils/database_helper.dart';
@@ -10,15 +14,52 @@ class PendudukService {
 
   Future<List<Penduduk>> fetchPenduduk({
     String? idKelompok,
-    String? desa,
+    int? desa,
+  }) async {
+    final isConnected = await isConnectedToInternet();
+
+    if (isConnected) {
+      return _fetchPendudukFromServer(
+        idDesa: desa,
+        idKelompok: idKelompok,
+      );
+    }
+
+    return _fetchPendudukFromLocal(
+      idDesa: desa,
+      idKelompok: idKelompok,
+    );
+  }
+
+  Future<List<Penduduk>> _fetchPendudukFromServer({
+    int? idDesa,
+    String? idKelompok,
+  }) async {
+    final token = (await SharedPreferences.getInstance()).getString('token');
+    final url = Uri.parse(
+        'http://10.0.2.2:8000/api/penduduk?idKelompok=$idKelompok&idDesa=$idDesa');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token',
+    });
+
+    final jsonBody = jsonDecode(response.body) as Map<String, dynamic>;
+    return (jsonBody['data'] as List)
+        .cast<Map<String, dynamic>>()
+        .map(Penduduk.fromJson)
+        .toList();
+  }
+
+  Future<List<Penduduk>> _fetchPendudukFromLocal({
+    int? idDesa,
+    String? idKelompok,
   }) async {
     final db = await dbHelper.database;
 
-    if (idKelompok != null && desa != null) {
+    if (idKelompok != null && idDesa != null) {
       final records = await db.query(
         'TBL_PENDUDUK',
-        where: "IDKelompok = ? AND Desa LIKE ?",
-        whereArgs: [idKelompok, "%$desa%"],
+        where: "IDKelompok = ? AND IDDesa = ?",
+        whereArgs: [idKelompok, idDesa],
       );
       return records.map(Penduduk.fromJson).toList();
     }

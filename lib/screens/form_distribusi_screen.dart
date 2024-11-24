@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sigasi/models/distribusi.dart';
 import 'package:sigasi/providers/kebutuhan_posko_provider.dart';
+import 'package:sigasi/providers/list_distribusi_provider.dart';
+import 'package:sigasi/providers/list_posko_provider.dart';
+import 'package:sigasi/utils/app_router.dart';
 
 class FormDistribusiScreen extends ConsumerStatefulWidget {
   const FormDistribusiScreen({super.key});
@@ -11,11 +16,16 @@ class FormDistribusiScreen extends ConsumerStatefulWidget {
 }
 
 class _FormDistribusiScreenState extends ConsumerState<FormDistribusiScreen> {
+  final _jumlahDistribusiController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  String? _idPosko;
+  String? _idBarang;
 
   @override
   Widget build(BuildContext context) {
-    final listKebutuhan = ref.watch(kebutuhanPoskoProvider);
+    final listPosko = ref.watch(listPoskoProvider);
+    final listKebutuhan = ref.watch(kebutuhanPoskoProvider(_idPosko));
 
     return Scaffold(
       appBar: AppBar(
@@ -26,26 +36,83 @@ class _FormDistribusiScreenState extends ConsumerState<FormDistribusiScreen> {
         child: ListView(
           padding: const EdgeInsets.all(10),
           children: [
-            DropdownButtonFormField(
+            DropdownButtonFormField<String?>(
+              value: _idPosko,
               isExpanded: true,
               decoration: const InputDecoration(
                 labelText: 'Posko',
+              ),
+              items: listPosko.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map(
+                      (posko) => DropdownMenuItem(
+                        value: posko.iDPosko,
+                        child: Text(posko.lokasi ?? '-'),
+                      ),
+                    )
+                    .toList(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _idPosko = value;
+                  _idBarang = null;
+                });
+              },
+            ),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String?>(
+              value: _idBarang,
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Barang',
               ),
               items: listKebutuhan.maybeWhen(
                 orElse: () => [],
                 data: (data) => data
                     .map(
                       (kebutuhan) => DropdownMenuItem(
-                        value: kebutuhan.iDPosko,
-                        child: Text(kebutuhan.posko?.lokasi ?? '-'),
+                        value: kebutuhan.iDBarang,
+                        child: Text(kebutuhan.barang?.namaBarang ?? '-'),
                       ),
                     )
                     .toList(),
               ),
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {
+                  _idBarang = value;
+                });
+              },
             ),
+            const SizedBox(height: 10),
+            TextFormField(
+              controller: _jumlahDistribusiController,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Jumlah Distribusi',
+              ),
+            ),
+            const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  final distribusi = Distribusi(
+                    iDBarang: _idBarang,
+                    iDPosko: _idPosko,
+                    jumlah: int.parse(_jumlahDistribusiController.text),
+                  );
+
+                  await ref
+                      .read(listDistribusiProvider.notifier)
+                      .save(distribusi);
+
+                  if (context.mounted) {
+                    Navigator.of(context).popUntil((route) =>
+                        route.settings.name == AppRouter.listDistribusiRoute);
+                  }
+                }
+              },
               child: const Text('Simpan'),
             ),
           ],

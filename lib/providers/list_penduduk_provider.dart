@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/models/penduduk.dart';
 import 'package:sigasi/services/penduduk_service.dart';
 
-typedef PendudukParams = ({String? desa, String? idKelompok});
+typedef PendudukParams = ({int? desa, String? idKelompok});
 
 final listPendududukProvider = AsyncNotifierProvider.autoDispose
     .family<ListPendudukNotifier, List<Penduduk>, PendudukParams>(

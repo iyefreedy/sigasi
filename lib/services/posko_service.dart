@@ -82,6 +82,23 @@ class PoskoService {
       whereArgs: [posko.iDPosko],
     );
 
+    final isConnected = await isConnectedToInternet();
+    if (isConnected) {
+      final token =
+          (await (SharedPreferences.getInstance())).getString('token');
+      final url = Uri.parse('http://10.0.2.2:8000/api/posko/${posko.iDPosko}');
+      final response = await http.put(
+        url,
+        body: jsonEncode(posko.toJson()),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json'
+        },
+      );
+
+      print(response.body);
+    }
+
     return posko;
   }
 
@@ -97,8 +114,18 @@ class PoskoService {
   }
 
   Future<List<Kebutuhan>> fetchKebutuhan(String? idPosko) async {
+    final token = (await (SharedPreferences.getInstance())).getString('token');
     final url = Uri.parse('http://10.0.2.2:8000/api/posko/$idPosko/kebutuhan');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token',
+    });
 
-    return [];
+    final jsonBody = jsonDecode(response.body) as Map<String, dynamic>;
+    print(response.body);
+    final listKebutuhan = (jsonBody['data'] as List)
+        .map((json) => Kebutuhan.fromJson(json as Map<String, dynamic>))
+        .toList();
+
+    return listKebutuhan;
   }
 }

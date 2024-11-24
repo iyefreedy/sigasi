@@ -59,6 +59,13 @@ class HomeScreen extends ConsumerWidget {
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               children: [
+                MenuItem(
+                  to: AppRouter.filterKeluargaRoute,
+                  title: 'Data Keluraga',
+                  backgroundColor: Colors.pink.shade100,
+                  foregroundColor: Colors.pink.shade700,
+                  icon: Icons.family_restroom,
+                ),
                 // if (roles != null && roles.first.name == 'kecamatan')
                 MenuItem(
                   to: AppRouter.filterPendudukRoute,

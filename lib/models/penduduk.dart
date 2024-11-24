@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sigasi/models/anggota_keluarga.dart';
 
 part 'penduduk.g.dart';
 
@@ -6,27 +7,33 @@ part 'penduduk.g.dart';
 class Penduduk {
   const Penduduk({
     this.iDPenduduk,
-    this.desa,
-    this.jenisKelamin,
     this.kTP,
+    this.nama,
+    this.jenisKelamin,
+    this.tanggalLahir,
+    this.alamat,
+    this.iDDesa,
+    this.iDKecamatan,
     this.iDKelompok,
     this.lastUpdateBy,
     this.lastUpdateDate,
-    this.nama,
-    this.tanggalLahir,
-    this.alamat,
+    this.anggota,
   });
 
   final String? iDPenduduk;
-  final String? jenisKelamin;
-  final String? desa;
-  final String? tanggalLahir;
   final String? kTP;
   final String? nama;
+  final String? jenisKelamin;
+  final String? tanggalLahir;
   final String? alamat;
+  final int? iDDesa;
+  final int? iDKecamatan;
   final String? iDKelompok;
   final String? lastUpdateBy;
   final String? lastUpdateDate;
+
+  @JsonKey(name: 'anggota', includeToJson: false)
+  final AnggotaKeluarga? anggota;
 
   factory Penduduk.fromJson(Map<String, dynamic> json) =>
       _$PendudukFromJson(json);
@@ -38,22 +45,24 @@ class Penduduk {
     String? kTP,
     String? nama,
     String? jenisKelamin,
-    String? desa,
     String? tanggalLahir,
     String? alamat,
-    String? kelompok,
+    int? iDDesa,
+    int? iDKecamatan,
+    String? iDKelompok,
     String? lastUpdateBy,
     String? lastUpdateDate,
   }) {
     return Penduduk(
       iDPenduduk: iDPenduduk ?? this.iDPenduduk,
       jenisKelamin: jenisKelamin ?? this.jenisKelamin,
-      desa: desa ?? this.desa,
+      iDDesa: iDDesa ?? this.iDDesa,
+      iDKecamatan: iDKecamatan ?? this.iDKecamatan,
       tanggalLahir: tanggalLahir ?? this.tanggalLahir,
       kTP: kTP ?? this.kTP,
       nama: nama ?? this.nama,
       alamat: alamat ?? this.alamat,
-      iDKelompok: kelompok ?? this.iDKelompok,
+      iDKelompok: iDKelompok ?? this.iDKelompok,
       lastUpdateBy: lastUpdateBy ?? this.lastUpdateBy,
       lastUpdateDate: lastUpdateDate ?? this.lastUpdateDate,
     );
@@ -69,7 +78,7 @@ class Penduduk {
         kTP: $kTP,
         tanggalLahir: $tanggalLahir,
         kelompok: $iDKelompok,
-        desa: $desa,
+        idDesa: $iDKecamatan,
         alamat: $alamat,
         lastUpdateDate: $lastUpdateDate,
         lastUpdateBy: $lastUpdateBy,

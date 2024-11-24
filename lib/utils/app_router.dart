@@ -3,12 +3,16 @@ import 'package:sigasi/models/donatur.dart';
 import 'package:sigasi/models/penduduk.dart';
 import 'package:sigasi/models/posko.dart';
 import 'package:sigasi/screens/create_penduduk_screen.dart';
+import 'package:sigasi/screens/detail_keluarga_screen.dart';
 import 'package:sigasi/screens/edit_penduduk_screen.dart';
+import 'package:sigasi/screens/filter_keluarga_screen.dart';
 import 'package:sigasi/screens/filter_pengungsi_screen.dart';
+import 'package:sigasi/screens/form_anggota_keluarga_screen.dart';
 import 'package:sigasi/screens/form_bantuan_screen.dart';
 import 'package:sigasi/screens/form_distribusi_screen.dart';
 import 'package:sigasi/screens/form_donatur_screen.dart';
 import 'package:sigasi/screens/form_kebutuhan_screen.dart';
+import 'package:sigasi/screens/form_keluarga_screen.dart';
 import 'package:sigasi/screens/form_pengungsi_screen.dart';
 import 'package:sigasi/screens/form_posko_screen.dart';
 import 'package:sigasi/screens/home_screen.dart';
@@ -16,6 +20,7 @@ import 'package:sigasi/screens/list_bantuan_screen.dart';
 import 'package:sigasi/screens/list_distribusi_screen.dart';
 import 'package:sigasi/screens/list_donatur_screen.dart';
 import 'package:sigasi/screens/list_kebutuhan_screen.dart';
+import 'package:sigasi/screens/list_keluarga_screen.dart';
 import 'package:sigasi/screens/list_penduduk_screen.dart';
 import 'package:sigasi/screens/list_pengungsi_screen.dart';
 import 'package:sigasi/screens/list_posko_screen.dart';
@@ -28,6 +33,15 @@ class AppRouter {
   static const homeRoute = '/';
   static const splashRoute = '/splash';
   static const loginRoute = '/login';
+
+  static const filterKeluargaRoute = '/filter-keluarga';
+  static const listKeluargaRoute = '/list-keluarga';
+  static const formKeluargaRoute = '/form-keluarga';
+  static const detailKeluargaRoute = '/detail-keluarga';
+
+  static const formAnggotaKeluargaRoute =
+      '/detail-keluarga/form-anggota-keluarga';
+
   static const filterPendudukRoute = '/filter-penduduk';
   static const formPendudukRoute = '/form-penduduk';
   static const listPendudukRoute = '/list-penduduk';
@@ -63,10 +77,60 @@ class AppRouter {
           settings: RouteSettings(name: routeName),
           builder: (context) => const SplashScreen(),
         );
+
+      case filterKeluargaRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) => const FilterKeluargaScreen(),
+        );
+      case formKeluargaRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) => const FormKeluargaScreen(),
+        );
+      case listKeluargaRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) {
+            final args = settings.arguments as List<int>;
+            final idKecamatan = args[0];
+            final idDesa = args[1];
+            return ListKeluargaScreen(
+              idDesa: idDesa,
+              idKecamatan: idKecamatan,
+            );
+          },
+        );
+      case detailKeluargaRoute:
+        return MaterialPageRoute(builder: (context) {
+          final args = settings.arguments as String;
+          return DetailKeluargaScreen(id: args);
+        });
+
+      case formAnggotaKeluargaRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) {
+            final idKeluarga = settings.arguments as String;
+            return FormAnggotaKeluargaScreen(idKeluarga: idKeluarga);
+          },
+        );
+
       case filterPendudukRoute:
         return MaterialPageRoute(
           settings: RouteSettings(name: routeName),
           builder: (context) => const FilterPendudukScreen(),
+        );
+      case listPendudukRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) {
+            final params = settings.arguments as List;
+            return ListPendudukScreen(
+              idKelompok: params[0] as String,
+              desa: params[1] as int,
+            );
+          },
         );
 
       case filterPengungsiRoute:
@@ -92,17 +156,7 @@ class AppRouter {
             return const CreatePendudukScreen();
           },
         );
-      case listPendudukRoute:
-        return MaterialPageRoute(
-          settings: RouteSettings(name: routeName),
-          builder: (context) {
-            final params = settings.arguments as List;
-            return ListPendudukScreen(
-              idKelompok: params[0] as String,
-              desa: params[1] as String,
-            );
-          },
-        );
+
       case listPoskoroute:
         return MaterialPageRoute(
           settings: RouteSettings(name: routeName),

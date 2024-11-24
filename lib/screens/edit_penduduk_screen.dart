@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sigasi/models/penduduk.dart';
+import 'package:sigasi/providers/list_desa_provider.dart';
+import 'package:sigasi/providers/list_kecamatan_provider.dart';
 import 'package:sigasi/providers/list_kelompok_provider.dart';
 
 import '../services/penduduk_service.dart';
@@ -37,7 +39,8 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
 
   String? _jenisKelamin;
   String? _kelompok;
-  String? _desa;
+  int? _desa;
+  int? _kecamatan;
 
   @override
   void initState() {
@@ -50,7 +53,7 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
         TextEditingController(text: widget.penduduk.tanggalLahir);
     _jenisKelamin = widget.penduduk.jenisKelamin;
     _kelompok = widget.penduduk.iDKelompok;
-    _desa = widget.penduduk.desa;
+    _desa = _desa;
 
     _formKey = GlobalKey<FormState>();
   }
@@ -58,6 +61,9 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
   @override
   Widget build(BuildContext context) {
     final listKelompok = ref.watch(listKelompokProvider);
+    final listKecamatan = ref.watch(listKecamatanProvider);
+    final listDesa = ref.watch(listDesaProvider(_kecamatan));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Form Penduduk'),
@@ -146,7 +152,38 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            DropdownButtonFormField<String?>(
+            DropdownButtonFormField<int?>(
+              value: _kecamatan,
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Kecamatan',
+              ),
+              validator: (value) {
+                if (value == null) {
+                  return 'Kecamatan harus diisi.';
+                }
+
+                return null;
+              },
+              items: listKecamatan.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map(
+                      (kecamatan) => DropdownMenuItem(
+                        value: kecamatan.iDKecamatan,
+                        child: Text(kecamatan.nama),
+                      ),
+                    )
+                    .toList(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _kecamatan = value;
+                });
+              },
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<int?>(
               value: _desa,
               isExpanded: true,
               decoration: const InputDecoration(
@@ -159,14 +196,17 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
 
                 return null;
               },
-              items: listDesa
-                  .map(
-                    (desa) => DropdownMenuItem(
-                      value: desa,
-                      child: Text(desa),
-                    ),
-                  )
-                  .toList(),
+              items: listDesa.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map(
+                      (desa) => DropdownMenuItem(
+                        value: desa.iDDesa,
+                        child: Text(desa.nama),
+                      ),
+                    )
+                    .toList(),
+              ),
               onChanged: (value) {
                 setState(() {
                   _desa = value;
@@ -206,10 +246,10 @@ class _CreatePendudukScreenState extends ConsumerState<EditPendudukScreen> {
               onPressed: () async {
                 final penduduk = widget.penduduk.copyWith(
                   alamat: _alamatController.text,
-                  desa: _desa,
+                  iDDesa: _desa,
                   jenisKelamin: _jenisKelamin,
                   kTP: _ktpController.text,
-                  kelompok: _kelompok,
+                  iDKelompok: _kelompok,
                   nama: _namaController.text,
                   tanggalLahir: _tanggalLahirController.text,
                   lastUpdateBy: 'String',

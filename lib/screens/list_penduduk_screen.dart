@@ -10,7 +10,7 @@ class ListPendudukScreen extends ConsumerStatefulWidget {
     required this.idKelompok,
   });
 
-  final String desa;
+  final int desa;
   final String idKelompok;
 
   @override

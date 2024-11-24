@@ -204,7 +204,7 @@ class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
               onPressed: () async {
                 final penduduk = Penduduk(
                   alamat: _alamatController.text,
-                  desa: _desa,
+                  iDDesa: 0,
                   jenisKelamin: _jenisKelamin,
                   kTP: _ktpController.text,
                   iDKelompok: _kelompok,
@@ -216,8 +216,9 @@ class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
 
                 if (_formKey.currentState!.validate()) {
                   await ref
-                      .read(listPendududukProvider((desa: '', idKelompok: null))
-                          .notifier)
+                      .read(
+                          listPendududukProvider((desa: null, idKelompok: null))
+                              .notifier)
                       .save(penduduk);
 
                   if (context.mounted) {
