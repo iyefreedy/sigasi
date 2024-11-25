@@ -17,7 +17,7 @@ class DistribusiService {
     final isConnected = await isConnectedToInternet();
     if (isConnected) {
       final token = (await SharedPreferences.getInstance()).getString('token');
-      final url = Uri.parse('http://10.0.2.2:8000/api/distribusi');
+      final url = Uri.parse('https://sigasi.my.id/api/distribusi');
       final response = await http.get(url, headers: {
         'Authorization': 'Bearer $token',
       });
@@ -55,7 +55,7 @@ class DistribusiService {
     final isConnected = await isConnectedToInternet();
     if (isConnected) {
       final token = (await SharedPreferences.getInstance()).getString('token');
-      final url = Uri.parse('http://10.0.2.2:8000/api/distribusi');
+      final url = Uri.parse('https://sigasi.my.id/api/distribusi');
       final response = await http.post(
         url,
         body: jsonEncode(newDistribusi.toJson()),

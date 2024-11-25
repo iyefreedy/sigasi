@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/providers/auth_provider.dart';
 
-import 'package:sigasi/utils/app_router.dart'; // Pastikan Anda memiliki AppRouter diatur.
-
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 

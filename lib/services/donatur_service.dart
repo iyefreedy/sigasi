@@ -31,7 +31,7 @@ class DonaturService {
 
   Future<List<Donatur>> _fetchDonaturFromServer() async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('http://10.0.2.2:8000/api/donatur');
+    final url = Uri.parse('https://sigasi.my.id/api/donatur');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });
@@ -79,7 +79,7 @@ class DonaturService {
 
   Future<Donatur> _insertDonaturToServer(Donatur donatur) async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('http://10.0.2.2:8000/api/donatur');
+    final url = Uri.parse('https://sigasi.my.id/api/donatur');
 
     final response = await http.post(url,
         body: jsonEncode(donatur.toJson()),
@@ -122,7 +122,7 @@ class DonaturService {
   Future<Donatur> _updateDonaturToServer(Donatur donatur) async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
     final url = Uri.parse(
-      'http://10.0.2.2:8000/api/donatur/${donatur.iDDonatur}',
+      'https://sigasi.my.id/api/donatur/${donatur.iDDonatur}',
     );
 
     final response = await http.put(url,

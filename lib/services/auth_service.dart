@@ -6,7 +6,7 @@ import 'package:sigasi/models/auth_response.dart';
 import 'package:sigasi/models/user.dart';
 
 class AuthService {
-  static const String _baseUrl = 'http://10.0.2.2:8000/api';
+  static const String _baseUrl = 'https://sigasi.my.id/api';
 
   Future<Map<String, String>> _getHeaders() async {
     final preferences = await SharedPreferences.getInstance();

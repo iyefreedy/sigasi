@@ -37,7 +37,7 @@ class PendudukService {
   }) async {
     final token = (await SharedPreferences.getInstance()).getString('token');
     final url = Uri.parse(
-        'http://10.0.2.2:8000/api/penduduk?idKelompok=$idKelompok&idDesa=$idDesa');
+        'https://sigasi.my.id/api/penduduk?idKelompok=$idKelompok&idDesa=$idDesa');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });

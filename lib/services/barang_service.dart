@@ -24,7 +24,7 @@ class BarangService {
 
   Future<List<Barang>> _fetchBarangFromServer() async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('http://10.0.2.2:8000/api/barang');
+    final url = Uri.parse('https://sigasi.my.id/api/barang');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });

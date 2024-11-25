@@ -10,7 +10,7 @@ class KelompokService {
 
   Future<List<Kelompok>> fetchKelompok() async {
     final token = (await SharedPreferences.getInstance()).getString('token');
-    final url = Uri.parse('http://10.0.2.2:8000/api/kelompok');
+    final url = Uri.parse('https://sigasi.my.id/api/kelompok');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},

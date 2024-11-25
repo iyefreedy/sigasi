@@ -15,7 +15,7 @@ class KeluargaService {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
     final url = Uri.parse(
-        'http://10.0.2.2:8000/api/keluarga?kecamatan=$idKecamatan&desa=$idDesa');
+        'https://sigasi.my.id/api/keluarga?kecamatan=$idKecamatan&desa=$idDesa');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });
@@ -33,7 +33,7 @@ class KeluargaService {
   Future<Keluarga> fetchKeluargaById(String id) async {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
-    final url = Uri.parse('http://10.0.2.2:8000/api/keluarga/$id');
+    final url = Uri.parse('https://sigasi.my.id/api/keluarga/$id');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ class KeluargaService {
   Future<Keluarga> insertKeluarga(Keluarga keluarga) async {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
-    final url = Uri.parse('http://10.0.2.2:8000/api/keluarga');
+    final url = Uri.parse('https://sigasi.my.id/api/keluarga');
     final response =
         await http.post(url, body: jsonEncode(keluarga.toJson()), headers: {
       'Authorization': 'Bearer $token',
@@ -71,7 +71,7 @@ class KeluargaService {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
     final url =
-        Uri.parse('http://10.0.2.2:8000/api/keluarga/$idKeluarga/anggota');
+        Uri.parse('https://sigasi.my.id/api/keluarga/$idKeluarga/anggota');
     final response = await http.post(url,
         body: jsonEncode({
           ...penduduk.toJson(),

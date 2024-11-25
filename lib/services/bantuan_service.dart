@@ -15,7 +15,7 @@ class BantuanService {
 
   Future<List<Bantuan>> _fetchBantuanFromServer() async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('http://10.0.2.2:8000/api/bantuan');
+    final url = Uri.parse('https://sigasi.my.id/api/bantuan');
 
     final response = await http.get(
       url,
@@ -96,7 +96,7 @@ class BantuanService {
 
   Future<Bantuan> insertBantuan(Bantuan bantuan) async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('http://10.0.2.2:8000/api/bantuan');
+    final url = Uri.parse('https://sigasi.my.id/api/bantuan');
 
     final response = await http.post(
       url,

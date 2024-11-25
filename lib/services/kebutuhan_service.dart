@@ -22,7 +22,7 @@ class KebutuhanService {
   Future<List<Kebutuhan>> _fetchKebutuhanFromServer() async {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
-    final url = Uri.parse('http://10.0.2.2:8000/api/kebutuhan');
+    final url = Uri.parse('https://sigasi.my.id/api/kebutuhan');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
       'Accept': 'application/json',
@@ -58,7 +58,7 @@ class KebutuhanService {
     if (isConnected) {
       final token = (await SharedPreferences.getInstance()).getString('token');
 
-      final url = Uri.parse('http://10.0.2.2:8000/api/kebutuhan');
+      final url = Uri.parse('https://sigasi.my.id/api/kebutuhan');
       final response = await http.post(
         url,
         body: jsonEncode(newKebutuhan.toJson()),
@@ -88,7 +88,7 @@ class KebutuhanService {
     if (isConnected) {
       final token = (await SharedPreferences.getInstance()).getString('token');
 
-      final url = Uri.parse('http://10.0.2.2:8000/api/kebutuhan');
+      final url = Uri.parse('https://sigasi.my.id/api/kebutuhan');
       await http.post(url, body: jsonEncode(kebutuhan.toJson()), headers: {
         'Authorization': 'Bearer $token',
         'Accept': 'application/json',
