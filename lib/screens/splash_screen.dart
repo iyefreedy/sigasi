@@ -13,26 +13,43 @@ class SplashScreen extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         final authState = ref.watch(authProvider);
-
-        return authState.when(
-          data: (user) {
-            if (user != null) {
-              return const HomeScreen();
-            } else {
-              return const LoginScreen();
+        ref.listen(
+          authProvider,
+          (previous, next) async {
+            if (next.error != null) {
+              final error = next.error;
+              if (context.mounted && previous?.error != next.error) {
+                await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Error'),
+                      content:
+                          Text(error.toString()), // Menampilkan pesan error
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             }
           },
-          loading: () => const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
-          error: (error, stackTrace) => Scaffold(
-            body: Center(
-              child: Text('Error: $error'),
-            ),
-          ),
         );
+
+        if (authState.isLoading) {
+          return const Scaffold(
+              body: Center(
+            child: CircularProgressIndicator(),
+          ));
+        }
+
+        return authState.user != null
+            ? const HomeScreen()
+            : const LoginScreen();
       },
     );
   }

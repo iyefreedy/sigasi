@@ -9,7 +9,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider);
-    final roles = auth.value?.roles;
+    final roles = auth.user?.roles;
 
     return Scaffold(
       body: CustomScrollView(

@@ -27,38 +27,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
-    try {
-      final username = _usernameController.text.trim();
-      final password = _passwordController.text.trim();
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
 
-      await ref.read(authProvider.notifier).login(username, password);
-
-      // Cek apakah login berhasil dengan mengecek state
-      final user = ref.read(authProvider).value;
-      if (user != null) {
-        if (mounted) {
-          Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: Text(e.toString()), // Menampilkan pesan error
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    }
+    await ref.read(authProvider.notifier).login(username, password);
   }
 
   @override

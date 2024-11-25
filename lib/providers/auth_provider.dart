@@ -2,45 +2,70 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/services/auth_service.dart';
 import '../models/user.dart';
 
-final authProvider = StateNotifierProvider<AuthNotifier, AsyncValue<User?>>(
+final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
   (ref) => AuthNotifier(AuthService()),
 );
 
-class AuthNotifier extends StateNotifier<AsyncValue<User?>> {
+class AuthState {
+  final User? user;
+  final Exception? error;
+  final bool isLoading;
+
+  const AuthState({
+    this.user,
+    this.error,
+    this.isLoading = false,
+  });
+
+  AuthState copyWith({
+    User? user,
+    Exception? error,
+    bool? isLoading,
+  }) {
+    return AuthState(
+      user: user ?? this.user,
+      error: error ?? this.error,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
+}
+
+class AuthNotifier extends StateNotifier<AuthState> {
   final AuthService authService;
 
-  AuthNotifier(this.authService) : super(const AsyncValue.data(null));
+  AuthNotifier(this.authService) : super(const AuthState());
 
-  User? get currentUser => state.value;
+  User? get currentUser => state.user;
 
   Future<void> login(String username, String password) async {
-    state = const AsyncValue.loading(); // Set loading state
+    state = state.copyWith(isLoading: true);
     try {
       final user = await authService.login(username, password);
-      state = AsyncValue.data(user);
-    } catch (e) {
-      state = AsyncValue.error(e, StackTrace.current); // Set error state
+      state = state.copyWith(user: user);
+    } on Exception catch (e) {
+      state = state.copyWith(error: e);
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 
   Future<void> authenticate() async {
-    state = const AsyncValue.loading(); // Set loading state
+    state = state.copyWith(isLoading: true); // Set loading state
     try {
       final user = await authService.authenticate();
-      state = AsyncValue.data(user);
-    } catch (e) {
+      state = state.copyWith(user: user);
+    } on Exception catch (e) {
       print('Authentication error: $e');
-      state = AsyncValue.error(e, StackTrace.current); // Set error state
+      state = state.copyWith(error: e);
     }
   }
 
   Future<void> logout() async {
     try {
-      state = const AsyncValue.data(null);
-      // Add additional logout logic if needed, such as clearing the token.
-    } catch (e) {
+      state = state.copyWith(user: null);
+    } on Exception catch (e) {
       print('Logout error: $e');
-      // Optionally handle logout errors if needed.
+      state = state.copyWith(error: e);
     }
   }
 }

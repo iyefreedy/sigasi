@@ -30,12 +30,6 @@ class _FilterPendudukScreenState extends ConsumerState<FilterPendudukScreen> {
       appBar: AppBar(
         title: const Text('Filter Penduduk'),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.person_add),
-        onPressed: () {
-          Navigator.of(context).pushNamed(AppRouter.formPendudukRoute);
-        },
-      ),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -128,7 +122,7 @@ class _FilterPendudukScreenState extends ConsumerState<FilterPendudukScreen> {
                 });
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             ElevatedButton.icon(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {

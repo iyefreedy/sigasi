@@ -7,7 +7,6 @@ import 'package:sigasi/models/donatur.dart';
 import 'package:sigasi/utils/connectivity.dart';
 import 'package:sigasi/utils/database_helper.dart';
 import 'package:http/http.dart' as http;
-import 'package:sqflite/sqflite.dart';
 
 import '../models/bantuan.dart';
 
@@ -36,28 +35,13 @@ class BantuanService {
         .map((json) => Bantuan.fromJson(json))
         .toList();
 
-    final listDetailBantuan =
-        listBantuan.expand((bantuan) => bantuan.detailBantuan).toList();
-
-    final db = await _databaseHelper.database;
-
-    final queueBantuan = listBantuan.map((bantuan) => db.insert(
-        'TBL_BANTUAN', bantuan.toJson()..remove('bantuan_detail'),
-        conflictAlgorithm: ConflictAlgorithm.replace));
-    final queueDetailBantuan = listDetailBantuan.map((detail) => db.insert(
-        'TBL_BANTUAN_DTL', detail.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace));
-
-    final queue = [...queueBantuan, ...queueDetailBantuan];
-    await Future.any(queue);
-
     return listBantuan;
   }
 
   Future<List<Bantuan>> fetchBantuan() async {
-    final connectivityResult = await isConnectedToInternet();
+    final isConnected = await isConnectedToInternet();
 
-    if (!connectivityResult) {
+    if (!isConnected) {
       final db = await _databaseHelper.database;
       final records = await db.query('TBL_BANTUAN');
 

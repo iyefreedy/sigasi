@@ -1,8 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sigasi/models/barang.dart';
 
-import 'donatur.dart';
-
 part 'detail_bantuan.g.dart';
 
 @JsonSerializable()
@@ -33,7 +31,6 @@ class DetailBantuan {
     String? iDBantuan,
     String? iDBarang,
     int? jumlah,
-    Donatur? donatur,
     Barang? barang,
   }) =>
       DetailBantuan(

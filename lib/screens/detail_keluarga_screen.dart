@@ -38,43 +38,62 @@ class DetailKeluargaScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                Flex(
-                  direction: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          keluarga.nomorKK ?? '-',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(keluarga.alamat ?? '-'),
-                      ],
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(keluarga.kecamatan?.nama ?? '-'),
-                        Text(keluarga.desa?.nama ?? '-'),
-                      ],
-                    )
-                  ],
-                ),
-                const SizedBox(height: 10),
-                for (final anggota in keluarga.anggota!)
-                  ListTileTheme(
-                    data: ListTileThemeData(
-                      tileColor: Theme.of(context).colorScheme.primaryContainer,
-                    ),
-                    child: ListTile(
-                      leading: const Icon(Icons.person),
-                      title: Text(anggota.penduduk?.nama ?? '-'),
-                      subtitle: Text(anggota.hubungan ?? '-'),
-                    ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainer,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(.15),
+                        offset: const Offset(0, 2),
+                        blurRadius: 1,
+                        spreadRadius: 1,
+                      )
+                    ],
                   ),
+                  child: Flex(
+                    direction: Axis.horizontal,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            keluarga.nomorKK ?? '-',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(keluarga.alamat ?? '-'),
+                        ],
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(keluarga.kecamatan?.nama ?? '-'),
+                          Text(keluarga.desa?.nama ?? '-'),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                if (keluarga.anggota?.isEmpty ?? false)
+                  const Text('Belum ada data anggota keluarga')
+                else
+                  for (final anggota in keluarga.anggota!)
+                    ListTileTheme(
+                      data: ListTileThemeData(
+                        tileColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.person),
+                        title: Text(anggota.penduduk?.nama ?? '-'),
+                        subtitle: Text(anggota.hubungan ?? '-'),
+                      ),
+                    ),
               ],
             ),
           );

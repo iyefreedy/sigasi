@@ -26,6 +26,12 @@ class ListKeluargaScreen extends ConsumerWidget {
       ),
       body: listKeluarga.when(
         data: (data) {
+          if (data.isEmpty) {
+            return const Center(
+              child: Text('Data tidak dimeukan'),
+            );
+          }
+
           return ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
