@@ -57,6 +57,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } on Exception catch (e) {
       print('Authentication error: $e');
       state = state.copyWith(error: e);
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 

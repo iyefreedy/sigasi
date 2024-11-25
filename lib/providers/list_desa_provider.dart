@@ -8,7 +8,8 @@ final listDesaProvider = FutureProvider.autoDispose.family<List<Desa>, int?>(
   (ref, arg) async {
     if (arg == null) return [];
 
-    final url = Uri.parse('https://sigasi.my.id/api/$arg/desa');
+    final url = Uri.parse('https://sigasi.my.id/api/kecamatan/$arg/desa');
+    print(url);
     final response = await http.get(url);
     print(response.body);
 

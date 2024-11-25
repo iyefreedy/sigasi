@@ -35,7 +35,7 @@ class PoskoService {
 
   Future<List<Posko>> _fetchPoskoFromServer() async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('https://sigasi.my.id/api/api/posko');
+    final url = Uri.parse('https://sigasi.my.id/api/posko');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
