@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 import '../models/posko.dart';
+import '../utils/app_constant.dart';
 
 class PoskoService {
   final DatabaseHelper dbHelper = DatabaseHelper.getInstance();
@@ -35,7 +36,7 @@ class PoskoService {
 
   Future<List<Posko>> _fetchPoskoFromServer() async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('https://sigasi.my.id/api/posko');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/posko');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
@@ -59,7 +60,7 @@ class PoskoService {
     if (isConnected) {
       final token =
           (await (SharedPreferences.getInstance())).getString('token');
-      final url = Uri.parse('https://sigasi.my.id/api/api/posko');
+      final url = Uri.parse('${AppConstant.apiUrl}/api/api/posko');
       await http.post(
         url,
         body: jsonEncode(newPosko.toJson()),
@@ -86,7 +87,7 @@ class PoskoService {
     if (isConnected) {
       final token =
           (await (SharedPreferences.getInstance())).getString('token');
-      final url = Uri.parse('https://sigasi.my.id/api/${posko.iDPosko}');
+      final url = Uri.parse('${AppConstant.apiUrl}/api/${posko.iDPosko}');
       final response = await http.put(
         url,
         body: jsonEncode(posko.toJson()),
@@ -115,7 +116,7 @@ class PoskoService {
 
   Future<List<Kebutuhan>> fetchKebutuhan(String? idPosko) async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('https://sigasi.my.id/api/$idPosko/kebutuhan');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/$idPosko/kebutuhan');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });

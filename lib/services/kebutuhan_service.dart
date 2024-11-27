@@ -7,6 +7,8 @@ import 'package:sigasi/utils/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
+import '../utils/app_constant.dart';
+
 class KebutuhanService {
   final DatabaseHelper _databaseHelper = DatabaseHelper.getInstance();
 
@@ -22,7 +24,7 @@ class KebutuhanService {
   Future<List<Kebutuhan>> _fetchKebutuhanFromServer() async {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
-    final url = Uri.parse('https://sigasi.my.id/api/kebutuhan');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/kebutuhan');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
       'Accept': 'application/json',
@@ -58,7 +60,7 @@ class KebutuhanService {
     if (isConnected) {
       final token = (await SharedPreferences.getInstance()).getString('token');
 
-      final url = Uri.parse('https://sigasi.my.id/api/kebutuhan');
+      final url = Uri.parse('${AppConstant.apiUrl}/api/kebutuhan');
       final response = await http.post(
         url,
         body: jsonEncode(newKebutuhan.toJson()),
@@ -88,7 +90,7 @@ class KebutuhanService {
     if (isConnected) {
       final token = (await SharedPreferences.getInstance()).getString('token');
 
-      final url = Uri.parse('https://sigasi.my.id/api/kebutuhan');
+      final url = Uri.parse('${AppConstant.apiUrl}/api/kebutuhan');
       await http.post(url, body: jsonEncode(kebutuhan.toJson()), headers: {
         'Authorization': 'Bearer $token',
         'Accept': 'application/json',

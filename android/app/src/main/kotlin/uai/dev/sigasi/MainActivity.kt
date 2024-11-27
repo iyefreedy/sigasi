@@ -1,4 +1,4 @@
-package com.example.sigasi
+package uai.dev.sigasi
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sigasi/models/donatur.dart';
 import 'package:sigasi/models/penduduk.dart';
 import 'package:sigasi/models/posko.dart';
+import 'package:sigasi/screens/add_anggota_screen.dart';
 import 'package:sigasi/screens/create_penduduk_screen.dart';
 import 'package:sigasi/screens/detail_keluarga_screen.dart';
 import 'package:sigasi/screens/edit_penduduk_screen.dart';
@@ -41,6 +42,7 @@ class AppRouter {
 
   static const formAnggotaKeluargaRoute =
       '/detail-keluarga/form-anggota-keluarga';
+  static const addAnggotaRoute = '/form-anggota';
 
   static const filterPendudukRoute = '/filter-penduduk';
   static const formPendudukRoute = '/form-penduduk';
@@ -106,13 +108,19 @@ class AppRouter {
           final args = settings.arguments as String;
           return DetailKeluargaScreen(id: args);
         });
-
       case formAnggotaKeluargaRoute:
         return MaterialPageRoute(
           settings: RouteSettings(name: routeName),
           builder: (context) {
             final idKeluarga = settings.arguments as String;
             return FormAnggotaKeluargaScreen(idKeluarga: idKeluarga);
+          },
+        );
+      case addAnggotaRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) {
+            return const AddAnggotaScreen();
           },
         );
 

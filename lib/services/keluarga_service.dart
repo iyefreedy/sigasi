@@ -6,6 +6,7 @@ import 'package:sigasi/models/keluarga.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/penduduk.dart';
+import '../utils/app_constant.dart';
 
 class KeluargaService {
   Future<List<Keluarga>> fetchKeluarga({
@@ -15,7 +16,7 @@ class KeluargaService {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
     final url = Uri.parse(
-        'https://sigasi.my.id/api/keluarga?kecamatan=$idKecamatan&desa=$idDesa');
+        '${AppConstant.apiUrl}/api/keluarga?kecamatan=$idKecamatan&desa=$idDesa');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });
@@ -33,7 +34,7 @@ class KeluargaService {
   Future<Keluarga> fetchKeluargaById(String id) async {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
-    final url = Uri.parse('https://sigasi.my.id/api/keluarga/$id');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/keluarga/$id');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
@@ -51,7 +52,7 @@ class KeluargaService {
   Future<Keluarga> insertKeluarga(Keluarga keluarga) async {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
-    final url = Uri.parse('https://sigasi.my.id/api/keluarga');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/keluarga');
     final response =
         await http.post(url, body: jsonEncode(keluarga.toJson()), headers: {
       'Authorization': 'Bearer $token',
@@ -71,7 +72,7 @@ class KeluargaService {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
     final url =
-        Uri.parse('https://sigasi.my.id/api/keluarga/$idKeluarga/anggota');
+        Uri.parse('${AppConstant.apiUrl}/api/keluarga/$idKeluarga/anggota');
     final response = await http.post(url,
         body: jsonEncode({
           ...penduduk.toJson(),

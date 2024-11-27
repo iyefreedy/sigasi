@@ -9,13 +9,14 @@ import 'package:sigasi/utils/database_helper.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/bantuan.dart';
+import '../utils/app_constant.dart';
 
 class BantuanService {
   final DatabaseHelper _databaseHelper = DatabaseHelper.getInstance();
 
   Future<List<Bantuan>> _fetchBantuanFromServer() async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('https://sigasi.my.id/api/bantuan');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/bantuan');
 
     final response = await http.get(
       url,
@@ -96,7 +97,7 @@ class BantuanService {
 
   Future<Bantuan> insertBantuan(Bantuan bantuan) async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('https://sigasi.my.id/api/bantuan');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/bantuan');
 
     final response = await http.post(
       url,

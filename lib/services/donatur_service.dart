@@ -7,6 +7,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 
+import '../utils/app_constant.dart';
 import '../utils/database_helper.dart';
 
 class DonaturService {
@@ -31,7 +32,7 @@ class DonaturService {
 
   Future<List<Donatur>> _fetchDonaturFromServer() async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('https://sigasi.my.id/api/donatur');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/donatur');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });
@@ -79,7 +80,7 @@ class DonaturService {
 
   Future<Donatur> _insertDonaturToServer(Donatur donatur) async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('https://sigasi.my.id/api/donatur');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/donatur');
 
     final response = await http.post(url,
         body: jsonEncode(donatur.toJson()),
@@ -122,7 +123,7 @@ class DonaturService {
   Future<Donatur> _updateDonaturToServer(Donatur donatur) async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
     final url = Uri.parse(
-      'https://sigasi.my.id/api/donatur/${donatur.iDDonatur}',
+      '${AppConstant.apiUrl}/api/donatur/${donatur.iDDonatur}',
     );
 
     final response = await http.put(url,

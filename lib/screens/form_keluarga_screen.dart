@@ -28,6 +28,8 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
   Kecamatan? _kecamatan;
   Desa? _desa;
 
+  bool _isLoading = false;
+
   @override
   void dispose() {
     super.dispose();
@@ -142,33 +144,52 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
               },
             ),
             const SizedBox(height: 10),
-            ElevatedButton.icon(
+            ElevatedButton(
               onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  final idKeluarga = const Uuid().v4();
-                  final keluarga = Keluarga(
-                    iDKeluarga: idKeluarga,
-                    iDDesa: _desa?.iDDesa,
-                    iDKecamatan: _kecamatan?.iDKecamatan,
-                    alamat: _alamatController.text,
-                    nomorKK: _nomorKkController.text,
-                  );
-                  await ref
-                      .read(listKeluargaProvider((
-                        idDesa: _desa!.iDDesa,
-                        idKecamatan: _kecamatan!.iDKecamatan,
-                      )).notifier)
-                      .save(keluarga);
-                  if (context.mounted) {
-                    Navigator.of(context).pushReplacementNamed(
-                      AppRouter.detailKeluargaRoute,
-                      arguments: idKeluarga,
+                try {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  if (_formKey.currentState!.validate()) {
+                    final idKeluarga = const Uuid().v4();
+                    final keluarga = Keluarga(
+                      iDKeluarga: idKeluarga,
+                      iDDesa: _desa?.iDDesa,
+                      iDKecamatan: _kecamatan?.iDKecamatan,
+                      alamat: _alamatController.text,
+                      nomorKK: _nomorKkController.text,
                     );
+                    await ref
+                        .read(listKeluargaProvider((
+                          idDesa: _desa!.iDDesa,
+                          idKecamatan: _kecamatan!.iDKecamatan,
+                        )).notifier)
+                        .save(keluarga);
+                    if (context.mounted) {
+                      Navigator.of(context).pushReplacementNamed(
+                        AppRouter.detailKeluargaRoute,
+                        arguments: idKeluarga,
+                      );
+                    }
                   }
+                } catch (e) {
+                  print(e);
+                } finally {
+                  _isLoading = false;
                 }
               },
-              label: const Text('Simpan'),
-              icon: const Icon(Icons.save),
+              child: _isLoading
+                  ? const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    )
+                  : const Text('Simpan'),
             ),
           ],
         ),

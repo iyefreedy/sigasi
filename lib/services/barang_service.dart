@@ -7,6 +7,8 @@ import 'package:sigasi/utils/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 
+import '../utils/app_constant.dart';
+
 class BarangService {
   final DatabaseHelper _databaseHelper = DatabaseHelper.getInstance();
 
@@ -24,7 +26,7 @@ class BarangService {
 
   Future<List<Barang>> _fetchBarangFromServer() async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('https://sigasi.my.id/api/barang');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/barang');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });

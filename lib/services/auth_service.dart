@@ -4,10 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sigasi/models/auth_response.dart';
 import 'package:sigasi/models/user.dart';
+import 'package:sigasi/utils/app_constant.dart';
 
 class AuthService {
-  static const String _baseUrl = 'https://sigasi.my.id/api';
-
   Future<Map<String, String>> _getHeaders() async {
     final preferences = await SharedPreferences.getInstance();
     final token = preferences.getString('token');
@@ -18,7 +17,7 @@ class AuthService {
   }
 
   Future<User?> authenticate() async {
-    final url = Uri.parse('$_baseUrl/dashboard');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/user');
     try {
       final headers = await _getHeaders();
       final response = await http.get(url, headers: headers);
@@ -34,7 +33,7 @@ class AuthService {
   }
 
   Future<User?> login(String username, String password) async {
-    final url = Uri.parse('$_baseUrl/authenticate');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/authenticate');
     try {
       final response = await http.post(
         url,
@@ -44,7 +43,7 @@ class AuthService {
         }),
         headers: {'Content-Type': 'application/json'},
       );
-      print(response.body);
+      print('Login response: ${response.body}');
 
       if (response.statusCode != 200) {
         print(response.body);

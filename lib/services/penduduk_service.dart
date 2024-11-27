@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/penduduk.dart';
+import '../utils/app_constant.dart';
 import '../utils/database_helper.dart';
 
 class PendudukService {
@@ -37,7 +38,7 @@ class PendudukService {
   }) async {
     final token = (await SharedPreferences.getInstance()).getString('token');
     final url = Uri.parse(
-        'https://sigasi.my.id/api/penduduk?idKelompok=$idKelompok&idDesa=$idDesa');
+        '${AppConstant.apiUrl}/api/penduduk?idKelompok=$idKelompok&idDesa=$idDesa');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });

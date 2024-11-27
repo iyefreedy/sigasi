@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 
+import '../utils/app_constant.dart';
 import '../utils/database_helper.dart';
 
 class DistribusiService {
@@ -17,7 +18,7 @@ class DistribusiService {
     final isConnected = await isConnectedToInternet();
     if (isConnected) {
       final token = (await SharedPreferences.getInstance()).getString('token');
-      final url = Uri.parse('https://sigasi.my.id/api/distribusi');
+      final url = Uri.parse('${AppConstant.apiUrl}/api/distribusi');
       final response = await http.get(url, headers: {
         'Authorization': 'Bearer $token',
       });
@@ -55,7 +56,7 @@ class DistribusiService {
     final isConnected = await isConnectedToInternet();
     if (isConnected) {
       final token = (await SharedPreferences.getInstance()).getString('token');
-      final url = Uri.parse('https://sigasi.my.id/api/distribusi');
+      final url = Uri.parse('${AppConstant.apiUrl}/api/distribusi');
       final response = await http.post(
         url,
         body: jsonEncode(newDistribusi.toJson()),

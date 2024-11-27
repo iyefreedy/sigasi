@@ -28,11 +28,25 @@ class _FilterKeluargaScreen extends ConsumerState<FilterKeluargaScreen> {
       appBar: AppBar(
         title: const Text('Filter data Keluarga'),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(AppRouter.formKeluargaRoute);
-        },
-        child: const Icon(Icons.add_circle),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: 'fab1',
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRouter.addAnggotaRoute);
+            },
+            child: const Icon(Icons.person_add),
+          ),
+          const SizedBox(height: 20),
+          FloatingActionButton(
+            heroTag: 'fab2',
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRouter.formKeluargaRoute);
+            },
+            child: const Icon(Icons.add_circle),
+          ),
+        ],
       ),
       body: Form(
         key: _formKey,
