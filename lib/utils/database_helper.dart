@@ -32,9 +32,8 @@ class DatabaseHelper {
             JenisKelamin TEXT,
             TanggalLahir TEXT,
             Alamat TEXT,
-            Desa TEXT,
-            Kecamatan TEXT,
-            Kabupaten TEXT,
+            IDDesa INTEGER,
+            IDKecamatan TEXT,
             IDKelompok TEXT,
             LastUpdateDate TEXT,
             LastUpdateBy TEXT
@@ -63,6 +62,7 @@ class DatabaseHelper {
         CREATE TABLE TBL_DONATUR (
           IDDonatur TEXT PRIMARY KEY,
           NamaPerusahaan TEXT,
+          NamaKontak TEXT,
           Alamat TEXT,
           NomorKontak TEXT,
           LastUpdateDate TEXT,

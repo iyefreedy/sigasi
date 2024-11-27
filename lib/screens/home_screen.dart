@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/providers/auth_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
+import 'package:sigasi/utils/dialogs/logout_dialog.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -22,14 +23,23 @@ class HomeScreen extends ConsumerWidget {
             ),
             actions: [
               PopupMenuButton(
-                onSelected: (value) {
-                  // AutoRouter.of(context).push(LoginRoute());
-                },
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem(
-                      child: const Text('Logout'),
-                      onTap: () async {},
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text('Logout'), Icon(Icons.logout)],
+                      ),
+                      onTap: () async {
+                        try {
+                          final shouldLogout = await showLogoutDialog(context);
+                          if (shouldLogout) {
+                            await ref.read(authProvider.notifier).logout();
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
                     )
                   ];
                 },
@@ -75,7 +85,9 @@ class HomeScreen extends ConsumerWidget {
                     foregroundColor: Colors.green.shade700,
                     icon: Icons.group,
                   ),
-                if (roles != null && roles.first.name == 'posko')
+                if (roles != null &&
+                    (roles.first.name == 'posko' ||
+                        roles.first.name == 'posko utama'))
                   MenuItem(
                     to: AppRouter.filterPengungsiRoute,
                     title: 'Data Pengungsi',
@@ -93,7 +105,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 if (roles != null && roles.first.name == 'bansos')
                   MenuItem(
-                    to: '/list-donatur',
+                    to: AppRouter.listDonaturRoute,
                     title: 'Data Donatur',
                     backgroundColor: Colors.tealAccent.shade100,
                     foregroundColor: Colors.tealAccent.shade700,
@@ -109,7 +121,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 if (roles != null && roles.first.name == 'bansos')
                   MenuItem(
-                    to: '/list-distribusi',
+                    to: AppRouter.listDistribusiRoute,
                     title: 'Data Distribusi',
                     backgroundColor: Colors.cyan.shade100,
                     foregroundColor: Colors.cyan.shade700,
@@ -117,7 +129,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 if (roles != null && roles.first.name == 'posko utama')
                   MenuItem(
-                    to: '/list-posko',
+                    to: AppRouter.listPoskoroute,
                     title: 'Data Posko',
                     backgroundColor: Colors.indigo.shade100,
                     foregroundColor: Colors.indigo.shade700,

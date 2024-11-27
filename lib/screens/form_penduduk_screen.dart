@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sigasi/models/penduduk.dart';
+import 'package:sigasi/providers/list_desa_provider.dart';
+import 'package:sigasi/providers/list_kecamatan_provider.dart';
 import 'package:sigasi/providers/list_kelompok_provider.dart';
 import 'package:sigasi/providers/list_penduduk_provider.dart';
-import 'package:sigasi/utils/app_router.dart';
+
+import '../utils/app_router.dart';
 
 const listDesa = [
   'Cibodas',
@@ -16,15 +19,17 @@ const listDesa = [
   'Sukanagih'
 ];
 
-class CreatePendudukScreen extends ConsumerStatefulWidget {
-  const CreatePendudukScreen({super.key});
+class FormPendudukScreen extends ConsumerStatefulWidget {
+  const FormPendudukScreen({super.key, this.penduduk});
+
+  final Penduduk? penduduk;
 
   @override
-  ConsumerState<CreatePendudukScreen> createState() =>
+  ConsumerState<FormPendudukScreen> createState() =>
       _CreatePendudukScreenState();
 }
 
-class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
+class _CreatePendudukScreenState extends ConsumerState<FormPendudukScreen> {
   late final TextEditingController _ktpController;
   late final TextEditingController _namaController;
   late final TextEditingController _tanggalLahirController;
@@ -32,26 +37,34 @@ class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
 
   late final GlobalKey<FormState> _formKey;
 
-  DateTime? _tanggalLahir;
   String? _jenisKelamin;
   String? _kelompok;
-  String? _desa;
+  int? _desa;
+  int? _kecamatan;
 
   @override
   void initState() {
     super.initState();
 
-    _ktpController = TextEditingController();
-    _namaController = TextEditingController();
-    _alamatController = TextEditingController();
+    _ktpController = TextEditingController(text: widget.penduduk?.kTP);
+    _namaController = TextEditingController(text: widget.penduduk?.nama);
+    _alamatController = TextEditingController(text: widget.penduduk?.alamat);
     _tanggalLahirController =
-        TextEditingController(text: _tanggalLahir?.toIso8601String());
+        TextEditingController(text: widget.penduduk?.tanggalLahir);
+    _jenisKelamin = widget.penduduk?.jenisKelamin;
+    _kelompok = widget.penduduk?.iDKelompok;
+    _desa = widget.penduduk?.iDDesa;
+    _kecamatan = widget.penduduk?.iDKecamatan;
+
     _formKey = GlobalKey<FormState>();
   }
 
   @override
   Widget build(BuildContext context) {
     final listKelompok = ref.watch(listKelompokProvider);
+    final listKecamatan = ref.watch(listKecamatanProvider);
+    final listDesa = ref.watch(listDesaProvider(_kecamatan));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Form Penduduk'),
@@ -88,6 +101,7 @@ class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
               decoration: const InputDecoration(
                 labelText: 'Jenis Kelamin',
               ),
+              value: _jenisKelamin,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Jenis kelamin harus diisi.';
@@ -102,7 +116,7 @@ class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
                 ),
                 DropdownMenuItem(
                   value: 'Perempuan',
-                  child: Text('Peremuan'),
+                  child: Text('Perempuan'),
                 ),
               ],
               onChanged: (value) {
@@ -126,9 +140,6 @@ class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
                 );
 
                 if (dateTime != null) {
-                  setState(() {
-                    _tanggalLahir = dateTime;
-                  });
                   _tanggalLahirController.text =
                       DateFormat('y-MM-dd').format(dateTime);
                 }
@@ -142,7 +153,38 @@ class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            DropdownButtonFormField<String?>(
+            DropdownButtonFormField<int?>(
+              value: _kecamatan,
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Kecamatan',
+              ),
+              validator: (value) {
+                if (value == null) {
+                  return 'Kecamatan harus diisi.';
+                }
+
+                return null;
+              },
+              items: listKecamatan.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map(
+                      (kecamatan) => DropdownMenuItem(
+                        value: kecamatan.iDKecamatan,
+                        child: Text(kecamatan.nama),
+                      ),
+                    )
+                    .toList(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _kecamatan = value;
+                });
+              },
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<int?>(
               value: _desa,
               isExpanded: true,
               decoration: const InputDecoration(
@@ -155,14 +197,17 @@ class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
 
                 return null;
               },
-              items: listDesa
-                  .map(
-                    (desa) => DropdownMenuItem(
-                      value: desa,
-                      child: Text(desa),
-                    ),
-                  )
-                  .toList(),
+              items: listDesa.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map(
+                      (desa) => DropdownMenuItem(
+                        value: desa.iDDesa,
+                        child: Text(desa.nama),
+                      ),
+                    )
+                    .toList(),
+              ),
               onChanged: (value) {
                 setState(() {
                   _desa = value;
@@ -175,24 +220,22 @@ class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
               decoration: const InputDecoration(
                 labelText: 'Kelompok',
               ),
+              value: _kelompok,
               validator: (value) {
                 if (value == null) {
-                  return 'Desa harus diisi.';
+                  return 'Kelompok harus diisi.';
                 }
 
                 return null;
               },
               items: listKelompok.maybeWhen(
-                data: (data) => data
-                    .map(
-                      (kelompok) => DropdownMenuItem(
-                        value: kelompok.iDKelompok,
-                        child: Text("${kelompok.namaKelompok}"),
-                      ),
-                    )
-                    .toList(),
-                orElse: () => [],
-              ),
+                  orElse: () => [],
+                  data: (data) => data
+                      .map((kelompok) => DropdownMenuItem(
+                            value: kelompok.iDKelompok,
+                            child: Text("${kelompok.namaKelompok}"),
+                          ))
+                      .toList()),
               onChanged: (value) {
                 setState(() {
                   _kelompok = value;
@@ -202,23 +245,20 @@ class _CreatePendudukScreenState extends ConsumerState<CreatePendudukScreen> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () async {
-                final penduduk = Penduduk(
+                final penduduk = (widget.penduduk ?? const Penduduk()).copyWith(
                   alamat: _alamatController.text,
-                  iDDesa: 0,
+                  iDDesa: _desa,
                   jenisKelamin: _jenisKelamin,
                   kTP: _ktpController.text,
                   iDKelompok: _kelompok,
                   nama: _namaController.text,
                   tanggalLahir: _tanggalLahirController.text,
-                  lastUpdateBy: 'dc119c38-6aaf-4355-94f2-e171f0a1311d',
-                  lastUpdateDate: DateTime.now().toIso8601String(),
                 );
 
                 if (_formKey.currentState!.validate()) {
                   await ref
-                      .read(
-                          listPendududukProvider((desa: null, idKelompok: null))
-                              .notifier)
+                      .read(listPendududukProvider(
+                          (desa: _desa, idKelompok: _kelompok)).notifier)
                       .save(penduduk);
 
                   if (context.mounted) {

@@ -47,11 +47,16 @@ class ListKebutuhanScreen extends ConsumerWidget {
                 ),
                 child: ExpansionTile(
                   title: Text(kebutuhan.posko?.lokasi ?? '-'),
+                  subtitle: Text(kebutuhan.barang?.namaBarang ?? '-'),
                   children: [
                     ListTile(
-                      title: Text(kebutuhan.barang?.namaBarang ?? '-'),
+                      title: const Text('Jumlah Kebutuhan'),
                       subtitle: Text(kebutuhan.jumlahKebutuhan.toString()),
-                    )
+                    ),
+                    ListTile(
+                      title: const Text('Jumlah Diterima'),
+                      subtitle: Text(kebutuhan.jumlahDiterima.toString()),
+                    ),
                   ],
                 ),
               );

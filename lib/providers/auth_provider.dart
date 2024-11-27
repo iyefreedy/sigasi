@@ -28,14 +28,25 @@ class AuthState {
       isLoading: isLoading ?? this.isLoading,
     );
   }
+
+  @override
+  String toString() {
+    return '''
+    AuthState(
+      user: $user,
+      error: $error,
+      isLoading: $isLoading,
+    )
+    ''';
+  }
 }
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthService authService;
 
-  AuthNotifier(this.authService) : super(const AuthState());
-
-  User? get currentUser => state.user;
+  AuthNotifier(this.authService) : super(const AuthState()) {
+    authenticate();
+  }
 
   Future<void> login(String username, String password) async {
     state = state.copyWith(isLoading: true);
@@ -43,7 +54,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = await authService.login(username, password);
       state = state.copyWith(user: user);
     } on Exception catch (e) {
-      state = state.copyWith(error: e);
+      state = state.copyWith(error: e, user: null);
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -56,18 +67,25 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(user: user);
     } on Exception catch (e) {
       print('Authentication error: $e');
-      state = state.copyWith(error: e);
+      state = state.copyWith(error: e, user: null);
     } finally {
       state = state.copyWith(isLoading: false);
     }
   }
 
   Future<void> logout() async {
+    state = state.copyWith(isLoading: true);
     try {
-      state = state.copyWith(user: null);
+      print('Try to logout: $state');
+      state = const AuthState(
+        user: null,
+        error: null,
+        isLoading: false,
+      );
+      await authService.logout();
     } on Exception catch (e) {
       print('Logout error: $e');
-      state = state.copyWith(error: e);
+      state = state.copyWith(error: e, isLoading: false);
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/utils/app_observer.dart';
 import 'package:sigasi/utils/app_router.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -14,9 +15,11 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
+
+  await initializeDateFormatting('id_ID');
   runApp(const MyApp());
 }
 

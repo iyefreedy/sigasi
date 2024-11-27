@@ -10,7 +10,7 @@ final listKeluargaProvider = AsyncNotifierProvider.autoDispose
   () => ListKeluargaNotifier(KeluargaService()),
 );
 
-typedef ListKeluargaParam = ({int idKecamatan, int idDesa});
+typedef ListKeluargaParam = ({int? idKecamatan, int? idDesa});
 
 class ListKeluargaNotifier
     extends AutoDisposeFamilyAsyncNotifier<List<Keluarga>, ListKeluargaParam> {

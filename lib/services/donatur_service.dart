@@ -62,25 +62,26 @@ class DonaturService {
   }
 
   Future<Donatur> insertDonatur(Donatur donatur) async {
+    final newDonatur = donatur.copyWith(iDDonatur: const Uuid().v4());
     print('Fetch from local storage');
-    await _insertDonaturToLocal(donatur);
+    await _insertDonaturToLocal(newDonatur);
 
     print('Fetch from server storage');
-    await _insertDonaturToServer(donatur);
+    await _insertDonaturToServer(newDonatur);
 
     return donatur;
   }
 
   Future<Donatur> _insertDonaturToLocal(Donatur donatur) async {
-    final newDonatur = donatur.copyWith(iDDonatur: const Uuid().v4());
     final db = await dbHelper.database;
-    await db.insert('TBL_DONATUR', newDonatur.toJson());
+    await db.insert('TBL_DONATUR', donatur.toJson());
     return donatur;
   }
 
   Future<Donatur> _insertDonaturToServer(Donatur donatur) async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
     final url = Uri.parse('${AppConstant.apiUrl}/api/donatur');
+    print(jsonEncode(donatur.toJson()));
 
     final response = await http.post(url,
         body: jsonEncode(donatur.toJson()),
@@ -88,6 +89,7 @@ class DonaturService {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json'
         });
+    print(response.body);
     final jsonBody = jsonDecode(response.body) as Map<String, dynamic>;
 
     final dataDonatur =

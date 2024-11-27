@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sigasi/utils/connectivity.dart';
@@ -72,8 +71,18 @@ class PendudukService {
   Future<Penduduk> insertPenduduk(Penduduk penduduk) async {
     final newPenduduk = penduduk.copyWith(iDPenduduk: const Uuid().v4());
     final db = await dbHelper.database;
-    final newIdPenduduk = await db.insert('TBL_PENDUDUK', newPenduduk.toJson());
-    log('$newIdPenduduk');
+    await db.insert('TBL_PENDUDUK', newPenduduk.toJson());
+
+    final isConnected = await isConnectedToInternet();
+    if (isConnected) {
+      final token = (await SharedPreferences.getInstance()).getString('token');
+      final url = Uri.parse('${AppConstant.apiUrl}/api/penduduk');
+      await http.post(url, body: jsonEncode(newPenduduk.toJson()), headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      });
+    }
+
     return newPenduduk;
   }
 
@@ -85,6 +94,16 @@ class PendudukService {
       where: "IDPenduduk=?",
       whereArgs: [penduduk.iDPenduduk],
     );
+
+    final isConnected = await isConnectedToInternet();
+    if (isConnected) {
+      final token = (await SharedPreferences.getInstance()).getString('token');
+      final url = Uri.parse('${AppConstant.apiUrl}/api/penduduk');
+      await http.put(url, body: jsonEncode(penduduk.toJson()), headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/sjon'
+      });
+    }
 
     return penduduk;
   }

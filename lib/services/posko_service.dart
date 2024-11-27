@@ -116,13 +116,13 @@ class PoskoService {
 
   Future<List<Kebutuhan>> fetchKebutuhan(String? idPosko) async {
     final token = (await (SharedPreferences.getInstance())).getString('token');
-    final url = Uri.parse('${AppConstant.apiUrl}/api/$idPosko/kebutuhan');
+    final url = Uri.parse('${AppConstant.apiUrl}/api/posko/$idPosko/kebutuhan');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });
 
-    final jsonBody = jsonDecode(response.body) as Map<String, dynamic>;
     print(response.body);
+    final jsonBody = jsonDecode(response.body) as Map<String, dynamic>;
     final listKebutuhan = (jsonBody['data'] as List)
         .map((json) => Kebutuhan.fromJson(json as Map<String, dynamic>))
         .toList();

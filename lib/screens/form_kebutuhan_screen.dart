@@ -28,6 +28,8 @@ class _FormKebutuhanScreenState extends ConsumerState<FormKebutuhanScreen> {
 
   final _jumlahKebutuhanController = TextEditingController();
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -133,28 +135,45 @@ class _FormKebutuhanScreenState extends ConsumerState<FormKebutuhanScreen> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  final kebutuhan = Kebutuhan(
-                    iDKebutuhan: widget.kebutuhan?.iDKebutuhan,
-                    iDBarang: _idBarang,
-                    iDPosko: _idPosko,
-                    jumlahKebutuhan: int.parse(_jumlahKebutuhanController.text),
-                  );
+              onPressed: !_isLoading
+                  ? () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        final kebutuhan = Kebutuhan(
+                          iDKebutuhan: widget.kebutuhan?.iDKebutuhan,
+                          iDBarang: _idBarang,
+                          iDPosko: _idPosko,
+                          jumlahKebutuhan:
+                              int.parse(_jumlahKebutuhanController.text),
+                        );
 
-                  await ref
-                      .read(listKebutuhanProvider.notifier)
-                      .save(kebutuhan);
+                        await ref
+                            .read(listKebutuhanProvider.notifier)
+                            .save(kebutuhan);
 
-                  if (context.mounted) {
-                    Navigator.of(context).popUntil(
-                      (route) =>
-                          route.settings.name == AppRouter.listKebutuhanRoute,
-                    );
-                  }
-                }
-              },
-              child: const Text("Simpan"),
+                        setState(() {
+                          _isLoading = false;
+                        });
+
+                        if (context.mounted) {
+                          Navigator.of(context).popUntil(
+                            (route) =>
+                                route.settings.name ==
+                                AppRouter.listKebutuhanRoute,
+                          );
+                        }
+                      }
+                    }
+                  : null,
+              child: _isLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(),
+                    )
+                  : const Text("Simpan"),
             )
           ],
         ),

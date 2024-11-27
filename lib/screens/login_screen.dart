@@ -23,12 +23,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> handleLogin() async {
-    if (!_formKey.currentState!.validate()) return;
+    try {
+      if (!_formKey.currentState!.validate()) return;
 
-    final username = _usernameController.text.trim();
-    final password = _passwordController.text.trim();
+      final username = _usernameController.text.trim();
+      final password = _passwordController.text.trim();
 
-    await ref.read(authProvider.notifier).login(username, password);
+      await ref.read(authProvider.notifier).login(username, password);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

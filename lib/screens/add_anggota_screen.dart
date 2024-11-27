@@ -1,13 +1,16 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:sigasi/models/anggota_keluarga.dart';
+import 'package:sigasi/models/keluarga.dart';
 import 'package:sigasi/models/penduduk.dart';
-import 'package:sigasi/providers/keluarga_provider.dart';
 import 'package:sigasi/providers/list_desa_provider.dart';
 import 'package:sigasi/providers/list_kecamatan_provider.dart';
 import 'package:sigasi/providers/list_kelompok_provider.dart';
 import 'package:sigasi/providers/list_keluarga_provider.dart';
+
+import '../models/anggota_keluarga.dart';
+import '../providers/keluarga_provider.dart';
 
 const listHubunganKeluarga = [
   'Kepala Keluarga',
@@ -38,6 +41,9 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
   String? _kelompok;
   int? _idDesa;
   int? _idKecamatan;
+  String? _idKeluarga;
+
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -62,6 +68,10 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
     final listKecamatan = ref.watch(listKecamatanProvider);
     final listDesa = ref.watch(listDesaProvider(_idKecamatan));
     final listKelompok = ref.watch(listKelompokProvider);
+    final listKeluarga = ref.watch(listKeluargaProvider((
+      idDesa: null,
+      idKecamatan: null,
+    )));
 
     return Scaffold(
       appBar: AppBar(
@@ -72,6 +82,39 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
         child: ListView(
           padding: const EdgeInsets.all(10),
           children: [
+            DropdownSearch<Keluarga>(
+              decoratorProps: const DropDownDecoratorProps(
+                decoration: InputDecoration(labelText: 'Nomor KK'),
+              ),
+              filterFn: (item, filter) =>
+                  item.nomorKK?.contains(filter) ?? false,
+              items: (filter, loadProps) {
+                print(filter);
+                print(loadProps);
+                return listKeluarga.maybeWhen(
+                  orElse: () => [],
+                  data: (data) => data,
+                );
+              },
+              onChanged: (value) {
+                setState(() {
+                  _idKeluarga = value?.iDKeluarga;
+                });
+              },
+              compareFn: (i, s) => i == s,
+              popupProps: PopupPropsMultiSelection.dialog(
+                showSearchBox: true,
+                suggestedItemProps: SuggestedItemProps(
+                  showSuggestedItems: true,
+                  suggestedItems: (us) {
+                    return us
+                        .where((e) => e.nomorKK?.contains("Mrs") ?? false)
+                        .toList();
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
             DropdownButtonFormField(
               value: _hubungan,
               decoration: const InputDecoration(
@@ -96,7 +139,7 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                 });
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             TextFormField(
               controller: _ktpController,
               decoration: const InputDecoration(
@@ -104,7 +147,7 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                 helperText: 'Opsional',
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             TextFormField(
               controller: _namaController,
               decoration: const InputDecoration(
@@ -118,7 +161,7 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                 return null;
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Flexible(
@@ -176,14 +219,14 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             TextFormField(
               controller: _alamatController,
               decoration: const InputDecoration(
                 labelText: 'Alamat',
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             DropdownButtonFormField<int?>(
               value: _idKecamatan,
               isExpanded: true,
@@ -215,7 +258,7 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                 });
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             DropdownButtonFormField<int?>(
               value: _idDesa,
               isExpanded: true,
@@ -246,7 +289,7 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                 });
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             DropdownButtonFormField<String?>(
               value: _kelompok,
               isExpanded: true,
@@ -279,33 +322,47 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  final penduduk = Penduduk(
-                    kTP: _ktpController.text,
-                    nama: _namaController.text,
-                    jenisKelamin: _jenisKelamin,
-                    tanggalLahir: _tanggalLahirController.text,
-                    alamat: _alamatController.text,
-                    iDDesa: _idDesa,
-                    iDKecamatan: _idKecamatan,
-                    iDKelompok: _kelompok,
-                  );
-                  // final anggota = AnggotaKeluarga(
-                  //   hubungan: _hubungan,
-                  //   iDKeluarga: widget.idKeluarga,
-                  //   iDPenduduk: penduduk.iDPenduduk,
-                  // );
-                  // await ref
-                  //     .read(keluargaProvider(widget.idKeluarga).notifier)
-                  //     .save(anggota: anggota, penduduk: penduduk);
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        final penduduk = Penduduk(
+                          kTP: _ktpController.text,
+                          nama: _namaController.text,
+                          jenisKelamin: _jenisKelamin,
+                          tanggalLahir: _tanggalLahirController.text,
+                          alamat: _alamatController.text,
+                          iDDesa: _idDesa,
+                          iDKecamatan: _idKecamatan,
+                          iDKelompok: _kelompok,
+                        );
+                        final anggota = AnggotaKeluarga(
+                          hubungan: _hubungan,
+                          iDKeluarga: _idKeluarga,
+                          iDPenduduk: penduduk.iDPenduduk,
+                        );
+                        await ref
+                            .read(keluargaProvider(_idKeluarga!).notifier)
+                            .save(anggota: anggota, penduduk: penduduk);
 
-                  if (context.mounted) {
-                    Navigator.of(context).pop();
-                  }
-                }
-              },
-              child: const Text('Simpan'),
+                        setState(() {
+                          _isLoading = false;
+                        });
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    },
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(),
+                    )
+                  : const Text('Simpan'),
             ),
           ],
         ),

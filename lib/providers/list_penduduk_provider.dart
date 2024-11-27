@@ -25,11 +25,11 @@ class ListPendudukNotifier
     );
   }
 
-  Future<void> save(Penduduk penduduk) async {
+  Future<Penduduk> save(Penduduk penduduk) async {
     if (penduduk.iDPenduduk == null) {
-      await pendudukService.insertPenduduk(penduduk);
+      return pendudukService.insertPenduduk(penduduk);
     } else {
-      await pendudukService.updatePenduduk(penduduk);
+      return pendudukService.updatePenduduk(penduduk);
     }
   }
 }

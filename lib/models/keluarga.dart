@@ -41,4 +41,9 @@ class Keluarga {
       _$KeluargaFromJson(json);
 
   Map<String, dynamic> toJson() => _$KeluargaToJson(this);
+
+  @override
+  String toString() {
+    return nomorKK ?? '-';
+  }
 }

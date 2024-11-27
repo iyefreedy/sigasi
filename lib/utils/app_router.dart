@@ -3,9 +3,8 @@ import 'package:sigasi/models/donatur.dart';
 import 'package:sigasi/models/penduduk.dart';
 import 'package:sigasi/models/posko.dart';
 import 'package:sigasi/screens/add_anggota_screen.dart';
-import 'package:sigasi/screens/create_penduduk_screen.dart';
 import 'package:sigasi/screens/detail_keluarga_screen.dart';
-import 'package:sigasi/screens/edit_penduduk_screen.dart';
+import 'package:sigasi/screens/form_penduduk_screen.dart';
 import 'package:sigasi/screens/filter_keluarga_screen.dart';
 import 'package:sigasi/screens/filter_pengungsi_screen.dart';
 import 'package:sigasi/screens/form_anggota_keluarga_screen.dart';
@@ -157,11 +156,8 @@ class AppRouter {
           settings: RouteSettings(name: routeName),
           builder: (context) {
             final penduduk = settings.arguments as Penduduk?;
-            if (penduduk != null) {
-              return EditPendudukScreen(penduduk: penduduk);
-            }
 
-            return const CreatePendudukScreen();
+            return FormPendudukScreen(penduduk: penduduk);
           },
         );
 

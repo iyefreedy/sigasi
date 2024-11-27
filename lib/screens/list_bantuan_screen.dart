@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:sigasi/providers/list_bantuan_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 
@@ -46,13 +47,32 @@ class ListBantuanScreen extends ConsumerWidget {
                 ),
                 child: ExpansionTile(
                   title: Text(bantuan.donatur?.namaPerusahaan ?? '-'),
-                  subtitle:
-                      Text(bantuan.tanggalBantuan?.toIso8601String() ?? '-'),
+                  subtitle: Text(bantuan.tanggalBantuan != null
+                      ? DateFormat.yMMMEd('id_ID')
+                          .format(bantuan.tanggalBantuan!)
+                      : '-'),
+                  childrenPadding: const EdgeInsets.all(20),
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Nama Barang',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          'Jumlah',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        )
+                      ],
+                    ),
                     for (final detail in bantuan.detailBantuan)
-                      ListTile(
-                        title: Text((detail.jumlah ?? 0).toString()),
-                        subtitle: Text(detail.barang?.namaBarang ?? '-'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(detail.barang?.namaBarang ?? '-'),
+                          Text((detail.jumlah ?? 0).toString())
+                        ],
                       )
                   ],
                 ),

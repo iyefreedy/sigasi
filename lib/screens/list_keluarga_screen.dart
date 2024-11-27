@@ -28,7 +28,7 @@ class ListKeluargaScreen extends ConsumerWidget {
         data: (data) {
           if (data.isEmpty) {
             return const Center(
-              child: Text('Data tidak dimeukan'),
+              child: Text('Pencarian tidak ditemukan'),
             );
           }
 

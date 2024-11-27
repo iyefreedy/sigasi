@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:sigasi/models/anggota_keluarga.dart';
 import 'package:sigasi/models/keluarga.dart';
+import 'package:sigasi/models/penduduk.dart';
 import 'package:sigasi/providers/list_keluarga_provider.dart';
+import 'package:sigasi/providers/list_penduduk_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/desa.dart';
 import '../models/kecamatan.dart';
+import '../providers/keluarga_provider.dart';
 import '../providers/list_desa_provider.dart';
 import '../providers/list_kecamatan_provider.dart';
+import '../providers/list_kelompok_provider.dart';
+import 'form_anggota_keluarga_screen.dart';
 
 class FormKeluargaScreen extends ConsumerStatefulWidget {
   const FormKeluargaScreen({super.key});
@@ -23,10 +30,21 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final _nomorKkController = TextEditingController();
+  final _alamatKkController = TextEditingController();
+
+  final _ktpController = TextEditingController();
+  final _namaController = TextEditingController();
+  final _tanggalLahirController = TextEditingController();
   final _alamatController = TextEditingController();
 
   Kecamatan? _kecamatan;
   Desa? _desa;
+
+  String? _hubungan = 'Kepala Keluarga';
+  String? _jenisKelamin;
+  String? _kelompok;
+  int? _desaPenduduk;
+  int? _kecamatanPenduduk;
 
   bool _isLoading = false;
 
@@ -34,11 +52,16 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
   void dispose() {
     super.dispose();
     _nomorKkController.dispose();
+    _alamatKkController.dispose();
+    _ktpController.dispose();
+    _namaController.dispose();
+    _tanggalLahirController.dispose();
     _alamatController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final listKelompok = ref.watch(listKelompokProvider);
     final listKecamatan = ref.watch(listKecamatanProvider);
     final listDesa = ref.watch(listDesaProvider(_kecamatan?.iDKecamatan));
 
@@ -70,7 +93,7 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
             ),
             const SizedBox(height: 10),
             TextFormField(
-              controller: _alamatController,
+              controller: _alamatKkController,
               decoration: const InputDecoration(
                 labelText: 'Alamat',
               ),
@@ -144,6 +167,206 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
               },
             ),
             const SizedBox(height: 10),
+            const Divider(),
+            Text(
+              'Informasi Kepala Keluarga',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 10),
+            DropdownButtonFormField(
+              value: _hubungan,
+              decoration: const InputDecoration(
+                labelText: 'Hubungan Keluarga',
+              ),
+              validator: (value) {
+                if (value == null || _hubungan == null) {
+                  return 'Hubungan keluarga harus diisi.';
+                }
+
+                return null;
+              },
+              items: listHubunganKeluarga
+                  .map((hubungan) => DropdownMenuItem(
+                        value: hubungan,
+                        child: Text(hubungan),
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  _hubungan = value;
+                });
+              },
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              controller: _ktpController,
+              decoration: const InputDecoration(
+                labelText: 'KTP',
+                helperText: 'Opsional',
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _namaController,
+              decoration: const InputDecoration(
+                labelText: 'Nama',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nama harus diisi.';
+                }
+
+                return null;
+              },
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField(
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Jenis Kelamin',
+              ),
+              value: _jenisKelamin,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Jenis kelamin harus diisi.';
+                }
+
+                return null;
+              },
+              items: const [
+                DropdownMenuItem(
+                  value: 'Laki-Laki',
+                  child: Text('Laki-Laki'),
+                ),
+                DropdownMenuItem(
+                  value: 'Perempuan',
+                  child: Text('Perempuan'),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _jenisKelamin = value;
+                });
+              },
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _tanggalLahirController,
+              readOnly: true,
+              decoration: const InputDecoration(
+                labelText: 'Tanggal Lahir',
+              ),
+              onTap: () async {
+                final dateTime = await showDatePicker(
+                  context: context,
+                  firstDate: DateTime(1970),
+                  lastDate: DateTime(2050),
+                );
+
+                if (dateTime != null) {
+                  _tanggalLahirController.text =
+                      DateFormat('y-MM-dd').format(dateTime);
+                }
+              },
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _alamatController,
+              decoration: const InputDecoration(
+                labelText: 'Alamat',
+              ),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<int?>(
+              value: _kecamatanPenduduk,
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Kecamatan',
+              ),
+              validator: (value) {
+                if (value == null) {
+                  return 'Kecamatan harus diisi.';
+                }
+
+                return null;
+              },
+              items: listKecamatan.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map(
+                      (kecamatan) => DropdownMenuItem(
+                        value: kecamatan.iDKecamatan,
+                        child: Text(kecamatan.nama),
+                      ),
+                    )
+                    .toList(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _kecamatanPenduduk = value;
+                });
+              },
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<int?>(
+              value: _desaPenduduk,
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Desa',
+              ),
+              validator: (value) {
+                if (value == null) {
+                  return 'Desa harus diisi.';
+                }
+
+                return null;
+              },
+              items: listDesa.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map(
+                      (desa) => DropdownMenuItem(
+                        value: desa.iDDesa,
+                        child: Text(desa.nama),
+                      ),
+                    )
+                    .toList(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _desaPenduduk = value;
+                });
+              },
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String?>(
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Kelompok',
+              ),
+              value: _kelompok,
+              validator: (value) {
+                if (value == null) {
+                  return 'Kelompok harus diisi.';
+                }
+
+                return null;
+              },
+              items: listKelompok.maybeWhen(
+                  orElse: () => [],
+                  data: (data) => data
+                      .map((kelompok) => DropdownMenuItem(
+                            value: kelompok.iDKelompok,
+                            child: Text("${kelompok.namaKelompok}"),
+                          ))
+                      .toList()),
+              onChanged: (value) {
+                setState(() {
+                  _kelompok = value;
+                });
+              },
+            ),
+            const SizedBox(),
             ElevatedButton(
               onPressed: () async {
                 try {
@@ -156,15 +379,39 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
                       iDKeluarga: idKeluarga,
                       iDDesa: _desa?.iDDesa,
                       iDKecamatan: _kecamatan?.iDKecamatan,
-                      alamat: _alamatController.text,
+                      alamat: _alamatKkController.text,
                       nomorKK: _nomorKkController.text,
                     );
+
                     await ref
                         .read(listKeluargaProvider((
                           idDesa: _desa!.iDDesa,
                           idKecamatan: _kecamatan!.iDKecamatan,
                         )).notifier)
                         .save(keluarga);
+
+                    final penduduk = await ref
+                        .read(listPendududukProvider(
+                                (desa: _desaPenduduk, idKelompok: _kelompok))
+                            .notifier)
+                        .save(Penduduk(
+                          alamat: _alamatController.text,
+                          iDDesa: _desaPenduduk,
+                          iDKecamatan: _kecamatanPenduduk,
+                          jenisKelamin: _jenisKelamin,
+                          kTP: _ktpController.text,
+                          iDKelompok: _kelompok,
+                          nama: _namaController.text,
+                          tanggalLahir: _tanggalLahirController.text,
+                        ));
+                    final anggota = AnggotaKeluarga(
+                      hubungan: _hubungan,
+                      iDKeluarga: keluarga.iDKeluarga,
+                      iDPenduduk: penduduk.iDPenduduk,
+                    );
+                    await ref
+                        .read(keluargaProvider(idKeluarga).notifier)
+                        .save(anggota: anggota, penduduk: penduduk);
                     if (context.mounted) {
                       Navigator.of(context).pushReplacementNamed(
                         AppRouter.detailKeluargaRoute,
@@ -175,7 +422,9 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
                 } catch (e) {
                   print(e);
                 } finally {
-                  _isLoading = false;
+                  setState(() {
+                    _isLoading = false;
+                  });
                 }
               },
               child: _isLoading

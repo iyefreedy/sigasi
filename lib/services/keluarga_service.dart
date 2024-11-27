@@ -10,13 +10,17 @@ import '../utils/app_constant.dart';
 
 class KeluargaService {
   Future<List<Keluarga>> fetchKeluarga({
-    required int idKecamatan,
-    required int idDesa,
+    int? idKecamatan,
+    int? idDesa,
   }) async {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
-    final url = Uri.parse(
-        '${AppConstant.apiUrl}/api/keluarga?kecamatan=$idKecamatan&desa=$idDesa');
+    String uri = '${AppConstant.apiUrl}/api/keluarga';
+    if (idKecamatan != null && idDesa != null) {
+      uri += '?kecamatan=$idKecamatan&desa=$idDesa';
+    }
+
+    final url = Uri.parse(uri);
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });

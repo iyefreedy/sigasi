@@ -10,9 +10,13 @@ class AuthService {
   Future<Map<String, String>> _getHeaders() async {
     final preferences = await SharedPreferences.getInstance();
     final token = preferences.getString('token');
+
+    if (token == null) {
+      throw Exception('Sesi anda telah berakhir');
+    }
     return {
       'Content-Type': 'application/json',
-      if (token != null) 'Authorization': 'Bearer $token',
+      'Authorization': 'Bearer $token',
     };
   }
 
@@ -61,9 +65,31 @@ class AuthService {
     }
   }
 
+  Future<void> logout() async {
+    final url = Uri.parse('${AppConstant.apiUrl}/api/logout');
+    try {
+      final headers = await _getHeaders();
+      final response = await http.post(url, headers: headers);
+
+      if (response.statusCode != 200) {
+        throw Exception('Sesi Anda telah berakhir. Silakan login kembali.');
+      }
+
+      await _removeToken();
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   Future<void> _saveToken(String token) async {
     final preferences = await SharedPreferences.getInstance();
     await preferences.setString('token', token);
+  }
+
+  Future<void> _removeToken() async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.remove('token');
   }
 
   User _parseUser(String responseBody) {

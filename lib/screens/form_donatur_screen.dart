@@ -19,6 +19,7 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
   late final TextEditingController _namaPerusahaanController;
   late final TextEditingController _nomorKontakController;
   late final TextEditingController _alamatController;
+  late final TextEditingController _namaKontakController;
 
   bool _isLoading = false;
 
@@ -28,6 +29,8 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
 
     _namaPerusahaanController =
         TextEditingController(text: widget.donatur?.namaPerusahaan);
+    _namaKontakController =
+        TextEditingController(text: widget.donatur?.namaKontak);
     _nomorKontakController =
         TextEditingController(text: widget.donatur?.nomorKontak);
     _alamatController = TextEditingController(text: widget.donatur?.alamat);
@@ -60,6 +63,20 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Nama perusahaan tidak boleh kosong';
+                }
+
+                return null;
+              },
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _namaKontakController,
+              decoration: const InputDecoration(
+                labelText: 'Nama Kontak',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nama kontak tidak boleh kosong';
                 }
 
                 return null;
@@ -105,6 +122,7 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
                         });
                         final donatur = Donatur(
                           alamat: _alamatController.text,
+                          namaKontak: _namaKontakController.text,
                           iDDonatur: widget.donatur?.iDDonatur,
                           namaPerusahaan: _namaPerusahaanController.text,
                           nomorKontak: _nomorKontakController.text,
@@ -119,9 +137,10 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
                       }
                     },
               child: _isLoading
-                  ? const Center(
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
                       child: CircularProgressIndicator(
-                        strokeWidth: 1,
                         color: Colors.white,
                       ),
                     )

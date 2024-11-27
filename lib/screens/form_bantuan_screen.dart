@@ -28,9 +28,10 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
 
   List<DetailBantuan> _listDetailBantuan = [];
 
+  bool _isLoading = false;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -238,26 +239,42 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
               Consumer(
                 builder: (context, ref, child) {
                   return ElevatedButton(
-                    onPressed: () async {
-                      final bantuan = (widget.bantuan ?? Bantuan()).copyWith(
-                        iDDonatur: _idDonatur,
-                        tanggalBantuan: _tanggalBantuan,
-                        detailBantuan: _listDetailBantuan,
-                      );
+                    onPressed: !_isLoading
+                        ? () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            final bantuan =
+                                (widget.bantuan ?? Bantuan()).copyWith(
+                              iDDonatur: _idDonatur,
+                              tanggalBantuan: _tanggalBantuan,
+                              detailBantuan: _listDetailBantuan,
+                            );
 
-                      if (_formKey.currentState!.validate()) {
-                        await ref
-                            .read(listBantuanProvider.notifier)
-                            .save(bantuan);
+                            if (_formKey.currentState!.validate()) {
+                              await ref
+                                  .read(listBantuanProvider.notifier)
+                                  .save(bantuan);
 
-                        if (context.mounted) {
-                          Navigator.of(context).popUntil((route) =>
-                              route.settings.name ==
-                              AppRouter.listBantuanRoute);
-                        }
-                      }
-                    },
-                    child: const Text('Simpan'),
+                              setState(() {
+                                _isLoading = false;
+                              });
+
+                              if (context.mounted) {
+                                Navigator.of(context).popUntil((route) =>
+                                    route.settings.name ==
+                                    AppRouter.listBantuanRoute);
+                              }
+                            }
+                          }
+                        : null,
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text('Simpan'),
                   );
                 },
               )
