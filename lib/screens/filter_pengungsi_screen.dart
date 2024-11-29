@@ -27,7 +27,7 @@ class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamed(AppRouter.formPengungsiRoute);
+          Navigator.of(context).pushNamed(AppRouter.addPengungsiRoute);
         },
         child: const Icon(Icons.person_add),
       ),

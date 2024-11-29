@@ -1,50 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sigasi/models/penduduk.dart';
+
 import 'package:sigasi/models/pengungsi.dart';
 import 'package:sigasi/providers/list_desa_provider.dart';
 import 'package:sigasi/providers/list_kecamatan_provider.dart';
 import 'package:sigasi/providers/list_penduduk_provider.dart';
 import 'package:sigasi/providers/list_pengungsi_provider.dart';
 import 'package:sigasi/providers/list_posko_provider.dart';
-import 'package:sigasi/utils/app_router.dart';
 
-class FormPengungsiScreen extends ConsumerStatefulWidget {
-  const FormPengungsiScreen({super.key, this.pengungsi});
-
-  final Pengungsi? pengungsi;
+class AddPengungsiScreen extends ConsumerStatefulWidget {
+  const AddPengungsiScreen({super.key});
 
   @override
-  ConsumerState<FormPengungsiScreen> createState() =>
-      _FormPengungsiScreenState();
+  ConsumerState<AddPengungsiScreen> createState() => _AddPengungsiScreenState();
 }
 
-class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
-  late final TextEditingController _kondisiKhususController;
+class _AddPengungsiScreenState extends ConsumerState<AddPengungsiScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  String? _idPenduduk;
   String? _idPosko;
   int? _idKecamatan;
   int? _idDesa;
 
   bool _isLoading = false;
-  List<Penduduk> _listPenduduk = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _kondisiKhususController =
-        TextEditingController(text: widget.pengungsi?.kondisiKhusus);
-    _idPenduduk = widget.pengungsi?.iDPenduduk;
-    _idPosko = widget.pengungsi?.iDPosko;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _kondisiKhususController.dispose();
-  }
+  List<Pengungsi> _listPengungsi = [];
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +32,10 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
     final listPenduduk =
         ref.watch(listPendududukProvider((desa: _idDesa, idKelompok: null)));
     final listPosko = ref.watch(listPoskoProvider);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Form Pengungsi'),
+        title: const Text('Tambah Pengungsi'),
       ),
       body: Form(
         key: _formKey,
@@ -131,20 +111,39 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
                 });
               },
             ),
+            const SizedBox(height: 10),
+            if (listPenduduk.value == null || listPenduduk.value!.isEmpty)
+              const Text(
+                'Tidak ada data penduduk',
+                textAlign: TextAlign.center,
+              ),
             ...listPenduduk.maybeWhen(
               orElse: () => [],
               data: (data) {
                 return data.map((penduduk) {
                   return CheckboxListTile(
-                    value: _listPenduduk.contains(penduduk),
+                    value: _listPengungsi
+                        .map((pengungsi) => pengungsi.iDPenduduk)
+                        .contains(penduduk.iDPenduduk),
                     title: Text(penduduk.nama ?? '-'),
                     subtitle: Text(penduduk.kelompok?.namaKelompok ?? '-'),
                     onChanged: (value) {
-                      final updatedList = List<Penduduk>.from(_listPenduduk)
-                        ..add(penduduk);
+                      print(value);
+                      var updatedList = List<Pengungsi>.from(_listPengungsi);
+                      if (value == true) {
+                        updatedList.add(Pengungsi(
+                          iDPenduduk: penduduk.iDPenduduk,
+                          iDPosko: _idPosko,
+                        ));
+                      } else {
+                        updatedList = updatedList
+                            .where((pengungsi) =>
+                                pengungsi.iDPenduduk != penduduk.iDPenduduk)
+                            .toList();
+                      }
 
                       setState(() {
-                        _listPenduduk = updatedList;
+                        _listPengungsi = updatedList;
                       });
                     },
                   );
@@ -153,37 +152,48 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: _isLoading
+              onPressed: _isLoading || _listPengungsi.isEmpty
                   ? null
                   : () async {
                       if (_formKey.currentState!.validate()) {
                         setState(() {
                           _isLoading = true;
                         });
-                        final pengungsi = Pengungsi(
-                          iDPengungsi: widget.pengungsi?.iDPengungsi,
-                          iDPenduduk: _idPenduduk,
-                          iDPosko: _idPosko,
-                          kondisiKhusus: _kondisiKhususController.text,
-                          lastUpdateDate: DateTime.now(),
-                        );
 
-                        await ref
+                        final futures = _listPengungsi.map((pengungsi) => ref
                             .read(listPengungsiProvider(
-                                (idKelompok: null, idPosko: null)).notifier)
-                            .save(pengungsi);
+                              (idKelompok: null, idPosko: _idPosko),
+                            ).notifier)
+                            .save(pengungsi));
+
+                        await Future.wait(futures);
 
                         setState(() {
                           _isLoading = false;
                         });
 
                         if (context.mounted) {
-                          Navigator.of(context).popUntil(
-                            (route) =>
-                                route.settings.name ==
-                                AppRouter.filterPengungsiRoute,
-                          );
+                          await showDialog(
+                              context: context,
+                              builder: (builder) {
+                                return AlertDialog(
+                                  title: const Text('Berhasil'),
+                                  content: const Text('Data berhasil disimpan'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              });
                         }
+
+                        setState(() {
+                          _idKecamatan = null;
+                          _idDesa = null;
+                        });
                       }
                     },
               child: _isLoading

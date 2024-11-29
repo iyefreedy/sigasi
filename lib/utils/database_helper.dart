@@ -140,6 +140,7 @@ class DatabaseHelper {
         IDPosko TEXT,
         IDBarang TEXT,
         Jumlah INTEGER,
+        TanggalDistribusi TEXT,
         LastUpdateBy TEXT,
         LastUpdateDate TEXT
       )

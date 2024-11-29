@@ -104,6 +104,9 @@ class _FormPoskoScreenState extends ConsumerState<FormPoskoScreen> {
               onPressed: _isLoading
                   ? null
                   : () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
                       final posko = Posko(
                         iDPosko: widget.posko?.iDPosko,
                         iDKetua: _idPengguna,

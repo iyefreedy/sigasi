@@ -31,5 +31,12 @@ class ListPengungsiNotifier
     } else {
       await pengungsiService.updatePengungsi(pengungsi);
     }
+
+    final futures = await pengungsiService.fetchPengungsi(
+      idKelompok: arg.idKelompok,
+      idPosko: arg.idPosko,
+    );
+
+    state = AsyncData(futures);
   }
 }

@@ -36,9 +36,7 @@ class HomeScreen extends ConsumerWidget {
                           if (shouldLogout) {
                             await ref.read(authProvider.notifier).logout();
                           }
-                        } catch (e) {
-                          print(e);
-                        }
+                        } catch (e) {}
                       },
                     )
                   ];

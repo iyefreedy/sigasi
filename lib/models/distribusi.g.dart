@@ -11,6 +11,9 @@ Distribusi _$DistribusiFromJson(Map<String, dynamic> json) => Distribusi(
       iDBarang: json['IDBarang'] as String?,
       iDPosko: json['IDPosko'] as String?,
       jumlah: (json['Jumlah'] as num?)?.toInt(),
+      tanggalDistribusi: json['TanggalDistribusi'] == null
+          ? null
+          : DateTime.parse(json['TanggalDistribusi'] as String),
       lastUpdateDate: json['LastUpdateDate'] == null
           ? null
           : DateTime.parse(json['LastUpdateDate'] as String),
@@ -30,5 +33,6 @@ Map<String, dynamic> _$DistribusiToJson(Distribusi instance) =>
       'IDPosko': instance.iDPosko,
       'Jumlah': instance.jumlah,
       'LastUpdateDate': instance.lastUpdateDate?.toIso8601String(),
+      'TanggalDistribusi': instance.tanggalDistribusi?.toIso8601String(),
       'LastUpdateBy': instance.lastUpdateBy,
     };

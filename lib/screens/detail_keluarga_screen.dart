@@ -110,8 +110,12 @@ class DetailKeluargaScreen extends ConsumerWidget {
                                             width: 100,
                                             child: Text('Nomor KTP'),
                                           ),
-                                          Text(
-                                              ': ${anggota.penduduk?.kTP ?? '-'}')
+                                          Flexible(
+                                            child: Text(
+                                              ': ${anggota.penduduk?.kTP ?? '-'}',
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          )
                                         ],
                                       ),
                                       Row(
@@ -120,8 +124,10 @@ class DetailKeluargaScreen extends ConsumerWidget {
                                             width: 100,
                                             child: Text('Nama'),
                                           ),
-                                          Text(
-                                              ': ${anggota.penduduk?.nama ?? '-'}')
+                                          Flexible(
+                                            child: Text(
+                                                ': ${anggota.penduduk?.nama ?? '-'}'),
+                                          )
                                         ],
                                       ),
                                       Row(

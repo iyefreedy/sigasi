@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:sigasi/models/distribusi.dart';
 import 'package:sigasi/providers/kebutuhan_posko_provider.dart';
 import 'package:sigasi/providers/list_distribusi_provider.dart';
@@ -18,10 +19,12 @@ class FormDistribusiScreen extends ConsumerStatefulWidget {
 
 class _FormDistribusiScreenState extends ConsumerState<FormDistribusiScreen> {
   final _jumlahDistribusiController = TextEditingController();
+  final _tanggalDistribusiController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   String? _idPosko;
   String? _idBarang;
+  DateTime? _tanggalDistribusi;
 
   bool _isLoading = false;
 
@@ -97,6 +100,29 @@ class _FormDistribusiScreenState extends ConsumerState<FormDistribusiScreen> {
               ),
             ),
             const SizedBox(height: 10),
+            TextFormField(
+              controller: _tanggalDistribusiController,
+              readOnly: true,
+              decoration: const InputDecoration(
+                labelText: 'Tanggal Distribusi',
+              ),
+              onTap: () async {
+                final dateTime = await showDatePicker(
+                  context: context,
+                  firstDate: DateTime(1930),
+                  lastDate: DateTime(2050),
+                );
+
+                if (dateTime != null) {
+                  setState(() {
+                    _tanggalDistribusi = dateTime;
+                  });
+                  _tanggalDistribusiController.text =
+                      DateFormat('y-MM-dd').format(dateTime);
+                }
+              },
+            ),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: _isLoading
                   ? null
@@ -111,14 +137,12 @@ class _FormDistribusiScreenState extends ConsumerState<FormDistribusiScreen> {
                             iDBarang: _idBarang,
                             iDPosko: _idPosko,
                             jumlah: int.parse(_jumlahDistribusiController.text),
+                            tanggalDistribusi: _tanggalDistribusi,
                           );
 
                           await ref
                               .read(listDistribusiProvider.notifier)
                               .save(distribusi);
-                          setState(() {
-                            _isLoading = false;
-                          });
 
                           if (context.mounted) {
                             Navigator.of(context).popUntil((route) =>
@@ -129,6 +153,10 @@ class _FormDistribusiScreenState extends ConsumerState<FormDistribusiScreen> {
                           if (context.mounted) {
                             await showErrorDialog(context, '$e');
                           }
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
                         }
                       }
                     },

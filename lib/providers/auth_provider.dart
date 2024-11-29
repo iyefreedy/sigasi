@@ -66,7 +66,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = await authService.authenticate();
       state = state.copyWith(user: user);
     } on Exception catch (e) {
-      print('Authentication error: $e');
       state = state.copyWith(error: e, user: null);
     } finally {
       state = state.copyWith(isLoading: false);
@@ -76,7 +75,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> logout() async {
     state = state.copyWith(isLoading: true);
     try {
-      print('Try to logout: $state');
       state = const AuthState(
         user: null,
         error: null,
@@ -84,7 +82,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
       await authService.logout();
     } on Exception catch (e) {
-      print('Logout error: $e');
       state = state.copyWith(error: e, isLoading: false);
     }
   }

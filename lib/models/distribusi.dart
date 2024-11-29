@@ -11,6 +11,7 @@ class Distribusi {
     this.iDBarang,
     this.iDPosko,
     this.jumlah,
+    this.tanggalDistribusi,
     this.lastUpdateDate,
     this.lastUpdateBy,
     this.barang,
@@ -22,6 +23,7 @@ class Distribusi {
   final String? iDPosko;
   final int? jumlah;
   final DateTime? lastUpdateDate;
+  final DateTime? tanggalDistribusi;
   final String? lastUpdateBy;
 
   @JsonKey(name: 'barang', includeToJson: false)
@@ -39,6 +41,7 @@ class Distribusi {
     String? iDBarang,
     String? iDPosko,
     int? jumlah,
+    DateTime? tanggalDistribusi,
     DateTime? lastUpdateDate,
     String? lastUpdateBy,
     Barang? barang,
@@ -53,6 +56,7 @@ class Distribusi {
       lastUpdateBy: lastUpdateBy ?? this.lastUpdateBy,
       barang: barang ?? this.barang,
       posko: posko ?? this.posko,
+      tanggalDistribusi: tanggalDistribusi ?? this.tanggalDistribusi,
     );
   }
 }

@@ -5,7 +5,6 @@ import 'package:sigasi/models/anggota_keluarga.dart';
 import 'package:sigasi/models/keluarga.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/penduduk.dart';
 import '../utils/app_constant.dart';
 
 class KeluargaService {

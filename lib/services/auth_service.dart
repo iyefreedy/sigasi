@@ -47,14 +47,10 @@ class AuthService {
         }),
         headers: {'Content-Type': 'application/json'},
       );
-      print('Login response: ${response.body}');
 
       if (response.statusCode != 200) {
-        print(response.body);
         throw Exception('Username atau kata sandi salah.');
       }
-
-      print(response.body);
 
       final authResponse = _parseAuthResponse(response.body);
       await _saveToken(authResponse.token);
@@ -77,7 +73,6 @@ class AuthService {
 
       await _removeToken();
     } catch (e) {
-      print(e);
       rethrow;
     }
   }

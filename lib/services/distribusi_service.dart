@@ -66,6 +66,8 @@ class DistribusiService {
         },
       );
 
+      print(response.body);
+
       if (response.statusCode != 201) {
         throw Exception('Stok tidak cukup');
       }

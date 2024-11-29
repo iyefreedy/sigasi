@@ -30,9 +30,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final password = _passwordController.text.trim();
 
       await ref.read(authProvider.notifier).login(username, password);
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   @override

@@ -5,8 +5,6 @@ import 'package:sigasi/models/anggota_keluarga.dart';
 import 'package:sigasi/models/keluarga.dart';
 import 'package:sigasi/services/keluarga_service.dart';
 
-import '../models/penduduk.dart';
-
 final keluargaProvider = AsyncNotifierProvider.autoDispose
     .family<KeluargaNotifier, Keluarga, String>(
   () => KeluargaNotifier(KeluargaService()),

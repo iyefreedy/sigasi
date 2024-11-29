@@ -91,7 +91,6 @@ class BantuanService {
       return listBantuan;
     }
 
-    print('Fetch from server');
     return _fetchBantuanFromServer();
   }
 
@@ -107,8 +106,6 @@ class BantuanService {
         'Content-Type': 'application/json',
       },
     );
-
-    print(response.body);
 
     if (response.statusCode != 201) {
       throw Exception(response.body);

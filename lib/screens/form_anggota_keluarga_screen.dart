@@ -5,6 +5,7 @@ import 'package:sigasi/models/anggota_keluarga.dart';
 import 'package:sigasi/models/penduduk.dart';
 import 'package:sigasi/providers/keluarga_provider.dart';
 import 'package:sigasi/providers/list_kelompok_provider.dart';
+import 'package:sigasi/providers/list_penduduk_provider.dart';
 
 const listHubunganKeluarga = ['Istri', 'Anak', 'Orang Tua', 'Lainnya'];
 
@@ -213,16 +214,22 @@ class _FormAnggotaKeluargaScreenState
                         setState(() {
                           _isLoading = true;
                         });
-                        final penduduk = Penduduk(
-                          kTP: _ktpController.text,
-                          nama: _namaController.text,
-                          jenisKelamin: _jenisKelamin,
-                          tanggalLahir: _tanggalLahir,
-                          alamat: keluarga.value?.alamat,
-                          iDDesa: keluarga.value?.iDDesa,
-                          iDKecamatan: keluarga.value?.iDKecamatan,
-                          iDKelompok: _kelompok,
-                        );
+                        final keluargaValue = keluarga.value;
+                        final penduduk = await ref
+                            .read(listPendududukProvider((
+                              desa: keluargaValue?.iDDesa,
+                              idKelompok: _kelompok
+                            )).notifier)
+                            .save(Penduduk(
+                              kTP: _ktpController.text,
+                              nama: _namaController.text,
+                              jenisKelamin: _jenisKelamin,
+                              tanggalLahir: _tanggalLahir,
+                              alamat: keluarga.value?.alamat,
+                              iDDesa: keluarga.value?.iDDesa,
+                              iDKecamatan: keluarga.value?.iDKecamatan,
+                              iDKelompok: _kelompok,
+                            ));
 
                         final anggota = AnggotaKeluarga(
                           hubungan: _hubungan,

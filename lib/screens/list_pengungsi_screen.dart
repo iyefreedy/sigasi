@@ -54,7 +54,7 @@ class ListPengungsiScreen extends ConsumerWidget {
                       child: const Text('Ubah'),
                       onTap: () {
                         Navigator.of(context).pushNamed(
-                          AppRouter.formPengungsiRoute,
+                          AppRouter.editPengungsiRoute,
                           arguments: pengungsi,
                         );
                       },

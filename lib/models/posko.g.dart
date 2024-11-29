@@ -12,6 +12,9 @@ Posko _$PoskoFromJson(Map<String, dynamic> json) => Posko(
       lokasi: json['Lokasi'] as String?,
       masalah: json['Masalah'] as String?,
       solusiMasalah: json['SolusiMasalah'] as String?,
+      penduduk: (json['penduduk'] as List<dynamic>?)
+          ?.map((e) => Penduduk.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$PoskoToJson(Posko instance) => <String, dynamic>{
@@ -20,4 +23,5 @@ Map<String, dynamic> _$PoskoToJson(Posko instance) => <String, dynamic>{
       'Lokasi': instance.lokasi,
       'Masalah': instance.masalah,
       'SolusiMasalah': instance.solusiMasalah,
+      'penduduk': instance.penduduk,
     };

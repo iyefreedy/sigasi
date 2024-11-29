@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sigasi/models/penduduk.dart';
 
 part 'posko.g.dart';
 
@@ -10,6 +11,7 @@ class Posko {
     this.lokasi,
     this.masalah,
     this.solusiMasalah,
+    this.penduduk,
   });
 
   final String? iDPosko;
@@ -17,6 +19,9 @@ class Posko {
   final String? lokasi;
   final String? masalah;
   final String? solusiMasalah;
+
+  @JsonKey(name: 'penduduk', includeIfNull: true)
+  final List<Penduduk>? penduduk;
 
   factory Posko.fromJson(Map<String, dynamic> json) => _$PoskoFromJson(json);
 
@@ -28,6 +33,7 @@ class Posko {
     String? lokasi,
     String? masalah,
     String? solusiMasalah,
+    List<Penduduk>? penduduk,
   }) {
     return Posko(
       iDPosko: iDPosko ?? this.iDPosko,
@@ -35,6 +41,7 @@ class Posko {
       lokasi: lokasi ?? this.lokasi,
       masalah: masalah ?? this.masalah,
       solusiMasalah: solusiMasalah ?? this.solusiMasalah,
+      penduduk: penduduk ?? this.penduduk,
     );
   }
 
