@@ -72,7 +72,7 @@ class HomeScreen extends ConsumerWidget {
                 if (roles != null && roles.first.name == 'kecamatan')
                   MenuItem(
                     to: AppRouter.filterKeluargaRoute,
-                    title: 'Data Keluraga',
+                    title: 'Data Keluarga',
                     backgroundColor: Colors.pink.shade100,
                     foregroundColor: Colors.pink.shade700,
                     icon: Icons.family_restroom,
