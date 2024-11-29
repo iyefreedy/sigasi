@@ -41,7 +41,7 @@ class _FormPoskoScreenState extends ConsumerState<FormPoskoScreen> {
   @override
   Widget build(BuildContext context) {
     final listPengguna = ref.watch(listPenggunaProvider);
-    print(listPengguna);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Form Posko'),
@@ -54,12 +54,18 @@ class _FormPoskoScreenState extends ConsumerState<FormPoskoScreen> {
               value: _idPengguna,
               items: listPengguna.maybeWhen(
                 orElse: () => [],
-                data: (data) => data
-                    .map((pengguna) => DropdownMenuItem(
-                          value: pengguna.iDPengguna,
-                          child: Text(pengguna.nama ?? '-'),
-                        ))
-                    .toList(),
+                data: (data) {
+                  final penggunaRelawan = data
+                      .where(
+                          (pengguna) => pengguna.roles?.first.name == 'relawan')
+                      .toList();
+                  return penggunaRelawan
+                      .map((pengguna) => DropdownMenuItem(
+                            value: pengguna.iDPengguna,
+                            child: Text(pengguna.nama ?? '-'),
+                          ))
+                      .toList();
+                },
               ),
               onChanged: (value) {
                 setState(() {

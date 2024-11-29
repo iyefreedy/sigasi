@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sigasi/models/anggota_keluarga.dart';
+import 'package:sigasi/models/kelompok.dart';
 
 part 'penduduk.g.dart';
 
@@ -18,13 +19,14 @@ class Penduduk {
     this.lastUpdateBy,
     this.lastUpdateDate,
     this.anggota,
+    this.kelompok,
   });
 
   final String? iDPenduduk;
   final String? kTP;
   final String? nama;
   final String? jenisKelamin;
-  final String? tanggalLahir;
+  final DateTime? tanggalLahir;
   final String? alamat;
   final int? iDDesa;
   final int? iDKecamatan;
@@ -34,6 +36,9 @@ class Penduduk {
 
   @JsonKey(name: 'anggota', includeToJson: false)
   final AnggotaKeluarga? anggota;
+
+  @JsonKey(name: 'kelompok', includeToJson: false)
+  final Kelompok? kelompok;
 
   factory Penduduk.fromJson(Map<String, dynamic> json) =>
       _$PendudukFromJson(json);
@@ -45,13 +50,15 @@ class Penduduk {
     String? kTP,
     String? nama,
     String? jenisKelamin,
-    String? tanggalLahir,
+    DateTime? tanggalLahir,
     String? alamat,
     int? iDDesa,
     int? iDKecamatan,
     String? iDKelompok,
     String? lastUpdateBy,
     String? lastUpdateDate,
+    Kelompok? kelompok,
+    AnggotaKeluarga? anggota,
   }) {
     return Penduduk(
       iDPenduduk: iDPenduduk ?? this.iDPenduduk,
@@ -65,6 +72,8 @@ class Penduduk {
       iDKelompok: iDKelompok ?? this.iDKelompok,
       lastUpdateBy: lastUpdateBy ?? this.lastUpdateBy,
       lastUpdateDate: lastUpdateDate ?? this.lastUpdateDate,
+      kelompok: kelompok ?? this.kelompok,
+      anggota: anggota ?? this.anggota,
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:sigasi/providers/keluarga_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 
@@ -89,7 +90,93 @@ class DetailKeluargaScreen extends ConsumerWidget {
                             Theme.of(context).colorScheme.primaryContainer,
                       ),
                       child: ListTile(
-                        leading: const Icon(Icons.person),
+                        trailing: Icon(
+                          Icons.touch_app_outlined,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (builder) {
+                              return AlertDialog(
+                                title: const Text('Detail Anggota Keluarga'),
+                                content: SizedBox(
+                                  height: 300,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 100,
+                                            child: Text('Nomor KTP'),
+                                          ),
+                                          Text(
+                                              ': ${anggota.penduduk?.kTP ?? '-'}')
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 100,
+                                            child: Text('Nama'),
+                                          ),
+                                          Text(
+                                              ': ${anggota.penduduk?.nama ?? '-'}')
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 100,
+                                            child: Text('Jenis Kelamin'),
+                                          ),
+                                          Text(
+                                              ': ${anggota.penduduk?.jenisKelamin ?? '-'}')
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 100,
+                                            child: Text('Tanggal Lahir'),
+                                          ),
+                                          Text(
+                                              ': ${anggota.penduduk?.tanggalLahir != null ? DateFormat.yMMMd('id_ID').format(anggota.penduduk!.tanggalLahir!) : '-'}')
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 100,
+                                            child: Text('Kelompok'),
+                                          ),
+                                          Flexible(
+                                            child: Text(
+                                              ': ${anggota.penduduk?.kelompok?.namaKelompok ?? '-'}',
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Tutup'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        leading: Icon(
+                          Icons.person,
+                          color: Theme.of(context).colorScheme.tertiary,
+                        ),
                         title: Text(anggota.penduduk?.nama ?? '-'),
                         subtitle: Text(anggota.hubungan ?? '-'),
                       ),

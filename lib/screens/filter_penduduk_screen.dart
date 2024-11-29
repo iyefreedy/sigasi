@@ -100,13 +100,6 @@ class _FilterPendudukScreenState extends ConsumerState<FilterPendudukScreen> {
                 labelText: 'Kelompok',
               ),
               value: _kelompok,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Pilih kelompok';
-                }
-
-                return null;
-              },
               items: listKelompok.maybeWhen(
                 orElse: () => [],
                 data: (data) => data

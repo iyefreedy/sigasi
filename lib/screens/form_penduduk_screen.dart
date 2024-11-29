@@ -41,6 +41,7 @@ class _CreatePendudukScreenState extends ConsumerState<FormPendudukScreen> {
   String? _kelompok;
   int? _desa;
   int? _kecamatan;
+  DateTime? _tanggalLahir;
 
   @override
   void initState() {
@@ -49,12 +50,17 @@ class _CreatePendudukScreenState extends ConsumerState<FormPendudukScreen> {
     _ktpController = TextEditingController(text: widget.penduduk?.kTP);
     _namaController = TextEditingController(text: widget.penduduk?.nama);
     _alamatController = TextEditingController(text: widget.penduduk?.alamat);
-    _tanggalLahirController =
-        TextEditingController(text: widget.penduduk?.tanggalLahir);
+    _tanggalLahirController = TextEditingController(
+      text: widget.penduduk?.tanggalLahir != null
+          ? DateFormat('y-MM-dd').format(widget.penduduk!.tanggalLahir!)
+          : null,
+    );
+
     _jenisKelamin = widget.penduduk?.jenisKelamin;
     _kelompok = widget.penduduk?.iDKelompok;
     _desa = widget.penduduk?.iDDesa;
     _kecamatan = widget.penduduk?.iDKecamatan;
+    _tanggalLahir = widget.penduduk?.tanggalLahir;
 
     _formKey = GlobalKey<FormState>();
   }
@@ -142,6 +148,9 @@ class _CreatePendudukScreenState extends ConsumerState<FormPendudukScreen> {
                 if (dateTime != null) {
                   _tanggalLahirController.text =
                       DateFormat('y-MM-dd').format(dateTime);
+                  setState(() {
+                    _tanggalLahir = dateTime;
+                  });
                 }
               },
             ),
@@ -252,7 +261,7 @@ class _CreatePendudukScreenState extends ConsumerState<FormPendudukScreen> {
                   kTP: _ktpController.text,
                   iDKelompok: _kelompok,
                   nama: _namaController.text,
-                  tanggalLahir: _tanggalLahirController.text,
+                  tanggalLahir: _tanggalLahir,
                 );
 
                 if (_formKey.currentState!.validate()) {

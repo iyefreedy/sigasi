@@ -16,7 +16,14 @@ import '../providers/keluarga_provider.dart';
 import '../providers/list_desa_provider.dart';
 import '../providers/list_kecamatan_provider.dart';
 import '../providers/list_kelompok_provider.dart';
-import 'form_anggota_keluarga_screen.dart';
+
+final listHubunganKeluarga = [
+  'Kepala Keluarga',
+  'Istri',
+  'Anak',
+  'Orang Tua',
+  'Lainnya'
+];
 
 class FormKeluargaScreen extends ConsumerStatefulWidget {
   const FormKeluargaScreen({super.key});
@@ -30,21 +37,19 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final _nomorKkController = TextEditingController();
-  final _alamatKkController = TextEditingController();
+  final _alamatController = TextEditingController();
 
   final _ktpController = TextEditingController();
   final _namaController = TextEditingController();
   final _tanggalLahirController = TextEditingController();
-  final _alamatController = TextEditingController();
 
   Kecamatan? _kecamatan;
   Desa? _desa;
 
-  String? _hubungan = 'Kepala Keluarga';
+  final String _hubungan = 'Kepala Keluarga';
   String? _jenisKelamin;
   String? _kelompok;
-  int? _desaPenduduk;
-  int? _kecamatanPenduduk;
+  DateTime? _tanggalLahir;
 
   bool _isLoading = false;
 
@@ -52,7 +57,7 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
   void dispose() {
     super.dispose();
     _nomorKkController.dispose();
-    _alamatKkController.dispose();
+
     _ktpController.dispose();
     _namaController.dispose();
     _tanggalLahirController.dispose();
@@ -67,7 +72,7 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Form Keluarga'),
+        title: const Text('Form Kartu Keluarga'),
       ),
       body: Form(
         key: _formKey,
@@ -93,7 +98,7 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
             ),
             const SizedBox(height: 10),
             TextFormField(
-              controller: _alamatKkController,
+              controller: _alamatController,
               decoration: const InputDecoration(
                 labelText: 'Alamat',
               ),
@@ -179,7 +184,7 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
                 labelText: 'Hubungan Keluarga',
               ),
               validator: (value) {
-                if (value == null || _hubungan == null) {
+                if (value == null) {
                   return 'Hubungan keluarga harus diisi.';
                 }
 
@@ -191,11 +196,7 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
                         child: Text(hubungan),
                       ))
                   .toList(),
-              onChanged: (value) {
-                setState(() {
-                  _hubungan = value;
-                });
-              },
+              onChanged: null,
             ),
             const SizedBox(height: 10),
             TextFormField(
@@ -264,78 +265,12 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
                 );
 
                 if (dateTime != null) {
+                  setState(() {
+                    _tanggalLahir = dateTime;
+                  });
                   _tanggalLahirController.text =
                       DateFormat('y-MM-dd').format(dateTime);
                 }
-              },
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _alamatController,
-              decoration: const InputDecoration(
-                labelText: 'Alamat',
-              ),
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<int?>(
-              value: _kecamatanPenduduk,
-              isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Kecamatan',
-              ),
-              validator: (value) {
-                if (value == null) {
-                  return 'Kecamatan harus diisi.';
-                }
-
-                return null;
-              },
-              items: listKecamatan.maybeWhen(
-                orElse: () => [],
-                data: (data) => data
-                    .map(
-                      (kecamatan) => DropdownMenuItem(
-                        value: kecamatan.iDKecamatan,
-                        child: Text(kecamatan.nama),
-                      ),
-                    )
-                    .toList(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _kecamatanPenduduk = value;
-                });
-              },
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<int?>(
-              value: _desaPenduduk,
-              isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Desa',
-              ),
-              validator: (value) {
-                if (value == null) {
-                  return 'Desa harus diisi.';
-                }
-
-                return null;
-              },
-              items: listDesa.maybeWhen(
-                orElse: () => [],
-                data: (data) => data
-                    .map(
-                      (desa) => DropdownMenuItem(
-                        value: desa.iDDesa,
-                        child: Text(desa.nama),
-                      ),
-                    )
-                    .toList(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _desaPenduduk = value;
-                });
               },
             ),
             const SizedBox(height: 12),
@@ -379,7 +314,7 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
                       iDKeluarga: idKeluarga,
                       iDDesa: _desa?.iDDesa,
                       iDKecamatan: _kecamatan?.iDKecamatan,
-                      alamat: _alamatKkController.text,
+                      alamat: _alamatController.text,
                       nomorKK: _nomorKkController.text,
                     );
 
@@ -392,17 +327,17 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
 
                     final penduduk = await ref
                         .read(listPendududukProvider(
-                                (desa: _desaPenduduk, idKelompok: _kelompok))
+                                (desa: _desa?.iDDesa, idKelompok: _kelompok))
                             .notifier)
                         .save(Penduduk(
                           alamat: _alamatController.text,
-                          iDDesa: _desaPenduduk,
-                          iDKecamatan: _kecamatanPenduduk,
+                          iDDesa: _desa?.iDDesa,
+                          iDKecamatan: _kecamatan?.iDKecamatan,
                           jenisKelamin: _jenisKelamin,
                           kTP: _ktpController.text,
                           iDKelompok: _kelompok,
                           nama: _namaController.text,
-                          tanggalLahir: _tanggalLahirController.text,
+                          tanggalLahir: _tanggalLahir,
                         ));
                     final anggota = AnggotaKeluarga(
                       hubungan: _hubungan,

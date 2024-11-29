@@ -36,8 +36,17 @@ class PendudukService {
     String? idKelompok,
   }) async {
     final token = (await SharedPreferences.getInstance()).getString('token');
-    final url = Uri.parse(
-        '${AppConstant.apiUrl}/api/penduduk?idKelompok=$idKelompok&idDesa=$idDesa');
+    var uri = '${AppConstant.apiUrl}/api/penduduk';
+
+    if (idDesa != null) {
+      uri += '?idDesa=$idDesa';
+    }
+
+    if (idKelompok != null) {
+      uri += '&idKelompok=$idKelompok';
+    }
+
+    final url = Uri.parse(uri);
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });
@@ -98,11 +107,15 @@ class PendudukService {
     final isConnected = await isConnectedToInternet();
     if (isConnected) {
       final token = (await SharedPreferences.getInstance()).getString('token');
-      final url = Uri.parse('${AppConstant.apiUrl}/api/penduduk');
-      await http.put(url, body: jsonEncode(penduduk.toJson()), headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/sjon'
-      });
+      final url = Uri.parse(
+          '${AppConstant.apiUrl}/api/penduduk/${penduduk.iDPenduduk}');
+      final res = await http.put(url,
+          body: jsonEncode(penduduk.toJson()),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json'
+          });
+      print(res.body);
     }
 
     return penduduk;

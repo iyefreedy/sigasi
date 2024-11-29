@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/providers/list_pengungsi_provider.dart';
+import 'package:sigasi/utils/app_router.dart';
 
 class ListPengungsiScreen extends ConsumerWidget {
   const ListPengungsiScreen({
@@ -17,9 +18,6 @@ class ListPengungsiScreen extends ConsumerWidget {
     final listPengungsi = ref.watch(listPengungsiProvider(
       (idKelompok: idKelompok, idPosko: idPosko),
     ));
-
-    print(idKelompok);
-    print(idPosko);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,7 +36,20 @@ class ListPengungsiScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final pengungsi = data[index];
               return ListTile(
-                title: Text(pengungsi.iDPosko ?? '-'),
+                title: Text(pengungsi.penduduk?.nama ?? '-'),
+                subtitle: Text(pengungsi.kondisiKhusus ?? '-'),
+                trailing: PopupMenuButton(
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: const Text('Ubah'),
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                            AppRouter.formPengungsiRoute,
+                            arguments: pengungsi);
+                      },
+                    )
+                  ],
+                ),
               );
             },
           );

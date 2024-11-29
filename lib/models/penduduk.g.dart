@@ -11,7 +11,9 @@ Penduduk _$PendudukFromJson(Map<String, dynamic> json) => Penduduk(
       kTP: json['KTP'] as String?,
       nama: json['Nama'] as String?,
       jenisKelamin: json['JenisKelamin'] as String?,
-      tanggalLahir: json['TanggalLahir'] as String?,
+      tanggalLahir: json['TanggalLahir'] == null
+          ? null
+          : DateTime.parse(json['TanggalLahir'] as String),
       alamat: json['Alamat'] as String?,
       iDDesa: (json['IDDesa'] as num?)?.toInt(),
       iDKecamatan: (json['IDKecamatan'] as num?)?.toInt(),
@@ -21,6 +23,9 @@ Penduduk _$PendudukFromJson(Map<String, dynamic> json) => Penduduk(
       anggota: json['anggota'] == null
           ? null
           : AnggotaKeluarga.fromJson(json['anggota'] as Map<String, dynamic>),
+      kelompok: json['kelompok'] == null
+          ? null
+          : Kelompok.fromJson(json['kelompok'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PendudukToJson(Penduduk instance) => <String, dynamic>{
@@ -28,7 +33,7 @@ Map<String, dynamic> _$PendudukToJson(Penduduk instance) => <String, dynamic>{
       'KTP': instance.kTP,
       'Nama': instance.nama,
       'JenisKelamin': instance.jenisKelamin,
-      'TanggalLahir': instance.tanggalLahir,
+      'TanggalLahir': instance.tanggalLahir?.toIso8601String(),
       'Alamat': instance.alamat,
       'IDDesa': instance.iDDesa,
       'IDKecamatan': instance.iDKecamatan,

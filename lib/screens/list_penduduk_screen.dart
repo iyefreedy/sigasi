@@ -7,11 +7,11 @@ class ListPendudukScreen extends ConsumerStatefulWidget {
   const ListPendudukScreen({
     super.key,
     required this.desa,
-    required this.idKelompok,
+    this.idKelompok,
   });
 
   final int desa;
-  final String idKelompok;
+  final String? idKelompok;
 
   @override
   ConsumerState<ListPendudukScreen> createState() => _ListPendudukScreenState();

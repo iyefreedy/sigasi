@@ -4,21 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sigasi/models/keluarga.dart';
 import 'package:sigasi/models/penduduk.dart';
-import 'package:sigasi/providers/list_desa_provider.dart';
-import 'package:sigasi/providers/list_kecamatan_provider.dart';
 import 'package:sigasi/providers/list_kelompok_provider.dart';
 import 'package:sigasi/providers/list_keluarga_provider.dart';
 
 import '../models/anggota_keluarga.dart';
 import '../providers/keluarga_provider.dart';
 
-const listHubunganKeluarga = [
-  'Kepala Keluarga',
-  'Istri',
-  'Anak',
-  'Orang Tua',
-  'Lainnya'
-];
+const listHubunganKeluarga = ['Istri', 'Anak', 'Orang Tua', 'Lainnya'];
 
 class AddAnggotaScreen extends ConsumerStatefulWidget {
   const AddAnggotaScreen({super.key});
@@ -32,16 +24,15 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
   late final TextEditingController _ktpController;
   late final TextEditingController _namaController;
   late final TextEditingController _tanggalLahirController;
-  late final TextEditingController _alamatController;
 
   final _formKey = GlobalKey<FormState>();
 
   String? _hubungan;
   String? _jenisKelamin;
   String? _kelompok;
-  int? _idDesa;
-  int? _idKecamatan;
   String? _idKeluarga;
+  Keluarga? _keluarga;
+  DateTime? _tanggalLahir;
 
   bool _isLoading = false;
 
@@ -51,7 +42,6 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
     _ktpController = TextEditingController();
     _namaController = TextEditingController();
     _tanggalLahirController = TextEditingController();
-    _alamatController = TextEditingController();
   }
 
   @override
@@ -60,13 +50,10 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
     _ktpController.dispose();
     _namaController.dispose();
     _tanggalLahirController.dispose();
-    _alamatController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final listKecamatan = ref.watch(listKecamatanProvider);
-    final listDesa = ref.watch(listDesaProvider(_idKecamatan));
     final listKelompok = ref.watch(listKelompokProvider);
     final listKeluarga = ref.watch(listKeluargaProvider((
       idDesa: null,
@@ -87,10 +74,8 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                 decoration: InputDecoration(labelText: 'Nomor KK'),
               ),
               filterFn: (item, filter) =>
-                  item.nomorKK?.contains(filter) ?? false,
+                  item.nomorKK?.startsWith(filter) ?? false,
               items: (filter, loadProps) {
-                print(filter);
-                print(loadProps);
                 return listKeluarga.maybeWhen(
                   orElse: () => [],
                   data: (data) => data,
@@ -99,19 +84,31 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
               onChanged: (value) {
                 setState(() {
                   _idKeluarga = value?.iDKeluarga;
+                  _keluarga = value;
                 });
               },
               compareFn: (i, s) => i == s,
               popupProps: PopupPropsMultiSelection.dialog(
+                itemBuilder: (context, item, isDisabled, isSelected) {
+                  return Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.nomorKK ?? '-',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        Text(
+                          'Kepala Keluarga: ${item.anggota?.where((anggota) => anggota.hubungan == 'Kepala Keluarga').first.penduduk?.nama ?? '-'}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  );
+                },
                 showSearchBox: true,
-                suggestedItemProps: SuggestedItemProps(
-                  showSuggestedItems: true,
-                  suggestedItems: (us) {
-                    return us
-                        .where((e) => e.nomorKK?.contains("Mrs") ?? false)
-                        .toList();
-                  },
-                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -211,6 +208,9 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                       );
 
                       if (dateTime != null) {
+                        setState(() {
+                          _tanggalLahir = dateTime;
+                        });
                         _tanggalLahirController.text =
                             DateFormat('y-MM-dd').format(dateTime);
                       }
@@ -218,76 +218,6 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: _alamatController,
-              decoration: const InputDecoration(
-                labelText: 'Alamat',
-              ),
-            ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<int?>(
-              value: _idKecamatan,
-              isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Kecamatan',
-              ),
-              validator: (value) {
-                if (value == null) {
-                  return 'Kecamatan harus diisi.';
-                }
-
-                return null;
-              },
-              items: listKecamatan.maybeWhen(
-                orElse: () => [],
-                data: (data) => data
-                    .map(
-                      (kecamatan) => DropdownMenuItem(
-                        value: kecamatan.iDKecamatan,
-                        child: Text(kecamatan.nama),
-                      ),
-                    )
-                    .toList(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _idKecamatan = value;
-                  _idDesa = null;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<int?>(
-              value: _idDesa,
-              isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Desa',
-              ),
-              validator: (value) {
-                if (value == null) {
-                  return 'Desa harus diisi.';
-                }
-
-                return null;
-              },
-              items: listDesa.maybeWhen(
-                orElse: () => [],
-                data: (data) => data
-                    .map(
-                      (desa) => DropdownMenuItem(
-                        value: desa.iDDesa,
-                        child: Text(desa.nama),
-                      ),
-                    )
-                    .toList(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _idDesa = value;
-                });
-              },
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String?>(
@@ -333,10 +263,10 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                           kTP: _ktpController.text,
                           nama: _namaController.text,
                           jenisKelamin: _jenisKelamin,
-                          tanggalLahir: _tanggalLahirController.text,
-                          alamat: _alamatController.text,
-                          iDDesa: _idDesa,
-                          iDKecamatan: _idKecamatan,
+                          tanggalLahir: _tanggalLahir,
+                          alamat: _keluarga?.alamat,
+                          iDDesa: _keluarga?.iDDesa,
+                          iDKecamatan: _keluarga?.iDKecamatan,
                           iDKelompok: _kelompok,
                         );
                         final anggota = AnggotaKeluarga(

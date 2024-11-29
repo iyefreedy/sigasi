@@ -11,8 +11,13 @@ Pengungsi _$PengungsiFromJson(Map<String, dynamic> json) => Pengungsi(
       iDPenduduk: json['IDPenduduk'] as String?,
       iDPosko: json['IDPosko'] as String?,
       kondisiKhusus: json['KondisiKhusus'] as String?,
-      lastUpdateDate: json['LastUpdateDate'] as String?,
+      lastUpdateDate: json['LastUpdateDate'] == null
+          ? null
+          : DateTime.parse(json['LastUpdateDate'] as String),
       lastUpdateBy: json['LastUpdateBy'] as String?,
+      penduduk: json['penduduk'] == null
+          ? null
+          : Penduduk.fromJson(json['penduduk'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PengungsiToJson(Pengungsi instance) => <String, dynamic>{
@@ -20,6 +25,6 @@ Map<String, dynamic> _$PengungsiToJson(Pengungsi instance) => <String, dynamic>{
       'IDPenduduk': instance.iDPenduduk,
       'IDPosko': instance.iDPosko,
       'KondisiKhusus': instance.kondisiKhusus,
-      'LastUpdateDate': instance.lastUpdateDate,
+      'LastUpdateDate': instance.lastUpdateDate?.toIso8601String(),
       'LastUpdateBy': instance.lastUpdateBy,
     };

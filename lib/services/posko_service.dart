@@ -60,7 +60,7 @@ class PoskoService {
     if (isConnected) {
       final token =
           (await (SharedPreferences.getInstance())).getString('token');
-      final url = Uri.parse('${AppConstant.apiUrl}/api/api/posko');
+      final url = Uri.parse('${AppConstant.apiUrl}/api/posko');
       await http.post(
         url,
         body: jsonEncode(newPosko.toJson()),
@@ -87,7 +87,7 @@ class PoskoService {
     if (isConnected) {
       final token =
           (await (SharedPreferences.getInstance())).getString('token');
-      final url = Uri.parse('${AppConstant.apiUrl}/api/${posko.iDPosko}');
+      final url = Uri.parse('${AppConstant.apiUrl}/api/posko/${posko.iDPosko}');
       final response = await http.put(
         url,
         body: jsonEncode(posko.toJson()),

@@ -17,10 +17,19 @@ class FormPengungsiScreen extends ConsumerStatefulWidget {
 }
 
 class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
-  final _kondisiKhususController = TextEditingController();
+  late final TextEditingController _kondisiKhususController;
   String? _idPenduduk;
   String? _idPosko;
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _kondisiKhususController =
+        TextEditingController(text: widget.pengungsi?.kondisiKhusus);
+    _idPenduduk = widget.pengungsi?.iDPenduduk;
+    _idPosko = widget.pengungsi?.iDPosko;
+  }
 
   @override
   void dispose() {
@@ -43,6 +52,7 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
           padding: const EdgeInsets.all(12),
           children: [
             DropdownButtonFormField<String?>(
+              value: _idPenduduk,
               isExpanded: true,
               decoration: const InputDecoration(
                 labelText: 'Identitas Pengungsi',
@@ -66,6 +76,7 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String?>(
+              value: _idPosko,
               decoration: const InputDecoration(
                 labelText: 'Posko',
               ),
@@ -88,6 +99,7 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
             ),
             const SizedBox(height: 12),
             TextFormField(
+              controller: _kondisiKhususController,
               decoration: const InputDecoration(
                 labelText: 'Kondisi Khusus',
               ),
@@ -101,7 +113,7 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
                     iDPenduduk: _idPenduduk,
                     iDPosko: _idPosko,
                     kondisiKhusus: _kondisiKhususController.text,
-                    lastUpdateDate: DateTime.now().toIso8601String(),
+                    lastUpdateDate: DateTime.now(),
                   );
 
                   await ref

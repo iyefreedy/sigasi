@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sigasi/models/penduduk.dart';
 
 part 'pengungsi.g.dart';
 
@@ -11,14 +12,18 @@ class Pengungsi {
     this.kondisiKhusus,
     this.lastUpdateDate,
     this.lastUpdateBy,
+    this.penduduk,
   });
 
   final String? iDPengungsi;
   final String? iDPenduduk;
   final String? iDPosko;
   final String? kondisiKhusus;
-  final String? lastUpdateDate;
+  final DateTime? lastUpdateDate;
   final String? lastUpdateBy;
+
+  @JsonKey(name: 'penduduk', includeToJson: false)
+  final Penduduk? penduduk;
 
   factory Pengungsi.fromJson(Map<String, dynamic> json) =>
       _$PengungsiFromJson(json);
@@ -30,8 +35,9 @@ class Pengungsi {
     String? iDPenduduk,
     String? iDPosko,
     String? kondisiKhusus,
-    String? lastUpdateDate,
+    DateTime? lastUpdateDate,
     String? lastUpdateBy,
+    Penduduk? penduduk,
   }) {
     return Pengungsi(
       iDPengungsi: iDPengungsi ?? this.iDPengungsi,
@@ -40,6 +46,7 @@ class Pengungsi {
       kondisiKhusus: kondisiKhusus ?? this.kondisiKhusus,
       lastUpdateDate: lastUpdateDate ?? this.lastUpdateDate,
       lastUpdateBy: lastUpdateBy ?? this.lastUpdateBy,
+      penduduk: penduduk ?? this.penduduk,
     );
   }
 }

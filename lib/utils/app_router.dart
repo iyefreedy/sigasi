@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sigasi/models/donatur.dart';
 import 'package:sigasi/models/penduduk.dart';
+import 'package:sigasi/models/pengungsi.dart';
 import 'package:sigasi/models/posko.dart';
 import 'package:sigasi/screens/add_anggota_screen.dart';
 import 'package:sigasi/screens/detail_keluarga_screen.dart';
@@ -134,22 +135,10 @@ class AppRouter {
           builder: (context) {
             final params = settings.arguments as List;
             return ListPendudukScreen(
-              idKelompok: params[0] as String,
+              idKelompok: params[0] as String?,
               desa: params[1] as int,
             );
           },
-        );
-
-      case filterPengungsiRoute:
-        return MaterialPageRoute(
-          settings: RouteSettings(name: routeName),
-          builder: (context) => const FilterPengungsiScreen(),
-        );
-
-      case formPengungsiRoute:
-        return MaterialPageRoute(
-          settings: RouteSettings(name: routeName),
-          builder: (context) => const FormPengungsiScreen(),
         );
       case formPendudukRoute:
         return MaterialPageRoute(
@@ -158,6 +147,32 @@ class AppRouter {
             final penduduk = settings.arguments as Penduduk?;
 
             return FormPendudukScreen(penduduk: penduduk);
+          },
+        );
+
+      case filterPengungsiRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) => const FilterPengungsiScreen(),
+        );
+      case listPengungsiRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) {
+            final args =
+                settings.arguments as ({String? idKelompok, String? idPosko});
+            return ListPengungsiScreen(
+              idKelompok: args.idKelompok,
+              idPosko: args.idPosko,
+            );
+          },
+        );
+      case formPengungsiRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) {
+            final args = settings.arguments as Pengungsi?;
+            return FormPengungsiScreen(pengungsi: args);
           },
         );
 
@@ -202,17 +217,6 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return const FormBantuanScreen();
-          },
-        );
-
-      case listPengungsiRoute:
-        return MaterialPageRoute(
-          settings: RouteSettings(name: routeName),
-          builder: (context) {
-            final args =
-                settings.arguments as ({String? idKelompok, String? idPosko});
-            return ListPengungsiScreen(
-                idKelompok: args.idKelompok, idPosko: args.idPosko);
           },
         );
 
