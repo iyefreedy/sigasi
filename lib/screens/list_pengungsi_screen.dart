@@ -36,16 +36,27 @@ class ListPengungsiScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final pengungsi = data[index];
               return ListTile(
-                title: Text(pengungsi.penduduk?.nama ?? '-'),
-                subtitle: Text(pengungsi.kondisiKhusus ?? '-'),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(pengungsi.penduduk?.nama ?? '-'),
+                    Text(
+                      pengungsi.penduduk?.kTP ?? '-',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                  ],
+                ),
+                subtitle:
+                    Text('Kondisi Khusus: ${pengungsi.kondisiKhusus ?? '-'}'),
                 trailing: PopupMenuButton(
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       child: const Text('Ubah'),
                       onTap: () {
                         Navigator.of(context).pushNamed(
-                            AppRouter.formPengungsiRoute,
-                            arguments: pengungsi);
+                          AppRouter.formPengungsiRoute,
+                          arguments: pengungsi,
+                        );
                       },
                     )
                   ],

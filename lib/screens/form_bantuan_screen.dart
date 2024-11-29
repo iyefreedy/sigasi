@@ -239,7 +239,7 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
               Consumer(
                 builder: (context, ref, child) {
                   return ElevatedButton(
-                    onPressed: !_isLoading
+                    onPressed: !_isLoading && _listDetailBantuan.isNotEmpty
                         ? () async {
                             setState(() {
                               _isLoading = true;

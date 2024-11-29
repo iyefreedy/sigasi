@@ -34,6 +34,8 @@ class _FormAnggotaKeluargaScreenState
   String? _kelompok;
   DateTime? _tanggalLahir;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -204,33 +206,48 @@ class _FormAnggotaKeluargaScreenState
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  final penduduk = Penduduk(
-                    kTP: _ktpController.text,
-                    nama: _namaController.text,
-                    jenisKelamin: _jenisKelamin,
-                    tanggalLahir: _tanggalLahir,
-                    alamat: keluarga.value?.alamat,
-                    iDDesa: keluarga.value?.iDDesa,
-                    iDKecamatan: keluarga.value?.iDKecamatan,
-                    iDKelompok: _kelompok,
-                  );
-                  final anggota = AnggotaKeluarga(
-                    hubungan: _hubungan,
-                    iDKeluarga: widget.idKeluarga,
-                    iDPenduduk: penduduk.iDPenduduk,
-                  );
-                  await ref
-                      .read(keluargaProvider(widget.idKeluarga).notifier)
-                      .save(anggota: anggota, penduduk: penduduk);
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        final penduduk = Penduduk(
+                          kTP: _ktpController.text,
+                          nama: _namaController.text,
+                          jenisKelamin: _jenisKelamin,
+                          tanggalLahir: _tanggalLahir,
+                          alamat: keluarga.value?.alamat,
+                          iDDesa: keluarga.value?.iDDesa,
+                          iDKecamatan: keluarga.value?.iDKecamatan,
+                          iDKelompok: _kelompok,
+                        );
 
-                  if (context.mounted) {
-                    Navigator.of(context).pop();
-                  }
-                }
-              },
-              child: const Text('Simpan'),
+                        final anggota = AnggotaKeluarga(
+                          hubungan: _hubungan,
+                          iDKeluarga: widget.idKeluarga,
+                          iDPenduduk: penduduk.iDPenduduk,
+                        );
+                        await ref
+                            .read(keluargaProvider(widget.idKeluarga).notifier)
+                            .save(anggota: anggota);
+                        setState(() {
+                          _isLoading = false;
+                        });
+
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    },
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(),
+                    )
+                  : const Text('Simpan'),
             ),
           ],
         ),

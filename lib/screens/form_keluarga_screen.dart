@@ -303,65 +303,68 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
             ),
             const SizedBox(),
             ElevatedButton(
-              onPressed: () async {
-                try {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  if (_formKey.currentState!.validate()) {
-                    final idKeluarga = const Uuid().v4();
-                    final keluarga = Keluarga(
-                      iDKeluarga: idKeluarga,
-                      iDDesa: _desa?.iDDesa,
-                      iDKecamatan: _kecamatan?.iDKecamatan,
-                      alamat: _alamatController.text,
-                      nomorKK: _nomorKkController.text,
-                    );
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      try {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        if (_formKey.currentState!.validate()) {
+                          final penduduk = await ref
+                              .read(listPendududukProvider((
+                                desa: _desa?.iDDesa,
+                                idKelompok: _kelompok
+                              )).notifier)
+                              .save(Penduduk(
+                                alamat: _alamatController.text,
+                                iDDesa: _desa?.iDDesa,
+                                iDKecamatan: _kecamatan?.iDKecamatan,
+                                jenisKelamin: _jenisKelamin,
+                                kTP: _ktpController.text,
+                                iDKelompok: _kelompok,
+                                nama: _namaController.text,
+                                tanggalLahir: _tanggalLahir,
+                              ));
+                          final idKeluarga = const Uuid().v4();
+                          final keluarga = Keluarga(
+                            iDKeluarga: idKeluarga,
+                            iDDesa: _desa?.iDDesa,
+                            iDKecamatan: _kecamatan?.iDKecamatan,
+                            alamat: _alamatController.text,
+                            nomorKK: _nomorKkController.text,
+                          );
 
-                    await ref
-                        .read(listKeluargaProvider((
-                          idDesa: _desa!.iDDesa,
-                          idKecamatan: _kecamatan!.iDKecamatan,
-                        )).notifier)
-                        .save(keluarga);
+                          await ref
+                              .read(listKeluargaProvider((
+                                idDesa: _desa!.iDDesa,
+                                idKecamatan: _kecamatan!.iDKecamatan,
+                              )).notifier)
+                              .save(keluarga);
 
-                    final penduduk = await ref
-                        .read(listPendududukProvider(
-                                (desa: _desa?.iDDesa, idKelompok: _kelompok))
-                            .notifier)
-                        .save(Penduduk(
-                          alamat: _alamatController.text,
-                          iDDesa: _desa?.iDDesa,
-                          iDKecamatan: _kecamatan?.iDKecamatan,
-                          jenisKelamin: _jenisKelamin,
-                          kTP: _ktpController.text,
-                          iDKelompok: _kelompok,
-                          nama: _namaController.text,
-                          tanggalLahir: _tanggalLahir,
-                        ));
-                    final anggota = AnggotaKeluarga(
-                      hubungan: _hubungan,
-                      iDKeluarga: keluarga.iDKeluarga,
-                      iDPenduduk: penduduk.iDPenduduk,
-                    );
-                    await ref
-                        .read(keluargaProvider(idKeluarga).notifier)
-                        .save(anggota: anggota, penduduk: penduduk);
-                    if (context.mounted) {
-                      Navigator.of(context).pushReplacementNamed(
-                        AppRouter.detailKeluargaRoute,
-                        arguments: idKeluarga,
-                      );
-                    }
-                  }
-                } catch (e) {
-                  print(e);
-                } finally {
-                  setState(() {
-                    _isLoading = false;
-                  });
-                }
-              },
+                          final anggota = AnggotaKeluarga(
+                            hubungan: _hubungan,
+                            iDKeluarga: keluarga.iDKeluarga,
+                            iDPenduduk: penduduk.iDPenduduk,
+                          );
+                          await ref
+                              .read(keluargaProvider(idKeluarga).notifier)
+                              .save(anggota: anggota);
+                          if (context.mounted) {
+                            Navigator.of(context).pushReplacementNamed(
+                              AppRouter.detailKeluargaRoute,
+                              arguments: idKeluarga,
+                            );
+                          }
+                        }
+                      } catch (e) {
+                        print(e);
+                      } finally {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                    },
               child: _isLoading
                   ? const Padding(
                       padding: EdgeInsets.all(8.0),

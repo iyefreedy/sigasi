@@ -18,7 +18,8 @@ class ListPendudukNotifier
   ListPendudukNotifier(this.pendudukService);
 
   @override
-  Future<List<Penduduk>> build(PendudukParams arg) {
+  Future<List<Penduduk>> build(PendudukParams arg) async {
+    if (arg.desa == null && arg.idKelompok == null) return [];
     return pendudukService.fetchPenduduk(
       desa: arg.desa,
       idKelompok: arg.idKelompok,

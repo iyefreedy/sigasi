@@ -25,12 +25,10 @@ class KeluargaNotifier
 
   Future<void> save({
     required AnggotaKeluarga anggota,
-    required Penduduk penduduk,
   }) async {
     await keluargaService.insertAnggota(
       idKeluarga: arg,
       anggota: anggota,
-      penduduk: penduduk,
     );
 
     final updatedKeluarga = await keluargaService.fetchKeluargaById(arg);

@@ -9,6 +9,7 @@ import 'package:sigasi/providers/list_keluarga_provider.dart';
 
 import '../models/anggota_keluarga.dart';
 import '../providers/keluarga_provider.dart';
+import '../providers/list_penduduk_provider.dart';
 
 const listHubunganKeluarga = ['Istri', 'Anak', 'Orang Tua', 'Lainnya'];
 
@@ -101,7 +102,7 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                         Text(
-                          'Kepala Keluarga: ${item.anggota?.where((anggota) => anggota.hubungan == 'Kepala Keluarga').first.penduduk?.nama ?? '-'}',
+                          'Kepala Keluarga: ${item.anggota!.where((anggota) => anggota.hubungan == 'Kepala Keluarga').isNotEmpty ? item.anggota?.where((anggota) => anggota.hubungan == 'Kepala Keluarga').first.penduduk?.nama : '-'}',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
@@ -259,16 +260,21 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                         setState(() {
                           _isLoading = true;
                         });
-                        final penduduk = Penduduk(
-                          kTP: _ktpController.text,
-                          nama: _namaController.text,
-                          jenisKelamin: _jenisKelamin,
-                          tanggalLahir: _tanggalLahir,
-                          alamat: _keluarga?.alamat,
-                          iDDesa: _keluarga?.iDDesa,
-                          iDKecamatan: _keluarga?.iDKecamatan,
-                          iDKelompok: _kelompok,
-                        );
+                        final penduduk = await ref
+                            .read(listPendududukProvider((
+                              desa: _keluarga?.iDDesa,
+                              idKelompok: _kelompok
+                            )).notifier)
+                            .save(Penduduk(
+                              kTP: _ktpController.text,
+                              nama: _namaController.text,
+                              jenisKelamin: _jenisKelamin,
+                              tanggalLahir: _tanggalLahir,
+                              alamat: _keluarga?.alamat,
+                              iDDesa: _keluarga?.iDDesa,
+                              iDKecamatan: _keluarga?.iDKecamatan,
+                              iDKelompok: _kelompok,
+                            ));
                         final anggota = AnggotaKeluarga(
                           hubungan: _hubungan,
                           iDKeluarga: _idKeluarga,
@@ -276,7 +282,7 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                         );
                         await ref
                             .read(keluargaProvider(_idKeluarga!).notifier)
-                            .save(anggota: anggota, penduduk: penduduk);
+                            .save(anggota: anggota);
 
                         setState(() {
                           _isLoading = false;

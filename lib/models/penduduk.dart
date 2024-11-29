@@ -94,4 +94,14 @@ class Penduduk {
       )
     ''';
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is Penduduk &&
+        other.iDPenduduk == iDPenduduk &&
+        other.kTP == kTP;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, iDPenduduk, kTP);
 }

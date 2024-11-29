@@ -20,6 +20,8 @@ class _FormPoskoScreenState extends ConsumerState<FormPoskoScreen> {
 
   String? _idPengguna;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -99,22 +101,30 @@ class _FormPoskoScreenState extends ConsumerState<FormPoskoScreen> {
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: () async {
-                final posko = Posko(
-                  iDPosko: widget.posko?.iDPosko,
-                  iDKetua: _idPengguna,
-                  lokasi: _lokasiController.text,
-                  masalah: _masalahController.text,
-                  solusiMasalah: _solusiMasalahController.text,
-                );
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      final posko = Posko(
+                        iDPosko: widget.posko?.iDPosko,
+                        iDKetua: _idPengguna,
+                        lokasi: _lokasiController.text,
+                        masalah: _masalahController.text,
+                        solusiMasalah: _solusiMasalahController.text,
+                      );
 
-                await ref.read(listPoskoProvider.notifier).save(posko);
+                      await ref.read(listPoskoProvider.notifier).save(posko);
 
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text('Simpan'),
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(),
+                    )
+                  : const Text('Simpan'),
             )
           ],
         ),

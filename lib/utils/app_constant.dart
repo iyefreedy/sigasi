@@ -1,4 +1,4 @@
 class AppConstant {
-  static const apiUrl = 'http://10.0.2.2:8000';
+  static const apiUrl = 'https://sigasi.my.id';
   static const scheme = 'http';
 }

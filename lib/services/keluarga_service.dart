@@ -71,7 +71,6 @@ class KeluargaService {
   Future<Keluarga> insertAnggota({
     required String idKeluarga,
     required AnggotaKeluarga anggota,
-    required Penduduk penduduk,
   }) async {
     final token = (await SharedPreferences.getInstance()).getString('token');
 
@@ -79,7 +78,6 @@ class KeluargaService {
         Uri.parse('${AppConstant.apiUrl}/api/keluarga/$idKeluarga/anggota');
     final response = await http.post(url,
         body: jsonEncode({
-          ...penduduk.toJson(),
           ...anggota.toJson(),
         }),
         headers: {

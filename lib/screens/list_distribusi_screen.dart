@@ -28,10 +28,21 @@ class ListDistribusiScreen extends ConsumerWidget {
           }
 
           return ListView.separated(
+            padding: const EdgeInsets.all(10),
             itemBuilder: (context, index) {
               final distribusi = data[index];
-              return ListTile(
-                title: Text((distribusi.jumlah ?? 0).toString()),
+              return ListTileTheme(
+                data: ListTileThemeData(
+                  tileColor: Theme.of(context).colorScheme.primaryContainer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: ListTile(
+                  title: Text((distribusi.barang?.namaBarang).toString()),
+                  subtitle: Text((distribusi.jumlah ?? 0).toString()),
+                  trailing: Text(distribusi.posko?.lokasi ?? '-'),
+                ),
               );
             },
             separatorBuilder: (context, index) => const SizedBox(height: 4),

@@ -43,6 +43,8 @@ class _CreatePendudukScreenState extends ConsumerState<FormPendudukScreen> {
   int? _kecamatan;
   DateTime? _tanggalLahir;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -253,30 +255,40 @@ class _CreatePendudukScreenState extends ConsumerState<FormPendudukScreen> {
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: () async {
-                final penduduk = (widget.penduduk ?? const Penduduk()).copyWith(
-                  alamat: _alamatController.text,
-                  iDDesa: _desa,
-                  jenisKelamin: _jenisKelamin,
-                  kTP: _ktpController.text,
-                  iDKelompok: _kelompok,
-                  nama: _namaController.text,
-                  tanggalLahir: _tanggalLahir,
-                );
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      final penduduk =
+                          (widget.penduduk ?? const Penduduk()).copyWith(
+                        alamat: _alamatController.text,
+                        iDDesa: _desa,
+                        jenisKelamin: _jenisKelamin,
+                        kTP: _ktpController.text,
+                        iDKelompok: _kelompok,
+                        nama: _namaController.text,
+                        tanggalLahir: _tanggalLahir,
+                      );
 
-                if (_formKey.currentState!.validate()) {
-                  await ref
-                      .read(listPendududukProvider(
-                          (desa: _desa, idKelompok: _kelompok)).notifier)
-                      .save(penduduk);
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        await ref
+                            .read(listPendududukProvider(
+                                (desa: _desa, idKelompok: _kelompok)).notifier)
+                            .save(penduduk);
 
-                  if (context.mounted) {
-                    Navigator.of(context).popUntil(
-                      ModalRoute.withName(AppRouter.filterPendudukRoute),
-                    );
-                  }
-                }
-              },
+                        setState(() {
+                          _isLoading = true;
+                        });
+
+                        if (context.mounted) {
+                          Navigator.of(context).popUntil(
+                            ModalRoute.withName(AppRouter.filterPendudukRoute),
+                          );
+                        }
+                      }
+                    },
               child: const Text('Simpan'),
             )
           ],

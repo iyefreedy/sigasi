@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sigasi/models/penduduk.dart';
 import 'package:sigasi/models/pengungsi.dart';
+import 'package:sigasi/providers/list_desa_provider.dart';
+import 'package:sigasi/providers/list_kecamatan_provider.dart';
 import 'package:sigasi/providers/list_penduduk_provider.dart';
 import 'package:sigasi/providers/list_pengungsi_provider.dart';
 import 'package:sigasi/providers/list_posko_provider.dart';
@@ -18,9 +21,15 @@ class FormPengungsiScreen extends ConsumerStatefulWidget {
 
 class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
   late final TextEditingController _kondisiKhususController;
+  final _formKey = GlobalKey<FormState>();
+
   String? _idPenduduk;
   String? _idPosko;
-  final _formKey = GlobalKey<FormState>();
+  int? _idKecamatan;
+  int? _idDesa;
+
+  bool _isLoading = false;
+  List<Penduduk> _listPenduduk = [];
 
   @override
   void initState() {
@@ -39,8 +48,10 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final listKecamatan = ref.watch(listKecamatanProvider);
+    final listDesa = ref.watch(listDesaProvider(_idKecamatan));
     final listPenduduk =
-        ref.watch(listPendududukProvider((desa: null, idKelompok: null)));
+        ref.watch(listPendududukProvider((desa: _idDesa, idKelompok: null)));
     final listPosko = ref.watch(listPoskoProvider);
     return Scaffold(
       appBar: AppBar(
@@ -49,32 +60,8 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(10),
           children: [
-            DropdownButtonFormField<String?>(
-              value: _idPenduduk,
-              isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Identitas Pengungsi',
-              ),
-              items: listPenduduk.maybeWhen(
-                orElse: () => [],
-                data: (data) => data
-                    .map(
-                      (penduduk) => DropdownMenuItem(
-                        value: penduduk.iDPenduduk,
-                        child: Text('${penduduk.nama}'),
-                      ),
-                    )
-                    .toList(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _idPenduduk = value;
-                });
-              },
-            ),
-            const SizedBox(height: 12),
             DropdownButtonFormField<String?>(
               value: _idPosko,
               decoration: const InputDecoration(
@@ -97,39 +84,115 @@ class _FormPengungsiScreenState extends ConsumerState<FormPengungsiScreen> {
                 });
               },
             ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _kondisiKhususController,
+            const SizedBox(height: 10),
+            DropdownButtonFormField<int?>(
+              value: _idKecamatan,
               decoration: const InputDecoration(
-                labelText: 'Kondisi Khusus',
+                labelText: 'Kecamatan',
               ),
+              items: listKecamatan.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map(
+                      (kecamatan) => DropdownMenuItem(
+                        value: kecamatan.iDKecamatan,
+                        child: Text(kecamatan.nama),
+                      ),
+                    )
+                    .toList(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _idKecamatan = value;
+                  _idDesa = null;
+                });
+              },
+            ),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<int?>(
+              value: _idDesa,
+              decoration: const InputDecoration(
+                labelText: 'Desa',
+              ),
+              items: listDesa.maybeWhen(
+                orElse: () => [],
+                data: (data) => data
+                    .map(
+                      (desa) => DropdownMenuItem(
+                        value: desa.iDDesa,
+                        child: Text(desa.nama),
+                      ),
+                    )
+                    .toList(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _idDesa = value;
+                });
+              },
+            ),
+            ...listPenduduk.maybeWhen(
+              orElse: () => [],
+              data: (data) {
+                return data.map((penduduk) {
+                  return CheckboxListTile(
+                    value: _listPenduduk.contains(penduduk),
+                    title: Text(penduduk.nama ?? '-'),
+                    subtitle: Text(penduduk.kelompok?.namaKelompok ?? '-'),
+                    onChanged: (value) {
+                      final updatedList = List<Penduduk>.from(_listPenduduk)
+                        ..add(penduduk);
+
+                      setState(() {
+                        _listPenduduk = updatedList;
+                      });
+                    },
+                  );
+                });
+              },
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  final pengungsi = Pengungsi(
-                    iDPengungsi: widget.pengungsi?.iDPengungsi,
-                    iDPenduduk: _idPenduduk,
-                    iDPosko: _idPosko,
-                    kondisiKhusus: _kondisiKhususController.text,
-                    lastUpdateDate: DateTime.now(),
-                  );
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        final pengungsi = Pengungsi(
+                          iDPengungsi: widget.pengungsi?.iDPengungsi,
+                          iDPenduduk: _idPenduduk,
+                          iDPosko: _idPosko,
+                          kondisiKhusus: _kondisiKhususController.text,
+                          lastUpdateDate: DateTime.now(),
+                        );
 
-                  await ref
-                      .read(listPengungsiProvider(
-                          (idKelompok: null, idPosko: null)).notifier)
-                      .save(pengungsi);
+                        await ref
+                            .read(listPengungsiProvider(
+                                (idKelompok: null, idPosko: null)).notifier)
+                            .save(pengungsi);
 
-                  if (context.mounted) {
-                    Navigator.of(context).popUntil(
-                      (route) =>
-                          route.settings.name == AppRouter.filterPengungsiRoute,
-                    );
-                  }
-                }
-              },
-              child: const Text('Simpan'),
+                        setState(() {
+                          _isLoading = false;
+                        });
+
+                        if (context.mounted) {
+                          Navigator.of(context).popUntil(
+                            (route) =>
+                                route.settings.name ==
+                                AppRouter.filterPengungsiRoute,
+                          );
+                        }
+                      }
+                    },
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(),
+                    )
+                  : const Text('Simpan'),
             ),
           ],
         ),

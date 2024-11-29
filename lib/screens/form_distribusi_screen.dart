@@ -6,6 +6,7 @@ import 'package:sigasi/providers/kebutuhan_posko_provider.dart';
 import 'package:sigasi/providers/list_distribusi_provider.dart';
 import 'package:sigasi/providers/list_posko_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
+import 'package:sigasi/utils/dialogs/error_dialog.dart';
 
 class FormDistribusiScreen extends ConsumerStatefulWidget {
   const FormDistribusiScreen({super.key});
@@ -21,6 +22,8 @@ class _FormDistribusiScreenState extends ConsumerState<FormDistribusiScreen> {
 
   String? _idPosko;
   String? _idBarang;
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -95,25 +98,47 @@ class _FormDistribusiScreenState extends ConsumerState<FormDistribusiScreen> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  final distribusi = Distribusi(
-                    iDBarang: _idBarang,
-                    iDPosko: _idPosko,
-                    jumlah: int.parse(_jumlahDistribusiController.text),
-                  );
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isLoading = true;
+                        });
 
-                  await ref
-                      .read(listDistribusiProvider.notifier)
-                      .save(distribusi);
+                        try {
+                          final distribusi = Distribusi(
+                            iDBarang: _idBarang,
+                            iDPosko: _idPosko,
+                            jumlah: int.parse(_jumlahDistribusiController.text),
+                          );
 
-                  if (context.mounted) {
-                    Navigator.of(context).popUntil((route) =>
-                        route.settings.name == AppRouter.listDistribusiRoute);
-                  }
-                }
-              },
-              child: const Text('Simpan'),
+                          await ref
+                              .read(listDistribusiProvider.notifier)
+                              .save(distribusi);
+                          setState(() {
+                            _isLoading = false;
+                          });
+
+                          if (context.mounted) {
+                            Navigator.of(context).popUntil((route) =>
+                                route.settings.name ==
+                                AppRouter.listDistribusiRoute);
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            await showErrorDialog(context, '$e');
+                          }
+                        }
+                      }
+                    },
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(),
+                    )
+                  : const Text('Simpan'),
             ),
           ],
         ),
