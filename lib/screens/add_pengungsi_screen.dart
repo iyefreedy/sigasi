@@ -7,6 +7,7 @@ import 'package:sigasi/providers/list_kecamatan_provider.dart';
 import 'package:sigasi/providers/list_penduduk_provider.dart';
 import 'package:sigasi/providers/list_pengungsi_provider.dart';
 import 'package:sigasi/providers/list_posko_provider.dart';
+import 'package:sigasi/providers/penduduk_provider.dart';
 
 class AddPengungsiScreen extends ConsumerStatefulWidget {
   const AddPengungsiScreen({super.key});
@@ -29,8 +30,7 @@ class _AddPengungsiScreenState extends ConsumerState<AddPengungsiScreen> {
   Widget build(BuildContext context) {
     final listKecamatan = ref.watch(listKecamatanProvider);
     final listDesa = ref.watch(listDesaProvider(_idKecamatan));
-    final listPenduduk =
-        ref.watch(listPendududukProvider((desa: _idDesa, idKelompok: null)));
+    final listPenduduk = ref.watch(pendudukProvider(_idDesa));
     final listPosko = ref.watch(listPoskoProvider);
 
     return Scaffold(
