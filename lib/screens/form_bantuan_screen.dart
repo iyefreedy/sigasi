@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sigasi/models/detail_bantuan.dart';
@@ -188,6 +189,9 @@ class _FormBantuanScreenState extends ConsumerState<FormBantuanScreen> {
                           child: TextFormField(
                             initialValue: detail.jumlah?.toString(),
                             keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                             decoration: const InputDecoration(
                               labelText: 'Jumlah',
                             ),

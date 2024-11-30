@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sigasi/models/anggota_keluarga.dart';
@@ -98,6 +99,8 @@ class _FormAnggotaKeluargaScreenState
                 labelText: 'KTP',
                 helperText: 'Opsional',
               ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             ),
             const SizedBox(height: 12),
             TextFormField(

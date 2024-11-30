@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/models/pengungsi.dart';
 import 'package:sigasi/providers/list_desa_provider.dart';
 import 'package:sigasi/providers/list_kecamatan_provider.dart';
-import 'package:sigasi/providers/list_penduduk_provider.dart';
 import 'package:sigasi/providers/list_pengungsi_provider.dart';
 import 'package:sigasi/providers/list_posko_provider.dart';
 import 'package:sigasi/providers/penduduk_provider.dart';
@@ -193,6 +192,7 @@ class _AddPengungsiScreenState extends ConsumerState<AddPengungsiScreen> {
                         setState(() {
                           _idKecamatan = null;
                           _idDesa = null;
+                          _listPengungsi = [];
                         });
                       }
                     },

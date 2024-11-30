@@ -81,6 +81,7 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
           children: [
             TextFormField(
               controller: _nomorKkController,
+              keyboardType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(16),
@@ -205,6 +206,8 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
                 labelText: 'KTP',
                 helperText: 'Opsional',
               ),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 12),
             TextFormField(

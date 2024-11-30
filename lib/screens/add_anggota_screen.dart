@@ -1,5 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sigasi/models/keluarga.dart';
@@ -144,6 +145,8 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                 labelText: 'KTP',
                 helperText: 'Opsional',
               ),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 10),
             TextFormField(

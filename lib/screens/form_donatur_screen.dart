@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/providers/list_donatur_provider.dart';
 
@@ -88,6 +89,7 @@ class _FormDonaturScreenState extends ConsumerState<FormDonaturScreen> {
               decoration: const InputDecoration(
                 labelText: 'Nomor Kontak',
               ),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               keyboardType: TextInputType.phone,
               validator: (value) {
                 if (value == null || value.isEmpty) {
