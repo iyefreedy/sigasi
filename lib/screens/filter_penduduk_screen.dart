@@ -107,7 +107,13 @@ class _FilterPendudukScreenState extends ConsumerState<FilterPendudukScreen> {
                           value: kelompok.iDKelompok,
                           child: Text("${kelompok.namaKelompok}"),
                         ))
-                    .toList(),
+                    .toList()
+                  ..insert(
+                      0,
+                      const DropdownMenuItem(
+                        value: null,
+                        child: Text("Semua Kelompok"),
+                      )),
               ),
               onChanged: (value) {
                 setState(() {
@@ -121,7 +127,7 @@ class _FilterPendudukScreenState extends ConsumerState<FilterPendudukScreen> {
                 if (_formKey.currentState!.validate()) {
                   Navigator.of(context).pushNamed(
                     AppRouter.listPendudukRoute,
-                    arguments: [_kelompok, _idDesa],
+                    arguments: [_kelompok, _idDesa, _idKecamatan],
                   );
                 }
               },

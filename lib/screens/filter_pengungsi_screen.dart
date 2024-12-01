@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sigasi/models/posko.dart';
 import 'package:sigasi/providers/list_kelompok_provider.dart';
 import 'package:sigasi/providers/list_posko_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
@@ -13,7 +14,7 @@ class FilterPengungsiScreen extends ConsumerStatefulWidget {
 }
 
 class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
-  String? _idPosko;
+  Posko? _posko;
   String? _idKelompok;
 
   @override
@@ -35,8 +36,8 @@ class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
         child: ListView(
           padding: const EdgeInsets.all(10),
           children: [
-            DropdownButtonFormField<String>(
-              value: _idPosko,
+            DropdownButtonFormField<Posko>(
+              value: _posko,
               decoration: const InputDecoration(
                 labelText: 'Posko',
               ),
@@ -44,14 +45,14 @@ class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
                 orElse: () => [],
                 data: (data) => data
                     .map((posko) => DropdownMenuItem(
-                          value: posko.iDPosko,
+                          value: posko,
                           child: Text(posko.lokasi ?? '-'),
                         ))
                     .toList(),
               ),
               onChanged: (value) {
                 setState(() {
-                  _idPosko = value;
+                  _posko = value;
                 });
               },
             ),
@@ -69,7 +70,11 @@ class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
                           value: kelompok.iDKelompok,
                           child: Text(kelompok.namaKelompok ?? '-'),
                         ))
-                    .toList(),
+                    .toList()
+                  ..add(const DropdownMenuItem(
+                    value: null,
+                    child: Text('Semua Kelompok'),
+                  )),
               ),
               onChanged: (value) {
                 setState(() {
@@ -82,7 +87,7 @@ class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
               onPressed: () {
                 Navigator.of(context)
                     .pushNamed(AppRouter.listPengungsiRoute, arguments: (
-                  idPosko: _idPosko,
+                  posko: _posko,
                   idKelompok: _idKelompok,
                 ));
               },

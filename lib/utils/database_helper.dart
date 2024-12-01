@@ -28,9 +28,9 @@ class DatabaseHelper {
   }
 
   Future _onUpgrade(Database db) async {
-    await db.execute('''
-    ALTER TABLE TBL_DISTRIBUSI ADD COLUMN TanggalDistribusi TEXT;
-    ''');
+    // await db.execute('''
+    // ALTER TABLE TBL_DISTRIBUSI ADD COLUMN TanggalDistribusi TEXT;
+    // ''');
   }
 
   Future _onCreate(Database db, int version) async {

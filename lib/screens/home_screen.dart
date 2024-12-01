@@ -4,6 +4,8 @@ import 'package:sigasi/providers/auth_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 import 'package:sigasi/utils/dialogs/logout_dialog.dart';
 
+import '../utils/dialogs/error_dialog.dart';
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -11,6 +13,20 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider);
     final roles = auth.user?.roles;
+    ref.listen(
+      authProvider,
+      (previous, next) {
+        if (next.error != null) {
+          if (context.mounted && previous?.error != next.error) {
+            showErrorDialog(context, next.error.toString());
+          }
+        }
+
+        if (next.user == null) {
+          Navigator.of(context).pushReplacementNamed(AppRouter.loginRoute);
+        }
+      },
+    );
 
     return Scaffold(
       body: CustomScrollView(
@@ -78,7 +94,7 @@ class HomeScreen extends ConsumerWidget {
                 if (roles != null && roles.first.name == 'kecamatan')
                   MenuItem(
                     to: AppRouter.filterPendudukRoute,
-                    title: 'Data Penduduk',
+                    title: 'Lihat data Penduduk',
                     backgroundColor: Colors.green.shade100,
                     foregroundColor: Colors.green.shade700,
                     icon: Icons.group,

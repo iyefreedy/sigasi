@@ -73,10 +73,18 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
           children: [
             DropdownSearch<Keluarga>(
               decoratorProps: const DropDownDecoratorProps(
-                decoration: InputDecoration(labelText: 'Nomor KK'),
+                decoration: InputDecoration(labelText: 'Nama Kepala Keluarga'),
               ),
-              filterFn: (item, filter) =>
-                  item.nomorKK?.startsWith(filter) ?? false,
+              filterFn: (item, filter) {
+                final result = item.anggota?.any((anggota) => (anggota
+                            .penduduk?.nama
+                            ?.toLowerCase()
+                            .contains(filter) ??
+                        false)) ??
+                    false;
+
+                return result;
+              },
               items: (filter, loadProps) {
                 return listKeluarga.maybeWhen(
                   orElse: () => [],
@@ -94,16 +102,17 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
                 itemBuilder: (context, item, isDisabled, isSelected) {
                   return Container(
                     padding: const EdgeInsets.all(10),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          item.nomorKK ?? '-',
+                          '${item.anggota!.where((anggota) => anggota.hubungan == 'Kepala Keluarga').isNotEmpty ? item.anggota?.where((anggota) => anggota.hubungan == 'Kepala Keluarga').first.penduduk?.nama : '-'}',
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                         Text(
-                          'Kepala Keluarga: ${item.anggota!.where((anggota) => anggota.hubungan == 'Kepala Keluarga').isNotEmpty ? item.anggota?.where((anggota) => anggota.hubungan == 'Kepala Keluarga').first.penduduk?.nama : '-'}',
+                          item.desa?.nama ?? '-',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],

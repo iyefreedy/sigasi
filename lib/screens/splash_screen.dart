@@ -18,14 +18,14 @@ class SplashScreen extends ConsumerWidget {
       authProvider,
       (previous, next) async {
         if (next.error != null) {
-          final error = next.error;
           if (context.mounted && previous?.error != next.error) {
             await showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
                   title: const Text('Error'),
-                  content: Text(error.toString()), // Menampilkan pesan error
+                  content: const Text(
+                      'Sesi anda telah berakhir. Silahkan login kembali'), // Menampilkan pesan error
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),

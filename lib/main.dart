@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(),
-        initialRoute: AppRouter.splashRoute,
+        initialRoute: AppRouter.loginRoute,
         onGenerateRoute: AppRouter.onGenerateRoute,
       ),
     );

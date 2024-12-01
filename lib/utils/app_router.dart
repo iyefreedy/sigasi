@@ -145,6 +145,7 @@ class AppRouter {
             return ListPendudukScreen(
               idKelompok: params[0] as String?,
               desa: params[1] as int,
+              kecamatan: params[2] as int,
             );
           },
         );
@@ -168,10 +169,10 @@ class AppRouter {
           settings: RouteSettings(name: routeName),
           builder: (context) {
             final args =
-                settings.arguments as ({String? idKelompok, String? idPosko});
+                settings.arguments as ({String? idKelompok, Posko? posko});
             return ListPengungsiScreen(
               idKelompok: args.idKelompok,
-              idPosko: args.idPosko,
+              posko: args.posko,
             );
           },
         );

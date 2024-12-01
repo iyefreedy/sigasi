@@ -8,8 +8,6 @@ import 'package:sigasi/providers/list_kecamatan_provider.dart';
 import 'package:sigasi/providers/list_kelompok_provider.dart';
 import 'package:sigasi/providers/list_penduduk_provider.dart';
 
-import '../utils/app_router.dart';
-
 const listDesa = [
   'Cibodas',
   'Ciherang',
@@ -286,9 +284,7 @@ class _CreatePendudukScreenState extends ConsumerState<FormPendudukScreen> {
                         });
 
                         if (context.mounted) {
-                          Navigator.of(context).popUntil(
-                            ModalRoute.withName(AppRouter.filterPendudukRoute),
-                          );
+                          Navigator.of(context).pop();
                         }
                       }
                     },

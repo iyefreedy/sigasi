@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sigasi/models/posko.dart';
 import 'package:sigasi/providers/list_pengungsi_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 
@@ -7,21 +8,23 @@ class ListPengungsiScreen extends ConsumerWidget {
   const ListPengungsiScreen({
     super.key,
     this.idKelompok,
-    this.idPosko,
+    this.posko,
   });
 
   final String? idKelompok;
-  final String? idPosko;
+  final Posko? posko;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final listPengungsi = ref.watch(listPengungsiProvider(
-      (idKelompok: idKelompok, idPosko: idPosko),
+      (idKelompok: idKelompok, idPosko: posko?.iDPosko),
     ));
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Data Pengungsi'),
+        title: Text(
+          'Data Pengungsi ${posko?.lokasi}',
+        ),
       ),
       body: listPengungsi.when(
         data: (data) {

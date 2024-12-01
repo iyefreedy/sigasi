@@ -37,7 +37,7 @@ class AnggotaKeluarga {
     String? hubungan,
     DateTime? lastUpdateDate,
     String? lastUpdateBy,
-    final AnggotaKeluarga? anggota,
+    AnggotaKeluarga? anggota,
   }) {
     return AnggotaKeluarga(
       iDAnggotaKeluarga: iDAnggotaKeluarga ?? this.iDAnggotaKeluarga,
@@ -47,5 +47,14 @@ class AnggotaKeluarga {
       lastUpdateDate: lastUpdateDate ?? this.lastUpdateDate,
       lastUpdateBy: lastUpdateBy ?? this.lastUpdateBy,
     );
+  }
+
+  @override
+  String toString() {
+    return '''Anggota(
+  idAnggota: $iDAnggotaKeluarga,
+  hubungan: $hubungan
+  penduduk: $penduduk
+)''';
   }
 }

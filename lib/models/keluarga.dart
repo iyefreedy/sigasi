@@ -44,6 +44,11 @@ class Keluarga {
 
   @override
   String toString() {
-    return nomorKK ?? '-';
+    return '''\nKeluarga(
+  idKeluarga: $iDKeluarga,
+  idKecamatan: $iDKecamatan,
+  idDesa: $iDDesa,
+  anggota: $anggota
+)''';
   }
 }

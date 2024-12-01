@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/models/penduduk.dart';
+import 'package:sigasi/providers/keluarga_provider.dart';
 import 'package:sigasi/services/penduduk_service.dart';
 
 typedef PendudukParams = ({int? desa, String? idKelompok});
@@ -27,6 +28,7 @@ class ListPendudukNotifier
   }
 
   Future<Penduduk> save(Penduduk penduduk) async {
+    ref.invalidate(keluargaProvider);
     if (penduduk.iDPenduduk == null) {
       return pendudukService.insertPenduduk(penduduk);
     } else {
