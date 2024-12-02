@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sigasi/exceptions/general_exception.dart';
 import 'package:sigasi/providers/auth_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 import 'package:sigasi/utils/dialogs/error_dialog.dart';
@@ -39,17 +40,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.listen(
       authProvider,
       (previous, next) {
-        if (next.error != null) {
-          if (context.mounted && previous?.error != next.error) {
-            showErrorDialog(context, next.error.toString());
-          }
+        final error = next.error;
+        if (error != null && error is GeneralException) {
+          showErrorDialog(context, error.message);
         }
 
-        if (next.user != null) {
-          Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
+        if (next.user != null &&
+            error == null &&
+            previous?.user != next.user &&
+            !next.isLoading) {
+          Navigator.of(context).popAndPushNamed(AppRouter.homeRoute);
         }
       },
     );
+
     return Scaffold(
       body: Form(
         key: _formKey,

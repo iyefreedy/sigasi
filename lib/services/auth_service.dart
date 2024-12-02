@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sigasi/exceptions/general_exception.dart';
 import 'package:sigasi/models/auth_response.dart';
 import 'package:sigasi/models/user.dart';
 import 'package:sigasi/utils/app_constant.dart';
@@ -12,7 +13,7 @@ class AuthService {
     final token = preferences.getString('token');
 
     if (token == null) {
-      throw Exception('Sesi anda telah berakhir');
+      throw UnathenticatedException('Sesi anda telah berakhir');
     }
     return {
       'Content-Type': 'application/json',
@@ -27,7 +28,9 @@ class AuthService {
       final response = await http.get(url, headers: headers);
 
       if (response.statusCode != 200) {
-        throw Exception('Sesi Anda telah berakhir. Silakan login kembali.');
+        throw UnathenticatedException(
+          'Sesi Anda telah berakhir. Silakan login kembali.',
+        );
       }
 
       return _parseUser(response.body);
@@ -49,7 +52,7 @@ class AuthService {
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Username atau kata sandi salah.');
+        throw UnathenticatedException('Username atau kata sandi salah.');
       }
 
       final authResponse = _parseAuthResponse(response.body);
@@ -68,7 +71,9 @@ class AuthService {
       final response = await http.post(url, headers: headers);
 
       if (response.statusCode != 200) {
-        throw Exception('Sesi Anda telah berakhir. Silakan login kembali.');
+        throw UnathenticatedException(
+          'Sesi Anda telah berakhir. Silakan login kembali.',
+        );
       }
 
       await _removeToken();

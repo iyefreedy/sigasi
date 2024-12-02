@@ -29,11 +29,9 @@ import 'package:sigasi/screens/list_posko_screen.dart';
 import 'package:sigasi/screens/login_screen.dart';
 
 import '../screens/filter_penduduk_screen.dart';
-import '../screens/splash_screen.dart';
 
 class AppRouter {
   static const homeRoute = '/';
-  static const splashRoute = '/splash';
   static const loginRoute = '/login';
 
   static const filterKeluargaRoute = '/filter-keluarga';
@@ -81,11 +79,6 @@ class AppRouter {
         return MaterialPageRoute(
           settings: RouteSettings(name: routeName),
           builder: (context) => const LoginScreen(),
-        );
-      case splashRoute:
-        return MaterialPageRoute(
-          settings: RouteSettings(name: routeName),
-          builder: (context) => const SplashScreen(),
         );
 
       case filterKeluargaRoute:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sigasi/exceptions/general_exception.dart';
 import 'package:sigasi/providers/auth_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 import 'package:sigasi/utils/dialogs/logout_dialog.dart';
@@ -16,14 +17,13 @@ class HomeScreen extends ConsumerWidget {
     ref.listen(
       authProvider,
       (previous, next) {
-        if (next.error != null) {
-          if (context.mounted && previous?.error != next.error) {
-            showErrorDialog(context, next.error.toString());
-          }
+        final error = next.error;
+        if (error != null && error is GeneralException) {
+          showErrorDialog(context, error.message);
         }
 
         if (next.user == null) {
-          Navigator.of(context).pushReplacementNamed(AppRouter.loginRoute);
+          Navigator.of(context).popAndPushNamed(AppRouter.loginRoute);
         }
       },
     );

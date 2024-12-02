@@ -21,4 +21,12 @@ class User {
   final List<Role>? roles;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  @override
+  bool operator ==(Object other) {
+    return other is User && other.iDPengguna == iDPengguna;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, iDPengguna);
 }

@@ -49,38 +49,42 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> login(String username, String password) async {
-    state = state.copyWith(isLoading: true);
+    state = const AuthState(
+      user: null,
+      error: null,
+      isLoading: true,
+    );
     try {
       final user = await authService.login(username, password);
-      state = state.copyWith(user: user);
+      state = state.copyWith(user: user, isLoading: false, error: null);
     } on Exception catch (e) {
-      state = state.copyWith(error: e, user: null);
-    } finally {
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(error: e, user: null, isLoading: false);
     }
   }
 
   Future<void> authenticate() async {
-    state = state.copyWith(isLoading: true); // Set loading state
+    state = const AuthState(
+      user: null,
+      error: null,
+      isLoading: true,
+    );
     try {
       final user = await authService.authenticate();
-      state = state.copyWith(user: user);
+      state = state.copyWith(user: user, isLoading: false, error: null);
     } on Exception catch (e) {
-      state = state.copyWith(error: e, user: null);
-    } finally {
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(error: e, user: null, isLoading: false);
     }
   }
 
   Future<void> logout() async {
     state = state.copyWith(isLoading: true);
     try {
+      await authService.logout();
       state = const AuthState(
         user: null,
         error: null,
         isLoading: false,
       );
-      await authService.logout();
     } on Exception catch (e) {
       state = state.copyWith(error: e, isLoading: false);
     }
