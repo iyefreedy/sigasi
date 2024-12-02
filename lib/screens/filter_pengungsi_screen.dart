@@ -14,8 +14,15 @@ class FilterPengungsiScreen extends ConsumerStatefulWidget {
 }
 
 class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
+  late final GlobalKey<FormState> _formKey;
   Posko? _posko;
   String? _idKelompok;
+
+  @override
+  void initState() {
+    super.initState();
+    _formKey = GlobalKey<FormState>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +40,7 @@ class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
         child: const Icon(Icons.person_add),
       ),
       body: Form(
+        key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(10),
           children: [
@@ -41,6 +49,7 @@ class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
               decoration: const InputDecoration(
                 labelText: 'Posko',
               ),
+              validator: (value) => value == null ? 'Pilih posko' : null,
               items: listPosko.maybeWhen(
                 orElse: () => [],
                 data: (data) => data
@@ -85,11 +94,13 @@ class _FilterPengungsiScreenState extends ConsumerState<FilterPengungsiScreen> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(AppRouter.listPengungsiRoute, arguments: (
-                  posko: _posko,
-                  idKelompok: _idKelompok,
-                ));
+                if (_formKey.currentState!.validate()) {
+                  Navigator.of(context)
+                      .pushNamed(AppRouter.listPengungsiRoute, arguments: (
+                    posko: _posko,
+                    idKelompok: _idKelompok,
+                  ));
+                }
               },
               child: const Text('Cari...'),
             )

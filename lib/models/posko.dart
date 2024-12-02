@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sigasi/models/kebutuhan.dart';
 import 'package:sigasi/models/penduduk.dart';
 
 part 'posko.g.dart';
@@ -12,6 +13,7 @@ class Posko {
     this.masalah,
     this.solusiMasalah,
     this.penduduk,
+    this.kebutuhan,
   });
 
   final String? iDPosko;
@@ -20,8 +22,11 @@ class Posko {
   final String? masalah;
   final String? solusiMasalah;
 
-  @JsonKey(name: 'penduduk', includeIfNull: true)
+  @JsonKey(name: 'penduduk', includeToJson: false)
   final List<Penduduk>? penduduk;
+
+  @JsonKey(name: 'kebutuhan', includeToJson: false, includeFromJson: false)
+  final List<Kebutuhan>? kebutuhan;
 
   factory Posko.fromJson(Map<String, dynamic> json) => _$PoskoFromJson(json);
 
@@ -34,6 +39,7 @@ class Posko {
     String? masalah,
     String? solusiMasalah,
     List<Penduduk>? penduduk,
+    List<Kebutuhan>? kebutuhan,
   }) {
     return Posko(
       iDPosko: iDPosko ?? this.iDPosko,
@@ -42,6 +48,7 @@ class Posko {
       masalah: masalah ?? this.masalah,
       solusiMasalah: solusiMasalah ?? this.solusiMasalah,
       penduduk: penduduk ?? this.penduduk,
+      kebutuhan: kebutuhan ?? this.kebutuhan,
     );
   }
 
@@ -49,4 +56,12 @@ class Posko {
   String toString() {
     return iDPosko.toString();
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is Posko && other.iDPosko == iDPosko;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, iDPosko);
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sigasi/models/kebutuhan.dart';
+import 'package:sigasi/models/posko.dart';
 import 'package:sigasi/providers/list_kebutuhan_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 
@@ -28,12 +30,31 @@ class ListKebutuhanScreen extends ConsumerWidget {
             );
           }
 
+          final Map<Posko?, List<Kebutuhan>> groupedByPosko = {};
+
+          for (var kebutuhan in data) {
+            final poskoKey = kebutuhan.posko;
+            print(poskoKey);
+
+            if (!groupedByPosko.containsKey(poskoKey)) {
+              groupedByPosko[poskoKey] = [];
+            }
+
+            groupedByPosko[poskoKey]?.add(kebutuhan);
+          }
+
+          final poskoList = groupedByPosko.entries.map((entry) {
+            return entry.key?.copyWith(
+              kebutuhan: entry.value,
+            );
+          }).toList();
+
           return ListView.separated(
             separatorBuilder: (context, index) => const SizedBox(height: 4),
             padding: const EdgeInsets.all(10),
-            itemCount: data.length,
+            itemCount: poskoList.length,
             itemBuilder: (context, index) {
-              final kebutuhan = data[index];
+              final posko = poskoList[index];
               return ExpansionTileTheme(
                 data: ExpansionTileThemeData(
                   backgroundColor:
@@ -45,20 +66,66 @@ class ListKebutuhanScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: ExpansionTile(
-                  title: Text(kebutuhan.posko?.lokasi ?? '-'),
-                  subtitle: Text(kebutuhan.barang?.namaBarang ?? '-'),
-                  children: [
-                    ListTile(
-                      title: const Text('Jumlah Kebutuhan'),
-                      subtitle: Text(kebutuhan.jumlahKebutuhan.toString()),
+                child:
+                    ExpansionTile(title: Text(posko?.lokasi ?? '-'), children: [
+                  ListTile(
+                    subtitle: Column(
+                      children: [
+                        Table(
+                          children: [
+                            TableRow(
+                              children: [
+                                TableCell(
+                                  child: Text(
+                                    'Nama Barang',
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                ),
+                                TableCell(
+                                  child: Text(
+                                    'Jumlah Kebutuhan',
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                ),
+                                TableCell(
+                                  child: Text(
+                                    'Jumlah Diterima',
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                )
+                              ],
+                            ),
+                            for (var kebutuhan
+                                in (posko?.kebutuhan ?? <Kebutuhan>[])) ...[
+                              TableRow(
+                                children: [
+                                  TableCell(
+                                    child: Text(
+                                        kebutuhan.barang?.namaBarang ?? '-'),
+                                  ),
+                                  TableCell(
+                                    child: Text(
+                                        kebutuhan.jumlahKebutuhan?.toString() ??
+                                            '-'),
+                                  ),
+                                  TableCell(
+                                    child: Text(
+                                      kebutuhan.jumlahDiterima?.toString() ??
+                                          '-',
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
                     ),
-                    ListTile(
-                      title: const Text('Jumlah Diterima'),
-                      subtitle: Text(kebutuhan.jumlahDiterima.toString()),
-                    ),
-                  ],
-                ),
+                  ),
+                ]),
               );
             },
           );

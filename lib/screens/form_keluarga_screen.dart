@@ -263,8 +263,8 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
               onTap: () async {
                 final dateTime = await showDatePicker(
                   context: context,
-                  firstDate: DateTime(1970),
-                  lastDate: DateTime(2050),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
                 );
 
                 if (dateTime != null) {

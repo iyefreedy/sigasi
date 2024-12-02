@@ -23,5 +23,4 @@ Map<String, dynamic> _$PoskoToJson(Posko instance) => <String, dynamic>{
       'Lokasi': instance.lokasi,
       'Masalah': instance.masalah,
       'SolusiMasalah': instance.solusiMasalah,
-      'penduduk': instance.penduduk,
     };
