@@ -49,6 +49,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> login(String username, String password) async {
+    print("Call login");
     state = const AuthState(
       user: null,
       error: null,
@@ -56,28 +57,27 @@ class AuthNotifier extends StateNotifier<AuthState> {
     );
     try {
       final user = await authService.login(username, password);
-      state = state.copyWith(user: user, isLoading: false, error: null);
+      state = AuthState(user: user, isLoading: false, error: null);
     } on Exception catch (e) {
-      state = state.copyWith(error: e, user: null, isLoading: false);
+      print('Catch $e');
+      state = AuthState(error: e, user: null, isLoading: false);
     }
   }
 
   Future<void> authenticate() async {
-    state = const AuthState(
-      user: null,
-      error: null,
-      isLoading: true,
-    );
+    print("Call authenticate");
+    state = state.copyWith(isLoading: true);
     try {
       final user = await authService.authenticate();
-      state = state.copyWith(user: user, isLoading: false, error: null);
+      state = AuthState(user: user, isLoading: false, error: null);
     } on Exception catch (e) {
-      state = state.copyWith(error: e, user: null, isLoading: false);
+      print('Catch authenticate $e');
+      state = AuthState(error: e, user: null, isLoading: false);
     }
   }
 
   Future<void> logout() async {
-    state = state.copyWith(isLoading: true);
+    state = const AuthState(isLoading: true);
     try {
       await authService.logout();
       state = const AuthState(
@@ -86,7 +86,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         isLoading: false,
       );
     } on Exception catch (e) {
-      state = state.copyWith(error: e, isLoading: false);
+      state = AuthState(error: e, isLoading: false);
     }
   }
 }

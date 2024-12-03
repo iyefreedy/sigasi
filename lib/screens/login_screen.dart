@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sigasi/exceptions/general_exception.dart';
 import 'package:sigasi/providers/auth_provider.dart';
-import 'package:sigasi/utils/app_router.dart';
 import 'package:sigasi/utils/dialogs/error_dialog.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -26,30 +25,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> handleLogin() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (_formKey.currentState!.validate()) {
+      final username = _usernameController.text.trim();
+      final password = _passwordController.text.trim();
 
-    final username = _usernameController.text.trim();
-    final password = _passwordController.text.trim();
-
-    await ref.read(authProvider.notifier).login(username, password);
+      await ref.read(authProvider.notifier).login(username, password);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authProvider);
+    print("Render login screen");
     ref.listen(
       authProvider,
-      (previous, next) {
-        final error = next.error;
-        if (error != null && error is GeneralException) {
-          showErrorDialog(context, error.message);
-        }
-
-        if (next.user != null &&
-            error == null &&
-            previous?.user != next.user &&
-            !next.isLoading) {
-          Navigator.of(context).popAndPushNamed(AppRouter.homeRoute);
+      (previous, next) async {
+        print(next);
+        print(previous);
+        if (next.user == null) {
+          final error = next.error;
+          if (error is GeneralException) {
+            await showErrorDialog(context, error.message);
+          }
         }
       },
     );
@@ -113,14 +109,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             const SizedBox(height: 24.0),
             ElevatedButton(
-              onPressed: authState.isLoading ? null : handleLogin,
-              child: authState.isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(),
-                    )
-                  : const Text('Login'),
+              onPressed: handleLogin,
+              child: const Text('Login'),
             ),
           ],
         ),

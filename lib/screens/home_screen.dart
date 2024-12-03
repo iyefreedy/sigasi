@@ -1,32 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sigasi/exceptions/general_exception.dart';
+
 import 'package:sigasi/providers/auth_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 import 'package:sigasi/utils/dialogs/logout_dialog.dart';
-
-import '../utils/dialogs/error_dialog.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print("Render home screen");
     final auth = ref.watch(authProvider);
     final roles = auth.user?.roles;
-    ref.listen(
-      authProvider,
-      (previous, next) {
-        final error = next.error;
-        if (error != null && error is GeneralException) {
-          showErrorDialog(context, error.message);
-        }
-
-        if (next.user == null) {
-          Navigator.of(context).popAndPushNamed(AppRouter.loginRoute);
-        }
-      },
-    );
 
     return Scaffold(
       body: CustomScrollView(
