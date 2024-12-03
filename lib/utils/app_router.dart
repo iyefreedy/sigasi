@@ -27,10 +27,12 @@ import 'package:sigasi/screens/list_penduduk_screen.dart';
 import 'package:sigasi/screens/list_pengungsi_screen.dart';
 import 'package:sigasi/screens/list_posko_screen.dart';
 import 'package:sigasi/screens/login_screen.dart';
+import 'package:sigasi/screens/splash_screen.dart';
 
 import '../screens/filter_penduduk_screen.dart';
 
 class AppRouter {
+  static const splashRoute = '/splash';
   static const homeRoute = '/';
   static const loginRoute = '/login';
 
@@ -70,6 +72,12 @@ class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final routeName = settings.name;
     switch (routeName) {
+      case splashRoute:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeName),
+          builder: (context) => const SplashScreen(),
+        );
+
       case homeRoute:
         return MaterialPageRoute(
           settings: RouteSettings(name: routeName),
