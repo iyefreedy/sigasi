@@ -38,6 +38,45 @@ class _FormAnggotaKeluargaScreenState
 
   bool _isLoading = false;
 
+  void handleSubmit() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      final keluarga =
+          await ref.read(keluargaProvider(widget.idKeluarga).future);
+      final penduduk = await ref
+          .read(listPendududukProvider(
+              (desa: keluarga.iDDesa, idKelompok: _kelompok)).notifier)
+          .save(Penduduk(
+            kTP: _ktpController.text,
+            nama: _namaController.text,
+            jenisKelamin: _jenisKelamin,
+            tanggalLahir: _tanggalLahir,
+            alamat: keluarga.alamat,
+            iDDesa: keluarga.iDDesa,
+            iDKecamatan: keluarga.iDKecamatan,
+            iDKelompok: _kelompok,
+          ));
+
+      final anggota = AnggotaKeluarga(
+        hubungan: _hubungan,
+        iDKeluarga: widget.idKeluarga,
+        iDPenduduk: penduduk.iDPenduduk,
+      );
+      await ref
+          .read(keluargaProvider(widget.idKeluarga).notifier)
+          .save(anggota: anggota);
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +95,6 @@ class _FormAnggotaKeluargaScreenState
 
   @override
   Widget build(BuildContext context) {
-    final keluarga = ref.watch(keluargaProvider(widget.idKeluarga));
     final listKelompok = ref.watch(listKelompokProvider);
 
     return Scaffold(
@@ -210,47 +248,7 @@ class _FormAnggotaKeluargaScreenState
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: _isLoading
-                  ? null
-                  : () async {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        final keluargaValue = keluarga.value;
-                        final penduduk = await ref
-                            .read(listPendududukProvider((
-                              desa: keluargaValue?.iDDesa,
-                              idKelompok: _kelompok
-                            )).notifier)
-                            .save(Penduduk(
-                              kTP: _ktpController.text,
-                              nama: _namaController.text,
-                              jenisKelamin: _jenisKelamin,
-                              tanggalLahir: _tanggalLahir,
-                              alamat: keluarga.value?.alamat,
-                              iDDesa: keluarga.value?.iDDesa,
-                              iDKecamatan: keluarga.value?.iDKecamatan,
-                              iDKelompok: _kelompok,
-                            ));
-
-                        final anggota = AnggotaKeluarga(
-                          hubungan: _hubungan,
-                          iDKeluarga: widget.idKeluarga,
-                          iDPenduduk: penduduk.iDPenduduk,
-                        );
-                        await ref
-                            .read(keluargaProvider(widget.idKeluarga).notifier)
-                            .save(anggota: anggota);
-                        setState(() {
-                          _isLoading = false;
-                        });
-
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                        }
-                      }
-                    },
+              onPressed: _isLoading ? null : handleSubmit,
               child: _isLoading
                   ? const SizedBox(
                       height: 20,

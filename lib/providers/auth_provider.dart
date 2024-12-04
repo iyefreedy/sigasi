@@ -49,7 +49,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> login(String username, String password) async {
-    print("Call login");
     state = const AuthState(
       user: null,
       error: null,
@@ -59,19 +58,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = await authService.login(username, password);
       state = AuthState(user: user, isLoading: false, error: null);
     } on Exception catch (e) {
-      print('Catch $e');
       state = AuthState(error: e, user: null, isLoading: false);
     }
   }
 
   Future<void> authenticate() async {
-    print("Call authenticate");
     state = state.copyWith(isLoading: true);
     try {
       final user = await authService.authenticate();
       state = AuthState(user: user, isLoading: false, error: null);
     } on Exception catch (e) {
-      print('Catch authenticate $e');
       state = AuthState(error: e, user: null, isLoading: false);
     }
   }

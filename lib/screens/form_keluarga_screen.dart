@@ -105,7 +105,6 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
   int calculateYearsDifference(DateTime start, DateTime end) {
     int years = end.year - start.year;
 
-    // Jika bulan/tanggal di end lebih awal dari start, kurangi 1 tahun
     if (end.month < start.month ||
         (end.month == start.month && end.day < start.day)) {
       years--;
@@ -119,8 +118,6 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
       final selectedKelompok = await recognizeKelompok();
       _kelompok = selectedKelompok.iDKelompok;
     }
-
-    print(_kelompok);
 
     try {
       setState(() {
@@ -165,7 +162,7 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
         await ref
             .read(keluargaProvider(idKeluarga).notifier)
             .save(anggota: anggota);
-        if (context.mounted) {
+        if (mounted) {
           Navigator.of(context).pushReplacementNamed(
             AppRouter.detailKeluargaRoute,
             arguments: idKeluarga,

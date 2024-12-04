@@ -127,7 +127,6 @@ class _AddPengungsiScreenState extends ConsumerState<AddPengungsiScreen> {
                     title: Text(penduduk.nama ?? '-'),
                     subtitle: Text(penduduk.kelompok?.namaKelompok ?? '-'),
                     onChanged: (value) {
-                      print(value);
                       var updatedList = List<Pengungsi>.from(_listPengungsi);
                       if (value == true) {
                         updatedList.add(Pengungsi(

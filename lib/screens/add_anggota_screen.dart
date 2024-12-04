@@ -38,6 +38,42 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
 
   bool _isLoading = false;
 
+  void handleSubmit() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      final penduduk = await ref
+          .read(listPendududukProvider(
+              (desa: _keluarga?.iDDesa, idKelompok: _kelompok)).notifier)
+          .save(Penduduk(
+            kTP: _ktpController.text,
+            nama: _namaController.text,
+            jenisKelamin: _jenisKelamin,
+            tanggalLahir: _tanggalLahir,
+            alamat: _keluarga?.alamat,
+            iDDesa: _keluarga?.iDDesa,
+            iDKecamatan: _keluarga?.iDKecamatan,
+            iDKelompok: _kelompok,
+          ));
+      final anggota = AnggotaKeluarga(
+        hubungan: _hubungan,
+        iDKeluarga: _idKeluarga,
+        iDPenduduk: penduduk.iDPenduduk,
+      );
+      await ref
+          .read(keluargaProvider(_idKeluarga!).notifier)
+          .save(anggota: anggota);
+
+      setState(() {
+        _isLoading = false;
+      });
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -265,45 +301,7 @@ class _AddAnggotaScreenState extends ConsumerState<AddAnggotaScreen> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: _isLoading
-                  ? null
-                  : () async {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        final penduduk = await ref
-                            .read(listPendududukProvider((
-                              desa: _keluarga?.iDDesa,
-                              idKelompok: _kelompok
-                            )).notifier)
-                            .save(Penduduk(
-                              kTP: _ktpController.text,
-                              nama: _namaController.text,
-                              jenisKelamin: _jenisKelamin,
-                              tanggalLahir: _tanggalLahir,
-                              alamat: _keluarga?.alamat,
-                              iDDesa: _keluarga?.iDDesa,
-                              iDKecamatan: _keluarga?.iDKecamatan,
-                              iDKelompok: _kelompok,
-                            ));
-                        final anggota = AnggotaKeluarga(
-                          hubungan: _hubungan,
-                          iDKeluarga: _idKeluarga,
-                          iDPenduduk: penduduk.iDPenduduk,
-                        );
-                        await ref
-                            .read(keluargaProvider(_idKeluarga!).notifier)
-                            .save(anggota: anggota);
-
-                        setState(() {
-                          _isLoading = false;
-                        });
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                        }
-                      }
-                    },
+              onPressed: _isLoading ? null : handleSubmit,
               child: _isLoading
                   ? const SizedBox(
                       height: 20,
