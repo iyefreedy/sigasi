@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sigasi/models/anggota_keluarga.dart';
+import 'package:sigasi/models/kelompok.dart';
 import 'package:sigasi/models/keluarga.dart';
 import 'package:sigasi/models/penduduk.dart';
 import 'package:sigasi/providers/list_keluarga_provider.dart';
@@ -38,7 +39,6 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
 
   final _nomorKkController = TextEditingController();
   final _alamatController = TextEditingController();
-
   final _ktpController = TextEditingController();
   final _namaController = TextEditingController();
   final _tanggalLahirController = TextEditingController();
@@ -53,11 +53,139 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
 
   bool _isLoading = false;
 
+  Future<Kelompok> recognizeKelompok() async {
+    assert(_tanggalLahir != null, 'Tanggal lahir belum dipilih');
+
+    final listKelompok = await ref.read(listKelompokProvider.future);
+
+    final today = DateTime.now();
+    final age = calculateYearsDifference(_tanggalLahir!, today);
+
+    if (age >= 0 && age <= 2) {
+      return listKelompok
+          .firstWhere((kelompok) => kelompok.namaKelompok == 'Anak Bayi');
+    } else if (age >= 3 && age <= 5) {
+      return listKelompok
+          .firstWhere((kelompok) => kelompok.namaKelompok == 'Anak Balita');
+    } else if (age == 6) {
+      return listKelompok.firstWhere(
+          (kelompok) => kelompok.namaKelompok == 'Anak Pra sekolah');
+    } else if (age >= 7 && age <= 12) {
+      return listKelompok.firstWhere(
+          (kelompok) => kelompok.namaKelompok == 'Anak usia SD/Setingkat');
+    } else if (age >= 13 && age <= 59) {
+      if (_jenisKelamin == 'Laki-Laki') {
+        return listKelompok.firstWhere((kelompok) =>
+            kelompok.namaKelompok == 'Penduduk Non rentan (Pria)');
+      } else {
+        return listKelompok.firstWhere((kelompok) =>
+            kelompok.namaKelompok == 'Penduduk Non rentan (Wanita)');
+      }
+    } else if (age >= 60 && age <= 69) {
+      if (_jenisKelamin == 'Laki-Laki') {
+        return listKelompok.firstWhere((kelompok) =>
+            kelompok.namaKelompok == 'Penduduk Usia Lanjut (Pria)');
+      } else {
+        return listKelompok.firstWhere((kelompok) =>
+            kelompok.namaKelompok == 'Penduduk Usia Lanjut (Wanita)');
+      }
+    } else {
+      if (_jenisKelamin == 'Laki-Laki') {
+        return listKelompok.firstWhere((kelompok) =>
+            kelompok.namaKelompok ==
+            'Penduduk Usia Lanjut Risiko Tinggi (Pria)');
+      } else {
+        return listKelompok.firstWhere((kelompok) =>
+            kelompok.namaKelompok ==
+            'Penduduk Usia Lanjut Risiko Tinggi (Wanita)');
+      }
+    }
+  }
+
+  int calculateYearsDifference(DateTime start, DateTime end) {
+    int years = end.year - start.year;
+
+    // Jika bulan/tanggal di end lebih awal dari start, kurangi 1 tahun
+    if (end.month < start.month ||
+        (end.month == start.month && end.day < start.day)) {
+      years--;
+    }
+
+    return years;
+  }
+
+  void handleSubmit() async {
+    if (_kelompok == null) {
+      final selectedKelompok = await recognizeKelompok();
+      _kelompok = selectedKelompok.iDKelompok;
+    }
+
+    print(_kelompok);
+
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      if (_formKey.currentState!.validate()) {
+        final idKeluarga = const Uuid().v4();
+        final keluarga = Keluarga(
+          iDKeluarga: idKeluarga,
+          iDDesa: _desa?.iDDesa,
+          iDKecamatan: _kecamatan?.iDKecamatan,
+          alamat: _alamatController.text,
+          nomorKK: _nomorKkController.text,
+        );
+
+        await ref
+            .read(listKeluargaProvider((
+              idDesa: _desa!.iDDesa,
+              idKecamatan: _kecamatan!.iDKecamatan,
+            )).notifier)
+            .save(keluarga);
+
+        final penduduk = await ref
+            .read(listPendududukProvider(
+                (desa: _desa?.iDDesa, idKelompok: _kelompok)).notifier)
+            .save(Penduduk(
+              alamat: _alamatController.text,
+              iDDesa: _desa?.iDDesa,
+              iDKecamatan: _kecamatan?.iDKecamatan,
+              jenisKelamin: _jenisKelamin,
+              kTP: _ktpController.text,
+              iDKelompok: _kelompok,
+              nama: _namaController.text,
+              tanggalLahir: _tanggalLahir,
+            ));
+
+        final anggota = AnggotaKeluarga(
+          hubungan: _hubungan,
+          iDKeluarga: keluarga.iDKeluarga,
+          iDPenduduk: penduduk.iDPenduduk,
+        );
+        await ref
+            .read(keluargaProvider(idKeluarga).notifier)
+            .save(anggota: anggota);
+        if (context.mounted) {
+          Navigator.of(context).pushReplacementNamed(
+            AppRouter.detailKeluargaRoute,
+            arguments: idKeluarga,
+          );
+        }
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
-    _nomorKkController.dispose();
 
+    _nomorKkController.dispose();
     _ktpController.dispose();
     _namaController.dispose();
     _tanggalLahirController.dispose();
@@ -260,9 +388,17 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
               decoration: const InputDecoration(
                 labelText: 'Tanggal Lahir',
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Pilih tanggal';
+                }
+
+                return null;
+              },
               onTap: () async {
                 final dateTime = await showDatePicker(
                   context: context,
+                  initialDate: _tanggalLahir,
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
                 );
@@ -283,13 +419,6 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
                 labelText: 'Kelompok',
               ),
               value: _kelompok,
-              validator: (value) {
-                if (value == null) {
-                  return 'Kelompok harus diisi.';
-                }
-
-                return null;
-              },
               items: listKelompok.maybeWhen(
                   orElse: () => [],
                   data: (data) => data
@@ -306,68 +435,7 @@ class _FormKeluargaScreenState extends ConsumerState<FormKeluargaScreen> {
             ),
             const SizedBox(),
             ElevatedButton(
-              onPressed: _isLoading
-                  ? null
-                  : () async {
-                      try {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        if (_formKey.currentState!.validate()) {
-                          final penduduk = await ref
-                              .read(listPendududukProvider((
-                                desa: _desa?.iDDesa,
-                                idKelompok: _kelompok
-                              )).notifier)
-                              .save(Penduduk(
-                                alamat: _alamatController.text,
-                                iDDesa: _desa?.iDDesa,
-                                iDKecamatan: _kecamatan?.iDKecamatan,
-                                jenisKelamin: _jenisKelamin,
-                                kTP: _ktpController.text,
-                                iDKelompok: _kelompok,
-                                nama: _namaController.text,
-                                tanggalLahir: _tanggalLahir,
-                              ));
-                          final idKeluarga = const Uuid().v4();
-                          final keluarga = Keluarga(
-                            iDKeluarga: idKeluarga,
-                            iDDesa: _desa?.iDDesa,
-                            iDKecamatan: _kecamatan?.iDKecamatan,
-                            alamat: _alamatController.text,
-                            nomorKK: _nomorKkController.text,
-                          );
-
-                          await ref
-                              .read(listKeluargaProvider((
-                                idDesa: _desa!.iDDesa,
-                                idKecamatan: _kecamatan!.iDKecamatan,
-                              )).notifier)
-                              .save(keluarga);
-
-                          final anggota = AnggotaKeluarga(
-                            hubungan: _hubungan,
-                            iDKeluarga: keluarga.iDKeluarga,
-                            iDPenduduk: penduduk.iDPenduduk,
-                          );
-                          await ref
-                              .read(keluargaProvider(idKeluarga).notifier)
-                              .save(anggota: anggota);
-                          if (context.mounted) {
-                            Navigator.of(context).pushReplacementNamed(
-                              AppRouter.detailKeluargaRoute,
-                              arguments: idKeluarga,
-                            );
-                          }
-                        }
-                      } catch (e) {
-                        print(e);
-                      } finally {
-                        setState(() {
-                          _isLoading = false;
-                        });
-                      }
-                    },
+              onPressed: _isLoading ? null : handleSubmit,
               child: _isLoading
                   ? const Padding(
                       padding: EdgeInsets.all(8.0),
