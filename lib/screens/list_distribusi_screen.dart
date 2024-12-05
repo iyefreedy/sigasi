@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:sigasi/providers/list_distribusi_provider.dart';
 import 'package:sigasi/utils/app_router.dart';
 
@@ -41,7 +42,13 @@ class ListDistribusiScreen extends ConsumerWidget {
                 child: ListTile(
                   title: Text((distribusi.barang?.namaBarang).toString()),
                   subtitle: Text((distribusi.jumlah ?? 0).toString()),
-                  trailing: Text(distribusi.posko?.lokasi ?? '-'),
+                  trailing: Column(
+                    children: [
+                      Text(distribusi.posko?.lokasi ?? '-'),
+                      Text(DateFormat.yMEd('id_ID')
+                          .format(distribusi.tanggalDistribusi!)),
+                    ],
+                  ),
                 ),
               );
             },

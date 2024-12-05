@@ -76,10 +76,20 @@ class _FormDistribusiScreenState extends ConsumerState<FormDistribusiScreen> {
               items: listKebutuhan.maybeWhen(
                 orElse: () => [],
                 data: (data) => data
+                    .where((kebutuhan) =>
+                        (kebutuhan.jumlahDiterima ?? 0) <
+                        (kebutuhan.jumlahKebutuhan ?? 0))
                     .map(
                       (kebutuhan) => DropdownMenuItem(
                         value: kebutuhan.iDBarang,
-                        child: Text(kebutuhan.barang?.namaBarang ?? '-'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(kebutuhan.barang?.namaBarang ?? '-'),
+                            Text((kebutuhan.barang?.stok?.jumlah ?? 0)
+                                .toString())
+                          ],
+                        ),
                       ),
                     )
                     .toList(),
