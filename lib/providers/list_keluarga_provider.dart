@@ -19,7 +19,9 @@ class ListKeluargaNotifier
   ListKeluargaNotifier(this.keluargaService);
 
   @override
-  Future<List<Keluarga>> build(ListKeluargaParam arg) {
+  Future<List<Keluarga>> build(ListKeluargaParam arg) async {
+    if (arg.idDesa == null || arg.idKecamatan == null) return [];
+
     return keluargaService.fetchKeluarga(
       idKecamatan: arg.idKecamatan,
       idDesa: arg.idDesa,
