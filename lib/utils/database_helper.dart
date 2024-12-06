@@ -19,18 +19,12 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), _databaseName);
+    await deleteDatabase(path);
     return await openDatabase(
       path,
       version: _databaseVersion,
       onCreate: _onCreate,
-      onConfigure: _onUpgrade,
     );
-  }
-
-  Future _onUpgrade(Database db) async {
-    // await db.execute('''
-    // ALTER TABLE TBL_DISTRIBUSI ADD COLUMN TanggalDistribusi TEXT;
-    // ''');
   }
 
   Future _onCreate(Database db, int version) async {
